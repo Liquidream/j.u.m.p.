@@ -4,6 +4,8 @@
 -- (including the title screen)
 function draw_game()
   cls() --5
+
+  camera(0,0)
   
   -- set default pprint style
   printp(

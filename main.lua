@@ -67,3 +67,21 @@ function on_resize()
   
   screen_resizeable(true, scale, on_resize)
 end
+
+-- TRASEVOL_DOG's "Centered" Camera()
+local _camera = camera
+SCREEN_X, SCREEN_Y = 0, 0
+function camera(x,y)
+ local scrw, scrh = screen_size()
+ 
+ if ON_MOBILE and scrh > scrw then
+  SCREEN_X = scrw/2 - GAME_WIDTH/2
+  SCREEN_Y = max(scrh/4 - GAME_HEIGHT/2, SCREEN_X)
+ else
+  SCREEN_X = scrw/2 - GAME_WIDTH/2
+  SCREEN_Y = scrh/2 - GAME_HEIGHT/2
+ end
+ 
+ _camera(-SCREEN_X+x, -SCREEN_Y+y)
+end
+rcamera = _camera
