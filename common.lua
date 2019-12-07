@@ -3,10 +3,10 @@
 --
 DEBUG_MODE = false
 
--- GAME_WIDTH = 256  -- 16:9 aspect ratio
--- GAME_HEIGHT = 144 -- (Lasdscape)
-GAME_WIDTH = 144  -- 16:9 aspect ratio
-GAME_HEIGHT = 256 -- (Portrait, for mobiles)
+GAME_WIDTH_LANDSCAPE = 256  -- 16:9 aspect ratio
+GAME_HEIGHT_LANDSCAPE = 144 -- (Landscape)
+GAME_WIDTH_PORTRAIT = 144   -- 16:9 aspect ratio
+GAME_HEIGHT_PORTRAIT = 256  -- (Portrait, for mobiles)
 GAME_SCALE = 3
 
 GAME_STATE = { SPLASH=0, TITLE=1, INFO=2, LVL_INTRO=3, LVL_PLAY=4, LVL_END=5, 
@@ -37,3 +37,6 @@ ak54 = {
 -- Globals
 --
 ON_MOBILE = castle and not castle.system.isDesktop()
+
+GAME_WIDTH = GAME_WIDTH_PORTRAIT     -- default to portrait/mobile
+GAME_HEIGHT = GAME_HEIGHT_PORTRAIT   -- (will update automatically to screen rotation)
