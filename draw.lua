@@ -34,11 +34,12 @@ function draw_game()
   end
 
 
-  circfill(0,0,40,3)
+  --circfill(0,0,40,3)
 
   print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
 
-  draw_player(60,100, 25,25)
+  circfill(60,100,12.5,3)
+  --draw_player(60,100, 25,25)
   
   if DEBUG_MODE then
     -- show game area
