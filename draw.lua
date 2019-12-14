@@ -34,12 +34,16 @@ function draw_game()
   end
 
 
-  --circfill(0,0,40,3)
+  pal()
+  palt(0, false)
+  palt(35,true)
+
 
   print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
 
   circfill(60,100,12.5,3)
-  --draw_player(60,100, 25,25)
+
+  draw_player(80,100, 25,25)
   
   if DEBUG_MODE then
     -- show game area
@@ -48,18 +52,18 @@ function draw_game()
 
 end
 
+
 function draw_player(x,y,dw,dh)
-  pal()
-  palt(0, false)
 
-  if surface_exists("photo") then
-    -- draw bg frame in player's colour
-    rectfill(x-1, y-1, x+dw, y+dh, 4)
-    -- draw the actual photo
-    spritesheet("photo")
-    local w,h = surface_size("photo")
-    sspr(0, 0, w, h, x, y, dw, dh)
-  end
+aspr(0, x,y, 0, 1,1, 0.5, 0.5, 1,1)
 
-  palt()
+  -- if surface_exists("photo") then
+  --   -- draw bg frame in player's colour
+  --   rectfill(x-1, y-1, x+dw, y+dh, 4)
+  --   -- draw the actual photo
+  --   spritesheet("photo")
+  --   local w,h = surface_size("photo")
+  --   sspr(0, 0, w, h, x, y, dw, dh)
+  -- end
+
 end

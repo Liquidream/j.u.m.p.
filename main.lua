@@ -61,15 +61,16 @@ function love.draw()
 end
 
 function on_resize()
-  local winw, winh = window_size()
-  -- set game rotation (landscape/portait)
-  if winw > winh then    
-    GAME_WIDTH = GAME_WIDTH_LANDSCAPE     -- landscape
-    GAME_HEIGHT = GAME_HEIGHT_LANDSCAPE 
-  else
-    GAME_WIDTH = GAME_WIDTH_PORTRAIT     -- portrait/mobile
-    GAME_HEIGHT = GAME_HEIGHT_PORTRAIT 
-  end
+  local winw, winh = window_size()  
+  -- auto-set game rotation (landscape/portait)
+  -- if winw > winh then    
+  --   GAME_WIDTH = GAME_WIDTH_LANDSCAPE     -- landscape
+  --   GAME_HEIGHT = GAME_HEIGHT_LANDSCAPE 
+  -- else
+  --   GAME_WIDTH = GAME_WIDTH_PORTRAIT     -- portrait/mobile
+  --   GAME_HEIGHT = GAME_HEIGHT_PORTRAIT 
+  -- end
+
   -- update game scale (integer snap)
   local scale = max(min(flr(winw/GAME_WIDTH), flr(winh/GAME_HEIGHT)), 1)  
   screen_resizeable(true, scale, on_resize)  

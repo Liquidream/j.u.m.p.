@@ -25,8 +25,7 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
-  -- load_font ("assets/Hungry.ttf", 32, "main-font", true)
-  -- load_font ("assets/Hungry.ttf", 16, "small-font", true)
+  load_font ("assets/Awesome.ttf", 16, "main-font", true)
   -- load_png("title", "assets/title-text.png", ak54, true)
   screen_resizeable(true, 2, on_resize)
   screen_render_integer_scale(false)
@@ -49,9 +48,9 @@ end
 
 function init_assets()
   -- load gfx
-  --load_png("spritesheet", "assets/spritesheet.png", ak54, true)
+  load_png("spritesheet", "assets/spritesheet.png", ak54, true)
   --load_png("keys", "assets/keys.png", ak54, true)
-  spritesheet_grid(16,16)
+  spritesheet_grid(32,32)
   
   -- todo: load sfx + music
   --init_sounds()
