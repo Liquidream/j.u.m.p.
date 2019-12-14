@@ -1,7 +1,7 @@
 -- globals
-_t=0
-
-
+_t = 0
+player = {}
+cam = {}
 -- locals
 
 
@@ -10,12 +10,45 @@ function init_game()
   init_sugarcoat()  
   init_assets()
   init_input()
+  init_player()
+  init_cam()
 
   _initialized = true
   on_resize()
 
   -- show the title
   --init_title()
+end
+
+function init_player()
+  player = {
+    x = GAME_WIDTH/2,     -- start in the middle
+    y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
+    lives = 3,
+    dy = 0,     -- y velocity
+    dx = 0,     -- x velocity
+    state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
+    onGround = true,
+  }
+end
+
+-- put player in starting position
+-- (either start of game or after losing a life)
+function reset_player()
+  player.x = GAME_WIDTH/2     -- start in the middle
+  player.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
+  player.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
+  player.onGround = true
+end
+
+function init_cam()
+  -- TODO: initialise camera object (smooth panning camera)
+  cam = {
+    x = 0,
+    y = 0,
+    trap_y = GAME_HEIGHT/2
+  }
+
 end
 
 function init_sugarcoat()
