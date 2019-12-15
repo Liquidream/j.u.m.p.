@@ -39,7 +39,8 @@ function draw_level()
   for i = 1,#platforms do
     -- draw platform (depending on type)
     local platform = platforms[i]
-    rectfill(platform.x, platform.y, platform.x+80, platform.y+10, 19)    
+    spr(platform.spr, platform.x, platform.y, platform.spr_w, spr_h)
+    --rectfill(platform.x, platform.y, platform.x+80, platform.y+10, 19)    
   end
 
   circfill(60,100,12.5,3)
@@ -47,14 +48,23 @@ function draw_level()
   draw_player(player.x,player.y, 25,25)
 
   if DEBUG_MODE then
+    -- draw max height line (camera focus)
     line(0, player.maxHeight, 50, player.maxHeight, 39)
+    -- draw collision hitboxes
+    draw_hitbox(player ,39)
+    for i = 1,#platforms do
+      local platform = platforms[i]
+      draw_hitbox(platform ,39)
+    end
   end
 
   draw_ui()
 
 end
 
-
+function draw_hitbox(obj, col)
+  rect(obj.x, obj.y, obj.x+obj.hitbox_w, obj.y+obj.hitbox_h, col)
+end
 
 function draw_ui()
   camera(0,0)
@@ -81,7 +91,7 @@ end
 
 function draw_player(x,y)
   -- draw green blob
-  aspr(0, x,y, 0, 1,1, 0.5, 0.5, 1,1)
+  aspr(0, x,y, 0, 1,1, 0, 0, 1,1)
 
   -- if surface_exists("photo") then
   --   -- draw bg frame in player's colour

@@ -6,6 +6,9 @@ function update_game(dt)
   -- player
   update_player(dt)
 
+  -- collisions
+  update_collisions()
+
   -- update camera
   update_camera(dt)
   
@@ -49,6 +52,21 @@ function update_player(dt)
   --   player.maxHeight = player.y
   -- end
   ---------------------------------------------
+end
+
+function update_collisions()
+  -- player > platforms
+  for i = 1,#platforms do
+    local platform = platforms[i]    
+    -- if collide with platform while falling...
+    if aabb(player, platform)
+     and player.vy>0 then
+      -- then land!
+      log("landed!")
+      player.onGround = true
+      player.vy = 0
+    end
+  end
 end
 
 function update_camera(dt)

@@ -40,3 +40,15 @@ ON_MOBILE = castle and not castle.system.isDesktop()
 
 GAME_WIDTH = GAME_WIDTH_PORTRAIT     -- default to portrait/mobile
 GAME_HEIGHT = GAME_HEIGHT_PORTRAIT   -- (will update automatically to screen rotation)
+
+
+-- Helper functions
+
+function aabb(a,b)
+  return (
+    a.x < b.x + b.hitbox_w 
+    and a.x + a.hitbox_w > b.x 
+    and a.y < b.y + b.hitbox_h 
+    and a.y + a.hitbox_h > b.y
+  )
+end

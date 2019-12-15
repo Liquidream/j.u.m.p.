@@ -26,20 +26,25 @@ end
 
 -- create level platforms
 function init_level()
-  local platformDist = 100
+  local platformDist = 150
   for i = 1,5+(player.levelNum*3) do
     -- create new platform
     platforms[i] = {
-      x = 30,
+      x = 55,
       y = GAME_HEIGHT+platformDist-(i*platformDist),
       type = 1, -- 1=
+      spr = 8,
+      spr_w = 1,
+      spr_h = 1,
+      hitbox_w = 32,
+      hitbox_h = 32,
     }
   end
 end
 
 function init_player()
   player = {
-    x = GAME_WIDTH/2,     -- start in the middle
+    x = GAME_WIDTH/2 - 16,     -- start in the middle
     y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
     maxHeight = GAME_HEIGHT-40,
     lives = 3,
@@ -47,7 +52,9 @@ function init_player()
     vx = 0,     -- x velocity
     state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
     onGround = true,
-    levelNum = 1
+    levelNum = 1,
+    hitbox_w = 32,
+    hitbox_h = 32,
   }
 end
 
