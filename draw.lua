@@ -27,7 +27,12 @@ function draw_game()
 end
 
 function draw_level()
-  cls(29) --5
+  cls(0) 
+
+  -- clip to game bounds?
+  --clip(0,0, GAME_WIDTH-1,GAME_HEIGHT-1)
+
+  draw_background()
 
   camera(cam.x, cam.y)
   
@@ -43,7 +48,7 @@ function draw_level()
     --rectfill(platform.x, platform.y, platform.x+80, platform.y+10, 19)    
   end
 
-  circfill(60,100,12.5,3)
+  --circfill(60,100,12.5,3)
 
   draw_player(player.x,player.y, 25,25)
 
@@ -60,6 +65,16 @@ function draw_level()
 
   draw_ui()
 
+end
+
+function draw_background()
+  --cls(0) --29
+  camera(0,0)
+  for y=-1,14 do
+    for x=0,4 do
+      spr(31,x*32,y*32 -(cam.y/2)%32)
+    end
+  end
 end
 
 function draw_hitbox(obj, col)
@@ -90,8 +105,22 @@ end
 
 
 function draw_player(x,y)
+  local spr = 0
+  -- update anims
+  if player.onGround then
+    if player.jumpCounter < 10 
+     or player.jumpCounter > player.jumpFreq-10 then 
+      spr = 1
+    else
+      spr = 0
+    end
+  else
+    -- jumping
+    spr=2
+  end 
+
   -- draw green blob
-  aspr(0, x,y, 0, 1,1, 0, 0, 1,1)
+  aspr(spr, x,y, 0, 1,1, 0, 0, 1,1)
 
   -- if surface_exists("photo") then
   --   -- draw bg frame in player's colour

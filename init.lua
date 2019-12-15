@@ -33,7 +33,7 @@ function init_level()
       x = 55,
       y = GAME_HEIGHT+platformDist-(i*platformDist),
       type = 1, -- 1=
-      spr = 8,
+      spr = 8 + irnd(2),
       spr_w = 1,
       spr_h = 1,
       hitbox_w = 32,
@@ -55,6 +55,8 @@ function init_player()
     levelNum = 1,
     hitbox_w = 32,
     hitbox_h = 32,
+    jumpCounter = 0,
+    jumpFreq = 100,
   }
 end
 
