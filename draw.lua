@@ -32,12 +32,9 @@ function draw_game()
   circfill(60,100,12.5,3)
 
   draw_player(player.x,player.y, 25,25)
-  
-  if DEBUG_MODE then
-    -- show game area
-    rect(0,cam.y, GAME_WIDTH-1,cam.y+GAME_HEIGHT-1, 35)
-  end
 
+  draw_ui()
+  
 end
 
 
@@ -55,6 +52,12 @@ function draw_ui()
 
 
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
+  
+  if DEBUG_MODE then
+    -- show game area
+    rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
+  end
+
   
 end
 
