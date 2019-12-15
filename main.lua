@@ -17,8 +17,6 @@
   • @somepx for Hungry font
     https://www.patreon.com/posts/new-free-font-27405348
   
-  • @egordorichev for input icons
-    https://egordorichev.itch.io/key-set
 
 ]]
 

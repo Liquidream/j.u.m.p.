@@ -3,9 +3,7 @@
 -- draw the actual game 
 -- (including the title screen)
 function draw_game()
-  cls(29) --5
-
-  camera(cam.x, cam.y)
+  
 
   
   if gameState == GAME_STATE.SPLASH then
@@ -17,24 +15,43 @@ function draw_game()
 
   elseif gameState == GAME_STATE.LVL_PLAY then
     -- normal play (level intro/outro/game-over)    
-    --draw_level()
+    draw_level()
 
   else
     -- ??
   end
 
 
+  
+  
+end
+
+function draw_level()
+  cls(29) --5
+
+  camera(cam.x, cam.y)
+  
   pal()
   palt(0, false)
   palt(35,true)
 
+  -- draw platforms
+  for i = 1,#platforms do
+    -- draw platform (depending on type)
+    local platform = platforms[i]
+    rectfill(platform.x, platform.y, platform.x+80, platform.y+10, 19)    
+  end
 
   circfill(60,100,12.5,3)
 
   draw_player(player.x,player.y, 25,25)
 
+  if DEBUG_MODE then
+    line(0, player.maxHeight, 50, player.maxHeight, 39)
+  end
+
   draw_ui()
-  
+
 end
 
 
@@ -55,7 +72,7 @@ function draw_ui()
   
   if DEBUG_MODE then
     -- show game area
-    rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
+    rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)    
   end
 
   

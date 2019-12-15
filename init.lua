@@ -2,7 +2,7 @@
 _t = 0
 player = {}
 cam = {}
--- locals
+platforms = {}
 
 
 function init_game()
@@ -12,23 +12,42 @@ function init_game()
   init_input()
   init_player()
   init_cam()
+  init_level()
 
   _initialized = true
   on_resize()
 
+
+  gameState = GAME_STATE.LVL_PLAY
+
   -- show the title
   --init_title()
+end
+
+-- create level platforms
+function init_level()
+  local platformDist = 100
+  for i = 1,5+(player.levelNum*3) do
+    -- create new platform
+    platforms[i] = {
+      x = 30,
+      y = GAME_HEIGHT+platformDist-(i*platformDist),
+      type = 1, -- 1=
+    }
+  end
 end
 
 function init_player()
   player = {
     x = GAME_WIDTH/2,     -- start in the middle
     y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
+    maxHeight = GAME_HEIGHT-40,
     lives = 3,
-    dy = 0,     -- y velocity
-    dx = 0,     -- x velocity
+    vy = 0,     -- y velocity
+    vx = 0,     -- x velocity
     state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
     onGround = true,
+    levelNum = 1
   }
 end
 
@@ -37,6 +56,7 @@ end
 function reset_player()
   player.x = GAME_WIDTH/2     -- start in the middle
   player.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
+  player.maxHeight = player.y
   player.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
   player.onGround = true
 end
