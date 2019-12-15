@@ -48,6 +48,7 @@ function init_player()
     y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
     maxHeight = GAME_HEIGHT-40,
     lives = 3,
+    score = 0,
     vy = 0,     -- y velocity
     vx = 0,     -- x velocity
     state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
@@ -87,7 +88,7 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
-  load_font ("assets/Awesome.ttf", 16, "main-font", true)
+  load_font ("assets/Awesome.ttf", 32, "main-font", true)
   -- load_png("title", "assets/title-text.png", ak54, true)
   screen_resizeable(true, 2, on_resize)
   screen_render_integer_scale(false)

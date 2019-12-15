@@ -51,6 +51,7 @@ function update_collisions()
       log("landed!")
       player.onGround = true
       player.vy = 0
+      player.score = player.score + 1
     end
   end
 end

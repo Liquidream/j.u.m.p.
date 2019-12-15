@@ -92,7 +92,11 @@ function draw_ui()
     0x0)
   printp_color(47, 0, 0, 0)
 
+  for i=0,player.lives-1 do
+    spr(30,i*22,-4)
+  end
 
+  print( string.format("%03d",player.score) ,GAME_WIDTH-32,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if DEBUG_MODE then
