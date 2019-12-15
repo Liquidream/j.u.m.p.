@@ -27,11 +27,11 @@ function update_player(dt)
       player.maxHeight = player.y
     end
     -- land
-    if player.y > GAME_HEIGHT-40 then
-      log("land")
-      player.onGround = true
-      player.vy = 0
-    end
+    -- if player.y > GAME_HEIGHT-40 then
+    --   log("land")
+    --   player.onGround = true
+    --   player.vy = 0
+    -- end
   end
   -- jump?
   if _t%200 == 100 then

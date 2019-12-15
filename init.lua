@@ -51,7 +51,7 @@ function init_player()
     vy = 0,     -- y velocity
     vx = 0,     -- x velocity
     state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
-    onGround = true,
+    onGround = false,
     levelNum = 1,
     hitbox_w = 32,
     hitbox_h = 32,
