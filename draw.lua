@@ -50,13 +50,13 @@ function draw_level()
 
   --circfill(60,100,12.5,3)
 
-  draw_player(player.x,player.y, 25,25)
+  draw_blob(blob.x,blob.y, 25,25)
 
   if DEBUG_MODE then
     -- draw max height line (camera focus)
-    line(0, player.maxHeight, 50, player.maxHeight, 39)
+    line(0, blob.maxHeight, 50, blob.maxHeight, 39)
     -- draw collision hitboxes
-    draw_hitbox(player ,39)
+    draw_hitbox(blob ,39)
     for i = 1,#platforms do
       local platform = platforms[i]
       draw_hitbox(platform ,39)
@@ -92,11 +92,11 @@ function draw_ui()
     0x0)
   printp_color(47, 0, 0, 0)
 
-  for i=0,player.lives-1 do
+  for i=0,blob.lives-1 do
     spr(30,i*22,-4)
   end
 
-  print( string.format("%03d",player.score) ,GAME_WIDTH-46,-2, 47)
+  print( string.format("%03d",blob.score) ,GAME_WIDTH-46,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if DEBUG_MODE then
@@ -108,12 +108,12 @@ function draw_ui()
 end
 
 
-function draw_player(x,y)
+function draw_blob(x,y)
   local spr = 0
   -- update anims
-  if player.onGround then
-    if player.jumpCounter < 10 
-     or player.jumpCounter > player.jumpFreq-10 then 
+  if blob.onGround then
+    if blob.jumpCounter < 10 
+     or blob.jumpCounter > blob.jumpFreq-10 then 
       spr = 1
     else
       spr = 0

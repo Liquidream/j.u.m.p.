@@ -1,6 +1,6 @@
 -- globals
 _t = 0
-player = {}
+blob = {}
 cam = {}
 platforms = {}
 lastPressedState = false
@@ -11,7 +11,7 @@ function init_game()
   init_sugarcoat()  
   init_assets()
   init_input()
-  init_player()
+  init_blob()
   init_cam()
   init_level()
 
@@ -34,8 +34,9 @@ function init_level()
                     8)
 
   -- create other platforms
-  for i = 2,5+(player.levelNum*3) do
-    local xpos = 55
+  for i = 2,5+(blob.levelNum*3) do
+    local xpos = irnd(8)*16
+    --local xpos = 55
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
     -- randomise types (based on those unlocked)    
     local pType = irnd(maxTypeNumber)+1
@@ -48,8 +49,8 @@ function init_level()
 end
 
 
-function init_player()
-  player = {
+function init_blob()
+  blob = {
     x = GAME_WIDTH/2 - 16,     -- start in the middle
     y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
     maxHeight = GAME_HEIGHT-40,
@@ -67,14 +68,14 @@ function init_player()
   }
 end
 
--- put player in starting position
+-- put blob in starting position
 -- (either start of game or after losing a life)
-function reset_player()
-  player.x = GAME_WIDTH/2     -- start in the middle
-  player.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
-  player.maxHeight = player.y
-  player.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
-  player.onGround = true
+function reset_blob()
+  blob.x = GAME_WIDTH/2     -- start in the middle
+  blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
+  blob.maxHeight = player.y
+  blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
+  blob.onGround = true
 end
 
 function init_cam()

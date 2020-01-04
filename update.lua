@@ -37,25 +37,31 @@ end
 
 function update_blob(dt)
   local gravity = 0.1
-  local jumpAmount = -6
-
-  if player.onGround then
+  
+  if blob.onGround then
+    local jumpAmountY = -6
+    local jumpAmountX = 0
+    if platforms[blob.onPlatformNum+1] then 
+      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/85
+    end
     -- jump?
-    player.jumpCounter = player.jumpCounter + 1
-    if player.jumpCounter == player.jumpFreq then
-      player.vy = jumpAmount
-      player.onGround = false
-      player.jumpCounter = 0
+    blob.jumpCounter = blob.jumpCounter + 1
+    if blob.jumpCounter == blob.jumpFreq then
+      blob.vy = jumpAmountY
+      blob.vx = jumpAmountX
+      blob.onGround = false
+      blob.jumpCounter = 0
       log("jump!")
     end
 
   else  
     -- jumping/falling
-    player.vy = player.vy + gravity
-    player.y = player.y + player.vy
+    blob.vy = blob.vy + gravity
+    blob.y = blob.y + blob.vy
+    blob.x = blob.x + blob.vx
     -- note only when height increases
-    if player.y < player.maxHeight then
-      player.maxHeight = player.y
+    if blob.y < blob.maxHeight then
+      blob.maxHeight = blob.y
     end
   end  
 
@@ -66,20 +72,22 @@ function update_collisions()
   for i = 1,#platforms do
     local platform = platforms[i]    
     -- if collide with platform while falling...
-    if aabb(player, platform)
-     and player.vy>0 then
+    if aabb(blob, platform)
+     and blob.vy>0 then
       -- then land!
       log("landed!")
-      player.onGround = true
-      player.vy = 0
-      player.score = player.score + 1
+      blob.onGround = true
+      blob.vy = 0
+      blob.score = blob.score + 1
+      blob.onPlatformNum = i
+      blob.x = platform.x + (platform.spr_w*32/2) - 16
     end
   end
 end
 
 function update_camera(dt)
-  -- make camera follow player's highest height
-  cam.y = lerp(cam.y, player.maxHeight-cam.trap_y, 2*dt)
+  -- make camera follow blob's highest height
+  cam.y = lerp(cam.y, blob.maxHeight-cam.trap_y, 2*dt)
 end
 
 
