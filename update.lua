@@ -36,14 +36,14 @@ function update_player_input()
 end
 
 function update_blob(dt)
-  local gravity = 0.1
+  local gravity = 300 --0.1
   
   if blob.onGround then
-    local jumpAmountY = -6
+    local jumpAmountY = -350 ---6
     local jumpAmountX = 0
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
     if morePlatforms then      
-      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/85
+      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/1.8
     end
     -- jump?
     -- still something to jump for
@@ -58,9 +58,9 @@ function update_blob(dt)
 
   else  
     -- jumping/falling
-    blob.vy = blob.vy + gravity
-    blob.y = blob.y + blob.vy
-    blob.x = blob.x + blob.vx
+    blob.vy = blob.vy + gravity *dt
+    blob.y = blob.y + blob.vy *dt
+    blob.x = blob.x + blob.vx *dt
     -- note only when height increases
     if blob.y < blob.maxHeight then
       blob.maxHeight = blob.y
