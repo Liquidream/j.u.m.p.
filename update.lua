@@ -41,12 +41,14 @@ function update_blob(dt)
   if blob.onGround then
     local jumpAmountY = -6
     local jumpAmountX = 0
-    if platforms[blob.onPlatformNum+1] then 
+    local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
+    if morePlatforms then      
       jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/85
     end
     -- jump?
+    -- still something to jump for
     blob.jumpCounter = blob.jumpCounter + 1
-    if blob.jumpCounter == blob.jumpFreq then
+    if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
       blob.vx = jumpAmountX
       blob.onGround = false
