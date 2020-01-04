@@ -3,7 +3,8 @@ _t = 0
 player = {}
 cam = {}
 platforms = {}
-
+lastPressedState = false
+maxTypeNumber = 2
 
 function init_game()
   --init_data()
@@ -16,7 +17,6 @@ function init_game()
 
   _initialized = true
   on_resize()
-
 
   gameState = GAME_STATE.LVL_PLAY
 
@@ -32,37 +32,19 @@ function init_level()
                     -55,
                     GAME_HEIGHT,
                     8)
-  -- platforms[1] = {
-  --   x = -56,
-  --   y = GAME_HEIGHT,
-  --   type = 1,
-  --   spr = 32,
-  --   spr_w = 8,
-  --   spr_h = 1,
-  --   hitbox_w = 32*8,
-  --   hitbox_h = 32,
-  -- }
-  
+
   -- create other platforms
   for i = 2,5+(player.levelNum*3) do
-    platforms[i] = StaticPlatform(
-                    55,
-                    GAME_HEIGHT+platformDist-(i*platformDist),
-                    1)
-    log("new = "..tostring(platforms[i]))
+    local xpos = 55
+    local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
+    -- randomise types (based on those unlocked)    
+    local pType = irnd(maxTypeNumber)+1
+    if pType == PLATFORM_TYPE.STATIC then
+      platforms[i] = StaticPlatform(xpos, ypos, 1)
+    elseif pType == PLATFORM_TYPE.SPIKER then
+      platforms[i] = SpikerPlatform(xpos, ypos, 1)
+    end
   end
-  -- for i = 2,5+(player.levelNum*3) do
-  --   platforms[i] = {
-  --     x = 55,
-  --     y = GAME_HEIGHT+platformDist-(i*platformDist),
-  --     type = 1, -- 1=
-  --     spr = 8 + irnd(2),
-  --     spr_w = 1,
-  --     spr_h = 1,
-  --     hitbox_w = 32,
-  --     hitbox_h = 32,
-  --   }
-  -- end
 end
 
 

@@ -19,15 +19,20 @@ end
 function update_player_input()
   -- check whether touch/button pressed
   -- and update the world accordingly
-  local mousePressed = btnp(7)
-  local mainKeyPressed = btnp(4)
+  local mousePressed = btn(7)
+  local mainKeyPressed = btn(4)
+  local currPressedState = mousePressed or mainKeyPressed  
 
-  for key,platform in pairs(platforms) do
-    -- update platform state
-    -- (if either input method used)
-    platform:setPressedState(mousePressed or mainKeyPressed)
+  if currPressedState ~= lastPressedState then
+    for key,platform in pairs(platforms) do
+      -- update platform state
+      -- (if either input method used)
+      platform:setPressedState(currPressedState)
+    end
   end
 
+  -- remember...
+  lastPressedState = currPressedState
 end
 
 function update_blob(dt)

@@ -44,7 +44,8 @@ function draw_level()
   for i = 1,#platforms do
     -- draw platform (depending on type)
     local platform = platforms[i]
-    spr(platform.spr, platform.x, platform.y, platform.spr_w, spr_h)
+    platform:draw()
+    -- spr(platform.spr, platform.x, platform.y, platform.spr_w, spr_h)
   end
 
   --circfill(60,100,12.5,3)
