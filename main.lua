@@ -38,6 +38,8 @@ require("common")
 require("init")
 require("update")
 require("draw")
+Object = require("objects/classic")
+require("objects/platforms")
 --require("sprinklez")
 
 

@@ -2,9 +2,11 @@
 function update_game(dt)
   _t=_t+1
 
+  -- player interactions
+  update_player_input()
 
-  -- player
-  update_player(dt)
+  -- jumping "blob"
+  update_blob(dt)
 
   -- collisions
   update_collisions()
@@ -14,7 +16,21 @@ function update_game(dt)
   
 end
 
-function update_player(dt)
+function update_player_input()
+  -- check whether touch/button pressed
+  -- and update the world accordingly
+  local mousePressed = btnp(7)
+  local mainKeyPressed = btnp(4)
+
+  for key,platform in pairs(platforms) do
+    -- update platform state
+    -- (if either input method used)
+    platform:setPressedState(mousePressed or mainKeyPressed)
+  end
+
+end
+
+function update_blob(dt)
   local gravity = 0.1
   local jumpAmount = -6
 

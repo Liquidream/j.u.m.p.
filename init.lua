@@ -27,20 +27,44 @@ end
 -- create level platforms
 function init_level()
   local platformDist = 150
-  for i = 1,5+(player.levelNum*3) do
-    -- create new platform
-    platforms[i] = {
-      x = 55,
-      y = GAME_HEIGHT+platformDist-(i*platformDist),
-      type = 1, -- 1=
-      spr = 8 + irnd(2),
-      spr_w = 1,
-      spr_h = 1,
-      hitbox_w = 32,
-      hitbox_h = 32,
-    }
+  -- create "floor" platform
+  platforms[1] = StaticPlatform(
+                    -55,
+                    GAME_HEIGHT,
+                    8)
+  -- platforms[1] = {
+  --   x = -56,
+  --   y = GAME_HEIGHT,
+  --   type = 1,
+  --   spr = 32,
+  --   spr_w = 8,
+  --   spr_h = 1,
+  --   hitbox_w = 32*8,
+  --   hitbox_h = 32,
+  -- }
+  
+  -- create other platforms
+  for i = 2,5+(player.levelNum*3) do
+    platforms[i] = StaticPlatform(
+                    55,
+                    GAME_HEIGHT+platformDist-(i*platformDist),
+                    1)
+    log("new = "..tostring(platforms[i]))
   end
+  -- for i = 2,5+(player.levelNum*3) do
+  --   platforms[i] = {
+  --     x = 55,
+  --     y = GAME_HEIGHT+platformDist-(i*platformDist),
+  --     type = 1, -- 1=
+  --     spr = 8 + irnd(2),
+  --     spr_w = 1,
+  --     spr_h = 1,
+  --     hitbox_w = 32,
+  --     hitbox_h = 32,
+  --   }
+  -- end
 end
+
 
 function init_player()
   player = {
@@ -117,4 +141,28 @@ function init_assets()
   
   -- todo: load sfx + music
   --init_sounds()
+end
+
+function init_input()
+  -- keyboard & gamepad input
+  -- register_btn(0, 0, {input_id("keyboard", "left"),
+  --                     input_id("keyboard", "a"),
+  --                     input_id("controller_button", "dpleft")})
+  -- register_btn(1, 0, {input_id("keyboard", "right"),
+  --                     input_id("keyboard", "d"),
+  --                     input_id("controller_button", "dpright")})
+  -- register_btn(2, 0, {input_id("keyboard", "up"),
+  --                     input_id("keyboard", "w"),
+  --                     input_id("controller_button", "dpup")})
+  -- register_btn(3, 0, {input_id("keyboard", "down"),
+  --                     input_id("keyboard", "s"),
+  --                    input_id("controller_button", "dpdown")})
+  register_btn(4, 0, {input_id("keyboard", "space"),
+                      input_id("controller_button", "x")})
+  -- mouse input
+  register_btn(5,  0, input_id("mouse_position", "x"))
+  register_btn(6,  0, input_id("mouse_position", "y"))
+  register_btn(7,  0, input_id("mouse_button", "lb"))
+
+
 end

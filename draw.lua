@@ -45,7 +45,6 @@ function draw_level()
     -- draw platform (depending on type)
     local platform = platforms[i]
     spr(platform.spr, platform.x, platform.y, platform.spr_w, spr_h)
-    --rectfill(platform.x, platform.y, platform.x+80, platform.y+10, 19)    
   end
 
   --circfill(60,100,12.5,3)
@@ -71,8 +70,8 @@ function draw_background()
   --cls(0) --29
   camera(0,0)
   for y=-1,14 do
-    for x=0,4 do
-      spr(31,x*32,y*32 -(cam.y/2)%32)
+    for x=-1,5 do
+      spr(31,x*32-8,y*32 -(cam.y/2)%32)
     end
   end
 end
@@ -96,7 +95,7 @@ function draw_ui()
     spr(30,i*22,-4)
   end
 
-  print( string.format("%03d",player.score) ,GAME_WIDTH-32,-2, 47)
+  print( string.format("%03d",player.score) ,GAME_WIDTH-46,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if DEBUG_MODE then
