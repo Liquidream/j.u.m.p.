@@ -78,8 +78,7 @@ function update_collisions()
   for i = 1,#platforms do
     local platform = platforms[i]    
     -- if collide with platform while falling...
-    if aabb(blob, platform)
-     and blob.vy>0 then
+    if platform:hasLanded(blob) then
       -- then land!
       log("landed!")
       blob.onGround = true

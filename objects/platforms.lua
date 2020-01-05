@@ -31,6 +31,17 @@ function BasePlatformObject:setPressedState(is_pressed)
   self.currState = is_pressed
   --log("setPressedState = "..tostring(is_pressed))
 end
+-- base "landed" test
+-- most platforms will override this
+function BasePlatformObject:hasLanded(blob)
+  -- check AABB collisions of platform hitbox
+  if aabb(blob, self) 
+     and blob.vy>0 then
+      -- landed
+      return true
+  end 
+  return false
+end
 
 -- ------------------------------------------------------------
 -- SPIKER platform type (no interaction)
@@ -74,6 +85,18 @@ do
   function SpikerPlatform:setPressedState(is_pressed)
     -- call base implementation
     SpikerPlatform.super.setPressedState(self,is_pressed)
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SpikerPlatform:hasLanded(blob)
+    -- check for spikes
+    if aabb(blob, self) and blob.vy>0 
+     and self.currState == self.activeState then
+      blob:loseLife()
+    end 
+    -- call base implementation
+    return SpikerPlatform.super.hasLanded(self,blob)
   end
 
 end

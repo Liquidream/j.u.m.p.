@@ -67,6 +67,11 @@ function init_blob()
     hitbox_h = 32,
     jumpCounter = 0,
     jumpFreq = 50, --100
+    loseLife = function(self)
+      log("OUCH!!!!")
+      self.lives = self.lives - 1
+      cls(38) flip()
+    end
   }
 end
 
