@@ -36,14 +36,18 @@ function update_player_input()
 end
 
 function update_blob(dt)
-  local gravity = 300 --0.1
-  
+  local gravity = 500
+  local jumpAmountY = -450
+  local speedFactor = 2
+  -- apply speed
+  -- jumpAmountY = jumpAmountY * speedFactor
+  -- gravity = gravity * speedFactor
+
   if blob.onGround then
-    local jumpAmountY = -350 ---6
     local jumpAmountX = 0
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
     if morePlatforms then      
-      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/1.8
+      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/1.4
     end
     -- jump?
     -- still something to jump for

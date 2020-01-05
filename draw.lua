@@ -101,7 +101,8 @@ function draw_ui()
   
   if DEBUG_MODE then
     -- show game area
-    rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)    
+    rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
+    line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
   end
 
   

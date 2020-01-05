@@ -29,13 +29,15 @@ function init_level()
   local platformDist = 150
   -- create "floor" platform
   platforms[1] = StaticPlatform(
-                    -55,
+                    -56,
                     GAME_HEIGHT,
                     8)
 
   -- create other platforms
   for i = 2,5+(blob.levelNum*3) do
-    local xpos = irnd(8)*16
+    local positions = {10, 56, 102}
+    local xpos = positions[irnd(3)+1]
+    --local xpos = irnd(8)*16
     --local xpos = 55
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
     -- randomise types (based on those unlocked)    
@@ -64,7 +66,7 @@ function init_blob()
     hitbox_w = 32,
     hitbox_h = 32,
     jumpCounter = 0,
-    jumpFreq = 100,
+    jumpFreq = 50, --100
   }
 end
 
