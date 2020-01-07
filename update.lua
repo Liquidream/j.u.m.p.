@@ -51,7 +51,9 @@ function update_blob(dt)
     end
     -- jump?
     -- still something to jump for
-    blob.jumpCounter = blob.jumpCounter + 1
+    if morePlatforms or blob.jumpCounter < blob.jumpFreq-10 then
+      blob.jumpCounter = blob.jumpCounter + 1
+    end
     if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
       blob.vx = jumpAmountX
