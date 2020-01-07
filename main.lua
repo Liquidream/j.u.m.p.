@@ -28,7 +28,7 @@ if CASTLE_PREFETCH then
     "draw.lua",
     "update.lua",
     "assets/spritesheet.png",
-    "assets/Awesome.ttf",
+   -- "assets/Awesome.ttf",
     "objects/classic.lua",
     "objects/platforms.lua",
   })

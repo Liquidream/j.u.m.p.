@@ -70,7 +70,7 @@ end
 function draw_background()
   --cls(0) --29
   camera(0,0)
-  for y=-1,14 do
+  for y=-2,14 do
     for x=-1,5 do
       spr(31,x*32-8,y*32 -(cam.y/2)%32)
     end
@@ -96,7 +96,7 @@ function draw_ui()
     spr(30,i*22,-4)
   end
 
-  print( string.format("%03d",blob.score) ,GAME_WIDTH-46,-2, 47)
+  pprint( string.format("%03d",blob.score) ,GAME_WIDTH-48,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if DEBUG_MODE then
