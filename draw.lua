@@ -119,9 +119,14 @@ function draw_blob(x,y)
     else
       spr = 0
     end
-  else
+  else    
     -- jumping
-    spr=2
+    --log("blob.vy:"..blob.vy)
+    if blob.vy < -25 then
+      spr=2   -- squished
+    else
+      spr=0   -- normal
+    end
   end 
 
   -- draw green blob

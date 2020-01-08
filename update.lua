@@ -84,7 +84,7 @@ function update_blob(dt)
     end
 
     -- check for level end
-    if not morePlatforms and blob.jumpCounter > blob.jumpFreq-10 then
+    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq-10 then
       -- end of level
       gameState = GAME_STATE.LVL_END      
       gameCounter = 0
