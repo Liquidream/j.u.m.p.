@@ -96,7 +96,7 @@ function draw_ui()
     spr(30,i*22,-4)
   end
 
-  pprint( string.format("%03d",blob.score) ,GAME_WIDTH-48,-2, 47)
+  pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if DEBUG_MODE then
