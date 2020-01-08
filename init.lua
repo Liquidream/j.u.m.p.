@@ -5,6 +5,7 @@ cam = {}
 platforms = {}
 lastPressedState = false
 maxTypeNumber = 2
+gameCounter = 0 -- used for countdown delays at end/start of levels
 
 function init_game()
   --init_data()
@@ -12,13 +13,11 @@ function init_game()
   init_assets()
   init_input()
   init_blob()
-  init_cam()
+  --init_cam()
   init_level()
 
   _initialized = true
   on_resize()
-
-  gameState = GAME_STATE.LVL_PLAY
 
   -- show the title
   --init_title()
@@ -48,6 +47,18 @@ function init_level()
       platforms[i] = SpikerPlatform(xpos, ypos, 1)
     end
   end
+  
+  -- reposition blob at start
+  reset_blob()
+
+  -- reset camera
+  init_cam()
+
+  -- ready to play
+  gameState = GAME_STATE.LVL_PLAY
+
+  --gameState = GAME_STATE.LVL_END
+  --gameCounter = 0
 end
 
 
@@ -78,11 +89,11 @@ end
 -- put blob in starting position
 -- (either start of game or after losing a life)
 function reset_blob()
-  blob.x = GAME_WIDTH/2     -- start in the middle
+  blob.x = GAME_WIDTH/2 - 16     -- start in the middle
   blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
-  blob.maxHeight = player.y
+  blob.maxHeight = GAME_HEIGHT-40
   blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
-  blob.onGround = true
+  blob.onGround = false
 end
 
 function init_cam()
@@ -92,7 +103,6 @@ function init_cam()
     y = 0,
     trap_y = GAME_HEIGHT/2
   }
-
 end
 
 function init_sugarcoat()

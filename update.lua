@@ -2,18 +2,42 @@
 function update_game(dt)
   _t=_t+1
 
-  -- player interactions
-  update_player_input()
+  if gameState == GAME_STATE.SPLASH then
+    -- todo: splash screen
 
-  -- jumping "blob"
-  update_blob(dt)
+  elseif gameState == GAME_STATE.TITLE then
+    -- todo: title screen    
 
-  -- collisions
-  update_collisions()
+  -- normal play (level intro/outro/game-over)    
+  elseif gameState == GAME_STATE.LVL_PLAY then
+    -- player interactions
+    update_player_input()
 
-  -- update camera
-  update_camera(dt)
+    -- jumping "blob"
+    update_blob(dt)
+
+    -- collisions
+    update_collisions()
+
+    -- update camera
+    update_camera(dt)
+
+  -- normal play (level intro/outro/game-over)    
+  elseif gameState == GAME_STATE.LVL_END then
+    
+    -- TODO: tally up score, then wait for user to start next round
+    gameCounter = gameCounter + 1
+    if gameCounter > 100 then
+      -- level up
+      blob.levelNum = blob.levelNum + 1
+      init_level()
+    end
+    -- update camera
+    update_camera(dt)
   
+  else
+    -- ??
+  end    
 end
 
 function update_player_input()
@@ -49,17 +73,21 @@ function update_blob(dt)
     if morePlatforms then      
       jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/1.4
     end
-    -- jump?
-    -- still something to jump for
-    if morePlatforms or blob.jumpCounter < blob.jumpFreq-10 then
-      blob.jumpCounter = blob.jumpCounter + 1
-    end
+    blob.jumpCounter = blob.jumpCounter + 1   
+    -- jump?   
     if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
       blob.vx = jumpAmountX
       blob.onGround = false
       blob.jumpCounter = 0
-      log("jump!")
+      --log("jump!")
+    end
+
+    -- check for level end
+    if not morePlatforms and blob.jumpCounter > blob.jumpFreq-10 then
+      -- end of level
+      gameState = GAME_STATE.LVL_END      
+      gameCounter = 0
     end
 
   else  
@@ -82,7 +110,7 @@ function update_collisions()
     -- if collide with platform while falling...
     if platform:hasLanded(blob) then
       -- then land!
-      log("landed!")
+      --log("landed!")
       blob.onGround = true
       blob.vy = 0
       blob.score = blob.score + 1

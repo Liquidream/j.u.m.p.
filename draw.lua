@@ -4,26 +4,23 @@
 -- (including the title screen)
 function draw_game()
   
-
-  
   if gameState == GAME_STATE.SPLASH then
-    -- todo: splash screen
+    
+    -- TODO: splash screen
 
   elseif gameState == GAME_STATE.TITLE then
-    -- todo: title screen
-    --draw_level()
 
-  elseif gameState == GAME_STATE.LVL_PLAY then
+    -- TODO: title screen
+    --draw_level()??
+
+  elseif gameState == GAME_STATE.LVL_PLAY 
+   or gameState == GAME_STATE.LVL_END then
     -- normal play (level intro/outro/game-over)    
     draw_level()
 
   else
     -- ??
   end
-
-
-  
-  
 end
 
 function draw_level()
@@ -99,13 +96,16 @@ function draw_ui()
   pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
   --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
+  if gameState == GAME_STATE.LVL_END then
+    pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
+    pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+  end
+
   if DEBUG_MODE then
     -- show game area
     rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
   end
-
-  
 end
 
 
