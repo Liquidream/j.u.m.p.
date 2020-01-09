@@ -55,3 +55,7 @@ function aabb(a,b)
     and a.y + a.hitbox_h > b.y
   )
 end
+
+function addTween(tween)
+  table.insert( tweens, tween )
+end

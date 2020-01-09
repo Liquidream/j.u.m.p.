@@ -23,13 +23,13 @@ function BasePlatformObject:update(dt)
 end
 function BasePlatformObject:draw()
   -- anything?
-  spr(self.spr, self.x, self.y, self.spr_w, spr_h)
+  spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
 end
 -- base state switcher (e.g. on "press")
 -- most platforms will override this
 function BasePlatformObject:setPressedState(is_pressed)
   self.currState = is_pressed
-  --log("setPressedState = "..tostring(is_pressed))
+  log("setPressedState = "..tostring(is_pressed))
 end
 -- base "landed" test
 -- most platforms will override this
@@ -41,6 +41,101 @@ function BasePlatformObject:hasLanded(blob)
       return true
   end 
   return false
+end
+
+-- ------------------------------------------------------------
+-- SLIDER platform type (closes/opens when activated)
+--
+SLIDER_MAX_OPEN_AMOUNT = 64
+do
+  SliderPlatform = BasePlatformObject:extend()
+
+  function SliderPlatform:new(x,y,spr_width)
+    -- QUESTION: ignore the x pos?
+    SliderPlatform.super.new(self, x, y)
+
+    self.type = 6
+      -- 1 = solid block
+      -- 2 = spikers
+      -- 3 = floaters
+      -- 4 = springers
+      -- 5 = blockers
+      -- 6 = sliders
+
+    --self.spr = (spr_width==1) and (8 + irnd(2)) or 32
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+
+    --self.openAmount = 0
+     self.openAmount = (self.currState==self.activeState) 
+                         and 0 or SLIDER_MAX_OPEN_AMOUNT   --0 to MAX
+
+    self.id = irnd(100000)
+  end
+
+  function SliderPlatform:updateMovement(dt)
+
+  end
+
+  function SliderPlatform:update(dt)
+    -- update base class/values
+    SliderPlatform.super.update(self, dt)
+
+    -- Update slider progress
+    self:updateMovement(dt)
+  end
+
+  function SliderPlatform:draw()
+    -- draw left "door"
+    x = (GAME_WIDTH/2) - 32 - self.openAmount
+    spr(11, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x - 32
+      spr(10, x, self.y, 1, self.spr_h)
+    end
+    -- draw right "door"
+    x = (GAME_WIDTH/2) + self.openAmount
+    spr(12, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x + 32
+      spr(13, x, self.y, 1, self.spr_h)
+    end
+    -- draw (base) platform?
+    --SliderPlatform.super.draw(self)
+  end
+
+  function SliderPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    SliderPlatform.super.setPressedState(self,is_pressed)
+
+    -- NOTE: Slider movement will happen in update
+    log(_t.."> adding tween for "..self.id)
+   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
+        'outCirc')
+    )
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SliderPlatform:hasLanded(blob)
+    -- check for landed
+    if aabb(blob, self) 
+      and blob.vy>0 
+      and self.currState == self.activeState then
+      return true
+    else
+      return false
+    end 
+    -- call base implementation
+    --return SliderPlatform.super.hasLanded(self,blob)
+  end
+
 end
 
 -- ------------------------------------------------------------
@@ -83,17 +178,13 @@ do
   end
 
   function SpikerPlatform:setPressedState(is_pressed)
-    -- log("setPressedState("..tostring(is_pressed)..")")
     -- call base implementation
     SpikerPlatform.super.setPressedState(self,is_pressed)
 
     -- check for spikes
-    -- log(" - blob.onGround = "..tostring(blob.onGround))
-    -- log(" - self.currState == self.activeState = "..tostring(self.currState == self.activeState))
     if blob.onGround
      and blob.onPlatform == self
      and self.currState == self.activeState then
-      -- log("  > loseLife()")
       blob:loseLife()
     end
   end

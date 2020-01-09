@@ -28,20 +28,21 @@ if CASTLE_PREFETCH then
     "draw.lua",
     "update.lua",
     "assets/spritesheet.png",
-   -- "assets/Awesome.ttf",
-    "objects/classic.lua",
+    "assets/gomarice_gogono_cocoa_mochi.ttf",
+    "lib/classic.lua",
     "objects/platforms.lua",
+    "lib/tween.lua",
   })
 end
 
 require("sugarcoat/sugarcoat")
 sugar.utility.using_package(sugar.S, true)
---tween = require 'lib/tween'
+tween = require 'lib/tween'
 require("common")
 require("init")
 require("update")
 require("draw")
-Object = require("objects/classic")
+Object = require("lib/classic")
 require("objects/platforms")
 --require("sprinklez")
 

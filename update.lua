@@ -2,6 +2,15 @@
 function update_game(dt)
   _t=_t+1
 
+  -- Update all tween animations
+  for key, tween in pairs(tweens) do
+    local complete = tween:update(dt)
+    -- purge completed tweens
+    if complete then
+      table.remove(tweens, key)
+    end
+  end
+
   if gameState == GAME_STATE.SPLASH then
     -- todo: splash screen
 
