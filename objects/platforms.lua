@@ -29,7 +29,7 @@ end
 -- most platforms will override this
 function BasePlatformObject:setPressedState(is_pressed)
   self.currState = is_pressed
-  log("setPressedState = "..tostring(is_pressed))
+  --log("setPressedState = "..tostring(is_pressed))
 end
 -- base "landed" test
 -- most platforms will override this
@@ -75,16 +75,26 @@ do
     self.id = irnd(100000)
   end
 
-  function SliderPlatform:updateMovement(dt)
-
-  end
 
   function SliderPlatform:update(dt)
     -- update base class/values
     SliderPlatform.super.update(self, dt)
 
-    -- Update slider progress
-    self:updateMovement(dt)
+    -- landed?
+    if 
+    --blob.y+32 >= self.y
+    blob.y+32 >= self.y-5 and blob.y+32<=self.y+50
+    and blob.vy>=0 
+    and self.currState == self.activeState 
+    then
+      -- landed
+      log("landed!!")
+      blob.onGround = true
+      blob.vy = 0
+      blob.y = self.y-32
+    else
+      blob.onGround = false
+    end
   end
 
   function SliderPlatform:draw()
@@ -110,9 +120,7 @@ do
     -- call base implementation
     SliderPlatform.super.setPressedState(self,is_pressed)
 
-    -- NOTE: Slider movement will happen in update
-    log(_t.."> adding tween for "..self.id)
-   
+    -- NOTE: Slider movement will happen in update   
     addTween(
       tween.new(
         0.3, self, 
@@ -125,15 +133,17 @@ do
   -- to also check for spikes
   function SliderPlatform:hasLanded(blob)
     -- check for landed
-    if aabb(blob, self) 
-      and blob.vy>0 
-      and self.currState == self.activeState then
-      return true
-    else
-      return false
-    end 
+    -- if aabb(blob, self) 
+    --   and blob.vy>0 
+    --   and self.currState == self.activeState then
+    --   return true
+    -- else
+    --   return false
+    -- end 
     -- call base implementation
     --return SliderPlatform.super.hasLanded(self,blob)
+    
+    return false -- landing handled in update!
   end
 
 end

@@ -25,6 +25,9 @@ function update_game(dt)
     -- jumping "blob"
     update_blob(dt)
 
+    -- platforms
+    update_platforms(dt)
+
     -- collisions
     update_collisions()
 
@@ -47,6 +50,13 @@ function update_game(dt)
   else
     -- ??
   end    
+end
+
+function update_platforms(dt)
+  for i = 1,#platforms do
+    local platform = platforms[i]
+    platform:update(dt)
+  end
 end
 
 function update_player_input()
