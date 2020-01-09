@@ -36,9 +36,8 @@ function init_level()
   for i = 2,5+(blob.levelNum*3) do
     local positions = {10, 56, 102}
     local xpos = positions[irnd(3)+1]
-    --local xpos = irnd(8)*16
-    --local xpos = 55
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
+
     -- randomise types (based on those unlocked)    
     local pType = irnd(maxTypeNumber)+1
     if pType == PLATFORM_TYPE.STATIC then
@@ -61,22 +60,15 @@ function init_level()
   --gameCounter = 0
 end
 
-
+-- create & initialise blob obj 
+-- (will be positioned later)
 function init_blob()
   blob = {
-    x = GAME_WIDTH/2 - 16,     -- start in the middle
-    y = GAME_HEIGHT-40,   -- start near the bottom (on starting platform)
-    maxHeight = GAME_HEIGHT-40,
     lives = 3,
     score = 0,
-    vy = 0,     -- y velocity
-    vx = 0,     -- x velocity
-    state = 0,  -- 0=start, 1=jumping, 2=flying, 3=landing?
-    onGround = false,
     levelNum = 1,
     hitbox_w = 32,
     hitbox_h = 32,
-    jumpCounter = 0,
     jumpFreq = 50, --100
     loseLife = function(self)
       log("OUCH!!!!")
@@ -86,14 +78,17 @@ function init_blob()
   }
 end
 
--- put blob in starting position
+-- reset blob back to starting position
 -- (either start of game or after losing a life)
 function reset_blob()
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
   blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
   blob.maxHeight = GAME_HEIGHT-40
+  blob.vy = 0     -- y velocity
+  blob.vx = 0     -- x velocity
   blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
   blob.onGround = false
+  blob.jumpCounter = 0
 end
 
 function init_cam()
