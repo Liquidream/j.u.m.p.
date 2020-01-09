@@ -115,6 +115,7 @@ function update_collisions()
       blob.vy = 0
       blob.score = blob.score + 1
       blob.onPlatformNum = i
+      blob.onPlatform = platform
       blob.x = platform.x + (platform.spr_w*32/2) - 16
       blob.y = platform.y - 32
     end

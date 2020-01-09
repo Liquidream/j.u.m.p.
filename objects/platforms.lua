@@ -83,8 +83,19 @@ do
   end
 
   function SpikerPlatform:setPressedState(is_pressed)
+    -- log("setPressedState("..tostring(is_pressed)..")")
     -- call base implementation
     SpikerPlatform.super.setPressedState(self,is_pressed)
+
+    -- check for spikes
+    -- log(" - blob.onGround = "..tostring(blob.onGround))
+    -- log(" - self.currState == self.activeState = "..tostring(self.currState == self.activeState))
+    if blob.onGround
+     and blob.onPlatform == self
+     and self.currState == self.activeState then
+      -- log("  > loseLife()")
+      blob:loseLife()
+    end
   end
 
   -- override "landed" test
