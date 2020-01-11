@@ -114,9 +114,19 @@ function update_blob(dt)
     blob.vy = blob.vy + gravity *dt
     blob.y = blob.y + blob.vy *dt
     blob.x = blob.x + blob.vx *dt
-    -- note only when height increases
-    if blob.y < blob.maxHeight then
+    -- note only when height increases (and going UP)
+    if blob.y < blob.maxHeight 
+     and blob.vy < 0 then
       blob.maxHeight = blob.y
+    end
+
+    -- check for off screen
+    if blob.y > cam.y + GAME_HEIGHT + cam.trap_y/2
+     and blob.maxHeight < blob.y 
+     then 
+      --blob:loseLife()
+      -- allow camera to follow again
+      blob.maxHeight = blob.y-- + GAME_HEIGHT/2
     end
   end  
 
