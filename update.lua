@@ -132,9 +132,12 @@ function update_collisions()
       --log("landed!")
       blob.onGround = true
       blob.vy = 0
-      blob.score = blob.score + 1
-      blob.onPlatformNum = i
-      blob.onPlatform = platform
+      if blob.onPlatformNum ~= i
+       and blob.onPlatform ~= platform then
+        blob.score = blob.score + 1
+        blob.onPlatformNum = i
+        blob.onPlatform = platform
+       end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
       blob.y = platform.y - 32
     end

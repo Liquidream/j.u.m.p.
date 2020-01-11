@@ -76,19 +76,20 @@ do
   end
 
 
+
   function SliderPlatform:update(dt)
     -- update base class/values
     SliderPlatform.super.update(self, dt)
 
     -- landed?
     if 
-    --blob.y+32 >= self.y
-    blob.y+32 >= self.y-5 and blob.y+32<=self.y+50
-    and blob.vy>=0 
-    and self.currState == self.activeState 
+    self:hasLanded(blob)
+    -- blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
+    -- and blob.vy>=0 
+    -- and self.currState == self.activeState 
     then
       -- landed
-      log("landed!!")
+      --log("landed!!")
       blob.onGround = true
       blob.vy = 0
       blob.y = self.y-32
@@ -133,6 +134,23 @@ do
   -- to also check for spikes
   function SliderPlatform:hasLanded(blob)
     -- check for landed
+    -- landed?
+    if 
+    --blob.y+32 >= self.y
+    blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
+    and blob.vy>=0 
+    and self.currState == self.activeState 
+    then
+      -- landed
+      return true
+      -- log("landed!!")
+      -- blob.onGround = true
+      -- blob.vy = 0
+      -- blob.y = self.y-32
+    --else
+      --blob.onGround = false
+    end
+
     -- if aabb(blob, self) 
     --   and blob.vy>0 
     --   and self.currState == self.activeState then
