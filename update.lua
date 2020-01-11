@@ -86,6 +86,7 @@ function update_blob(dt)
   -- jumpAmountY = jumpAmountY * speedFactor
   -- gravity = gravity * speedFactor
 
+  
   if blob.onGround then
     local jumpAmountX = 0
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
@@ -110,7 +111,7 @@ function update_blob(dt)
     end
 
   else  
-    -- jumping/falling
+    -- jumping/fallings
     blob.vy = blob.vy + gravity *dt
     blob.y = blob.y + blob.vy *dt
     blob.x = blob.x + blob.vx *dt
@@ -121,7 +122,7 @@ function update_blob(dt)
     end
 
     -- check for off screen
-    if blob.y > cam.y + GAME_HEIGHT + cam.trap_y/2
+    if blob.y > blob.maxHeight +50
      and blob.maxHeight < blob.y 
      then 
       --blob:loseLife()
@@ -129,7 +130,6 @@ function update_blob(dt)
       blob.maxHeight = blob.y-- + GAME_HEIGHT/2
     end
   end  
-
 end
 
 function update_collisions()
