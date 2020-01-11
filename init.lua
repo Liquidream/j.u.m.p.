@@ -4,8 +4,9 @@ blob = {}
 cam = {}
 platforms = {}
 lastPressedState = false
-maxTypeNumber = 2
+maxTypeNumber = 3
 gameCounter = 0 -- used for countdown delays at end/start of levels
+tweens = {}
 
 function init_game()
   --init_data()
@@ -38,13 +39,21 @@ function init_level()
     local xpos = positions[irnd(3)+1]
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
 
+    --local pType = PLATFORM_TYPE.SLIDER
+    
     -- randomise types (based on those unlocked)    
     local pType = irnd(maxTypeNumber)+1
+    
     if pType == PLATFORM_TYPE.STATIC then
       platforms[i] = StaticPlatform(xpos, ypos, 1)
+    
     elseif pType == PLATFORM_TYPE.SPIKER then
       platforms[i] = SpikerPlatform(xpos, ypos, 1)
+
+    elseif pType == PLATFORM_TYPE.SLIDER then
+      platforms[i] = SliderPlatform(56, ypos, 1)
     end
+
   end
   
   -- reposition blob at start

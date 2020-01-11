@@ -2,6 +2,15 @@
 function update_game(dt)
   _t=_t+1
 
+  -- Update all tween animations
+  for key, tween in pairs(tweens) do
+    local complete = tween:update(dt)
+    -- purge completed tweens
+    if complete then
+      table.remove(tweens, key)
+    end
+  end
+
   if gameState == GAME_STATE.SPLASH then
     -- todo: splash screen
 
@@ -15,6 +24,9 @@ function update_game(dt)
 
     -- jumping "blob"
     update_blob(dt)
+
+    -- platforms
+    update_platforms(dt)
 
     -- collisions
     update_collisions()
@@ -38,6 +50,13 @@ function update_game(dt)
   else
     -- ??
   end    
+end
+
+function update_platforms(dt)
+  for i = 1,#platforms do
+    local platform = platforms[i]
+    platform:update(dt)
+  end
 end
 
 function update_player_input()
@@ -67,6 +86,7 @@ function update_blob(dt)
   -- jumpAmountY = jumpAmountY * speedFactor
   -- gravity = gravity * speedFactor
 
+  
   if blob.onGround then
     local jumpAmountX = 0
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
@@ -91,16 +111,25 @@ function update_blob(dt)
     end
 
   else  
-    -- jumping/falling
+    -- jumping/fallings
     blob.vy = blob.vy + gravity *dt
     blob.y = blob.y + blob.vy *dt
     blob.x = blob.x + blob.vx *dt
-    -- note only when height increases
-    if blob.y < blob.maxHeight then
+    -- note only when height increases (and going UP)
+    if blob.y < blob.maxHeight 
+     and blob.vy < 0 then
       blob.maxHeight = blob.y
     end
-  end  
 
+    -- check for off screen
+    if blob.y > blob.maxHeight +50
+     and blob.maxHeight < blob.y 
+     then 
+      --blob:loseLife()
+      -- allow camera to follow again
+      blob.maxHeight = blob.y-- + GAME_HEIGHT/2
+    end
+  end  
 end
 
 function update_collisions()
@@ -113,9 +142,12 @@ function update_collisions()
       --log("landed!")
       blob.onGround = true
       blob.vy = 0
-      blob.score = blob.score + 1
-      blob.onPlatformNum = i
-      blob.onPlatform = platform
+      if blob.onPlatformNum ~= i
+       and blob.onPlatform ~= platform then
+        blob.score = blob.score + 1
+        blob.onPlatformNum = i
+        blob.onPlatform = platform
+       end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
       blob.y = platform.y - 32
     end
