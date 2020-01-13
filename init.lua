@@ -91,7 +91,8 @@ end
 -- (either start of game or after losing a life)
 function reset_blob()
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
-  blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
+  blob.y = GAME_HEIGHT-100   -- start near the bottom (on starting platform)
+  -- blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
   blob.maxHeight = GAME_HEIGHT-40
   blob.vy = 0     -- y velocity
   blob.vx = 0     -- x velocity
