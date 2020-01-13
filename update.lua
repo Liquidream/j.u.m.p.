@@ -3,7 +3,7 @@ function update_game(dt)
   _t=_t+1
 
   -- temp fix for "falling" bug?
-  if _t<10 then 
+  if _t<5 then 
     return
   end
 
