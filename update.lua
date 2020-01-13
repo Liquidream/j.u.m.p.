@@ -2,6 +2,11 @@
 function update_game(dt)
   _t=_t+1
 
+  -- temp fix for "falling" bug?
+  if _t<10 then 
+    return
+  end
+
   -- Update all tween animations
   for key, tween in pairs(tweens) do
     local complete = tween:update(dt)
