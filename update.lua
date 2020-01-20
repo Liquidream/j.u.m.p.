@@ -146,9 +146,14 @@ function update_collisions()
       -- then land!
       --log("landed!")
       blob.onGround = true
+      -- were we hurt?
+      if blob.vy > 500 then
+        blob:loseLife()
+      end
       blob.vy = 0
       if blob.onPlatformNum ~= i
-       and blob.onPlatform ~= platform then
+       and blob.onPlatform ~= platform
+       and blob.onPlatformNum then
         blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform

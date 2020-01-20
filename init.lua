@@ -57,7 +57,7 @@ function init_level()
   end
   
   -- reposition blob at start
-  reset_blob()
+  reset_blob(true)
 
   -- reset camera
   init_cam()
@@ -78,7 +78,7 @@ function init_blob()
     levelNum = 1,
     hitbox_w = 32,
     hitbox_h = 32,
-    jumpFreq = 50, --100
+    jumpFreq = 10, --50, --100
     loseLife = function(self)
       log("OUCH!!!!")
       self.lives = self.lives - 1
@@ -89,7 +89,7 @@ end
 
 -- reset blob back to starting position
 -- (either start of game or after losing a life)
-function reset_blob()
+function reset_blob(islevelInit)
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
   blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
   blob.maxHeight = GAME_HEIGHT-40
@@ -98,6 +98,12 @@ function reset_blob()
   blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
   blob.onGround = false
   blob.jumpCounter = 0
+  -- init start of level?
+  if islevelInit then
+    blob.score = 0
+    blob.onPlatformNum = 1
+    blob.onPlatform = nil
+  end
 end
 
 function init_cam()
