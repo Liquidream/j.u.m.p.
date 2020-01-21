@@ -4,43 +4,127 @@
 -- ------------------------------------------------------------
 -- Base platform properties, shared by all platforms, etc.
 --
-BasePlatformObject = Object:extend()
--- base constructor
-function BasePlatformObject:new(x,y)
-  -- initialising
-  self.x = x
-  self.y = y
-  -- randomise which is the "active" state (true/false)
-  self.activeState = irnd(2)==0 
-  -- default to false state (could be active or inactive)
-  self.currState = false
+do
+  BasePlatformObject = Object:extend()
+  -- base constructor
+  function BasePlatformObject:new(x,y)
+    -- initialising
+    self.x = x
+    self.y = y
+    -- randomise which is the "active" state (true/false)
+    self.activeState = irnd(2)==0 
+    -- default to false state (could be active or inactive)
+    self.currState = false
 
-  -- self.hitbox_w = 32
-  -- self.hitbox_h = 32
+    -- self.hitbox_w = 32
+    -- self.hitbox_h = 32
+  end
+  function BasePlatformObject:update(dt)
+    -- anything?
+  end
+  function BasePlatformObject:draw()
+    -- anything?
+    spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+  end
+  -- base state switcher (e.g. on "press")
+  -- most platforms will override this
+  function BasePlatformObject:setPressedState(is_pressed)
+    self.currState = is_pressed
+    --log("setPressedState = "..tostring(is_pressed))
+  end
+  -- base "landed" test
+  -- most platforms will override this
+  function BasePlatformObject:hasLanded(blob)
+    -- check AABB collisions of platform hitbox
+    if aabb(blob, self) 
+      and blob.vy>0 then
+        -- landed
+        return true
+    end 
+    return false
+  end
 end
-function BasePlatformObject:update(dt)
-  -- anything?
-end
-function BasePlatformObject:draw()
-  -- anything?
-  spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
-end
--- base state switcher (e.g. on "press")
--- most platforms will override this
-function BasePlatformObject:setPressedState(is_pressed)
-  self.currState = is_pressed
-  --log("setPressedState = "..tostring(is_pressed))
-end
--- base "landed" test
--- most platforms will override this
-function BasePlatformObject:hasLanded(blob)
-  -- check AABB collisions of platform hitbox
-  if aabb(blob, self) 
-     and blob.vy>0 then
-      -- landed
-      return true
-  end 
-  return false
+
+-- ------------------------------------------------------------
+-- BLOCKER platform type (breaks on interation)
+--
+do
+  BlockerPlatform = BasePlatformObject:extend()
+
+  function BlockerPlatform:new(x,y,spr_width)
+    BlockerPlatform.super.new(self, x, y)
+
+    self.type = PLATFORM_TYPE.BLOCKER
+      -- 1 = solid block
+      -- 2 = spikers
+      -- 3 = blockers
+      -- 4 = springers
+      -- 5 = floaters
+
+    self.spr = (spr_width==1) and (8 + irnd(2)) or 32
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+
+    self.activeState = true -- default to active "blocking"
+    self.hitsLeft = 2       -- number of hits left to break block
+    -- self:Reset()
+  end
+
+  function BlockerPlatform:update(dt)
+    -- update base class/values
+    BlockerPlatform.super.update(self, dt)
+
+    -- update local stuff
+  end
+
+  function BlockerPlatform:draw()
+    if self.activeState then 
+      --if self.hitsLeft > 1 then pal(42,54) end
+      if self.hitsLeft > 1 then pal(40,54) end
+      -- draw blocker    
+      spr(18, self.x - 6*32+16, self.y, 6, spr_h)
+      spr(18, self.x + 16, self.y, 6, spr_h, false, false)
+      pal()
+    end
+
+    -- draw (base) platform
+    --BlockerPlatform.super.draw(self)
+  end
+
+  function BlockerPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    BlockerPlatform.super.setPressedState(self,is_pressed)    
+    
+    -- smash block (only if visible)?    
+    if is_pressed
+     and self.y > cam.y 
+     and self.hitsLeft > 0 then
+      log("smash "..self.y)
+      -- register a hit
+      self.hitsLeft = self.hitsLeft - 1
+      -- have we destroyed it?
+      if self.hitsLeft <= 0 then
+        -- destroy blocker        
+        -- TODO: particles here?
+        self.activeState = false
+      end
+     end
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function BlockerPlatform:hasLanded(blob)
+    -- check for spikes
+    if aabb(blob, self) and blob.vy>0 
+     and self.currState == self.activeState then
+      blob:loseLife()
+    end 
+    -- call base implementation
+    return BlockerPlatform.super.hasLanded(self,blob)
+  end
+
 end
 
 -- ------------------------------------------------------------
@@ -171,7 +255,7 @@ do
 end
 
 -- ------------------------------------------------------------
--- SPIKER platform type (no interaction)
+-- SPIKER platform type (toggles on activation)
 --
 do
   SpikerPlatform = BasePlatformObject:extend()
