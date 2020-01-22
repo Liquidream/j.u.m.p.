@@ -76,7 +76,16 @@ do
     -- update base class/values
     BlockerPlatform.super.update(self, dt)
 
-    -- update local stuff
+    -- check for collisions (e.g. jumping "into" it)
+    if aabb(blob, self) 
+      --and blob.vy<0 
+      and self.activeState 
+     then
+      -- block!
+      blob:loseLife()
+      blob.vy = 0
+      blob.onGround = false
+    end
   end
 
   function BlockerPlatform:draw()
@@ -114,15 +123,11 @@ do
   end
 
   -- override "landed" test
-  -- to also check for spikes
+  -- to also check jumping "into"
   function BlockerPlatform:hasLanded(blob)
-    -- check for spikes
-    if aabb(blob, self) and blob.vy>0 
-     and self.currState == self.activeState then
-      blob:loseLife()
-    end 
+    -- can't land on this type
     -- call base implementation
-    return BlockerPlatform.super.hasLanded(self,blob)
+    --return BlockerPlatform.super.hasLanded(self,blob)
   end
 
 end
