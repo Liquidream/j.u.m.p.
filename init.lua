@@ -34,6 +34,7 @@ function init_level()
                     8)
 
   -- create other platforms
+  --local platformCount = 3
   local platformCount = 5+(blob.levelNum*3)
   for i = 2,platformCount do
     local positions = {10, 56, 102}

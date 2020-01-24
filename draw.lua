@@ -113,8 +113,8 @@ function draw_blob(x,y)
   local spr = 0
   -- update anims
   if blob.onGround then
-    if blob.jumpCounter < 10 
-     or blob.jumpCounter > blob.jumpFreq-10 then 
+    if blob.jumpCounter < 9 
+     or blob.jumpCounter > blob.jumpFreq then 
       spr = 1
     else
       spr = 0

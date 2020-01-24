@@ -113,7 +113,7 @@ function update_blob(dt)
       jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
       -- jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/1.4
     end
-    blob.jumpCounter = blob.jumpCounter + jumpPlatformCount  
+    blob.jumpCounter = blob.jumpCounter + 1-- + jumpPlatformCount  
     -- jump?   
     if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
@@ -123,8 +123,9 @@ function update_blob(dt)
       --log("jump!")
     end
 
+    log("blob.jumpCounter="..blob.jumpCounter)
     -- check for level end
-    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq-10 then
+    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
       -- end of level
       gameState = GAME_STATE.LVL_END      
       gameCounter = 0
@@ -161,6 +162,7 @@ function update_collisions()
       -- then land!
       --log("landed!")
       blob.onGround = true
+      --blob.jumpCounter = 0
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()
