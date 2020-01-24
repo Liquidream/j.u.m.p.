@@ -56,7 +56,7 @@ function init_level()
     
     elseif pType == PLATFORM_TYPE.BLOCKER 
      and i < platformCount then
-      platforms[i] = BlockerPlatform(56, ypos, 1)
+      platforms[i] = BlockerPlatform(-56, ypos, 8)
       log("active state = "..tostring(platforms[i].activeState))
     
     else

@@ -85,17 +85,17 @@ end
 
 function update_blob(dt)
   local gravity = 500
-  local jumpAmounts = {
+  local jumpYAmounts = {
     -450, -- one platform
-    -560, -- two platforms
+    -600, -- two platforms
     -670  -- three platforms?
   }
-  --local jumpAmountY = -560  -- two platforms
-  --local jumpAmountY = -450  -- one platform
+  local jumpXAmountAdjust = {
+    1.4, -- one platform
+    1.6, -- two platforms
+    1.4  -- three platforms?
+  }
   local speedFactor = 2
-  -- apply speed
-  -- jumpAmountY = jumpAmountY * speedFactor
-  -- gravity = gravity * speedFactor
   
   if blob.onGround then
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
@@ -105,11 +105,13 @@ function update_blob(dt)
     if platforms[min(blob.onPlatformNum+1,#platforms)].type == PLATFORM_TYPE.BLOCKER then
       jumpPlatformCount = 2
     end
-    local jumpAmountY = jumpAmounts[jumpPlatformCount]
+    local jumpAmountY = jumpYAmounts[jumpPlatformCount]
     local jumpAmountX = 0
 
-    if morePlatforms then      
-      jumpAmountX = (platforms[blob.onPlatformNum+jumpPlatformCount].x - blob.x)/1.4
+    if morePlatforms then
+      local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
+      jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
+      -- jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/1.4
     end
     blob.jumpCounter = blob.jumpCounter + jumpPlatformCount  
     -- jump?   

@@ -84,6 +84,7 @@ do
       -- block!
       blob:loseLife()
       blob.vy = 0
+      blob.y = self.y + 33
       blob.onGround = false
     end
   end
@@ -93,8 +94,11 @@ do
       --if self.hitsLeft > 1 then pal(42,54) end
       if self.hitsLeft > 1 then pal(40,54) end
       -- draw blocker    
-      spr(18, self.x - 6*32+16, self.y, 6, spr_h)
-      spr(18, self.x + 16, self.y, 6, spr_h, false, false)
+      spr(18, self.x -64, self.y, 6, spr_h)
+      --spr(18, self.x - 6*32+16, self.y, 6, spr_h)
+
+      spr(18, self.x + 128, self.y, 6, spr_h, false, false)
+      --spr(18, self.x + 16, self.y, 6, spr_h, false, false)
       pal()
     end
 
