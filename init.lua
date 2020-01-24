@@ -42,8 +42,8 @@ function init_level()
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
 
     -- randomise types (based on those unlocked)    
-    local pType = irnd(maxTypeNumber)+1
-    --local pType = PLATFORM_TYPE.BLOCKER    
+    --local pType = irnd(maxTypeNumber)+1
+    local pType = PLATFORM_TYPE.BLOCKER    
     --local pType = PLATFORM_TYPE.STATIC    
     
     if pType == PLATFORM_TYPE.STATIC then

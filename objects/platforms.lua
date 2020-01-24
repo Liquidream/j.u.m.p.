@@ -78,7 +78,6 @@ do
 
     -- check for collisions (e.g. jumping "into" it)
     if aabb(blob, self) 
-      --and blob.vy<0 
       and self.activeState 
      then
       -- block!
@@ -90,20 +89,31 @@ do
   end
 
   function BlockerPlatform:draw()
-    if self.activeState then 
+    -- pal swap
+    for i=1,16 do
+      pal(i,54)
+    end
+    if self.activeState then      
       --if self.hitsLeft > 1 then pal(42,54) end
       if self.hitsLeft > 1 then pal(40,54) end
-      -- draw blocker    
+      -- draw blocker (left-half)
       spr(18, self.x -64, self.y, 6, spr_h)
-      --spr(18, self.x - 6*32+16, self.y, 6, spr_h)
-
+      -- draw blocker (right-half)
       spr(18, self.x + 128, self.y, 6, spr_h, false, false)
-      --spr(18, self.x + 16, self.y, 6, spr_h, false, false)
       pal()
     end
-
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
+  end
+
+  local blockerPieces = {}
+
+  function blockerExplode()
+    --TODO: Create separate piece objects & palt() to only show main seg
+  end
+
+  function drawBlockerPieces()
+    --TODO: Draw separate piece using palt() to only show main seg
   end
 
   function BlockerPlatform:setPressedState(is_pressed)
@@ -125,6 +135,7 @@ do
       end
      end
   end
+
 
   -- override "landed" test
   -- to also check jumping "into"
