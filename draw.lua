@@ -33,9 +33,11 @@ function draw_level()
 
   camera(cam.x, cam.y)
   
-  pal()
-  palt(0, false)
-  palt(35,true)
+  -- reset palette
+  resetPal(ak54, 35)
+  --pal()
+  -- palt(0, false)
+  -- palt(35,true)
 
   -- draw platforms
   for i = 1,#platforms do
@@ -105,6 +107,8 @@ function draw_ui()
     -- show game area
     rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
+
+    pprint('FPS: ' .. love.timer.getFPS(), 85, GAME_HEIGHT-36, 49)
   end
 end
 
@@ -113,8 +117,8 @@ function draw_blob(x,y)
   local spr = 0
   -- update anims
   if blob.onGround then
-    if blob.jumpCounter < 10 
-     or blob.jumpCounter > blob.jumpFreq-10 then 
+    if blob.jumpCounter < 9 
+     or blob.jumpCounter > blob.jumpFreq then 
       spr = 1
     else
       spr = 0

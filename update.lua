@@ -85,20 +85,34 @@ end
 
 function update_blob(dt)
   local gravity = 500
-  local jumpAmountY = -450
+  local jumpYAmounts = {
+    -450, -- one platform
+    -600, -- two platforms
+    -670  -- three platforms?
+  }
+  local jumpXAmountAdjust = {
+    1.4, -- one platform
+    1.6, -- two platforms
+    1.4  -- three platforms?
+  }
   local speedFactor = 2
-  -- apply speed
-  -- jumpAmountY = jumpAmountY * speedFactor
-  -- gravity = gravity * speedFactor
-
   
   if blob.onGround then
-    local jumpAmountX = 0
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
-    if morePlatforms then      
-      jumpAmountX = (platforms[blob.onPlatformNum+1].x - blob.x)/1.4
+    local jumpPlatformCount = 1
+    -- jump more for blocker platforms
+    -- TODO: need to ensure the last platform is not a "blocker"
+    if platforms[min(blob.onPlatformNum+1,#platforms)].type == PLATFORM_TYPE.BLOCKER then
+      jumpPlatformCount = 2
     end
-    blob.jumpCounter = blob.jumpCounter + 1   
+    local jumpAmountY = jumpYAmounts[jumpPlatformCount]
+    local jumpAmountX = 0
+
+    if morePlatforms then
+      local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
+      jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
+    end
+    blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
     if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
@@ -109,7 +123,7 @@ function update_blob(dt)
     end
 
     -- check for level end
-    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq-10 then
+    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
       -- end of level
       gameState = GAME_STATE.LVL_END      
       gameCounter = 0
@@ -146,6 +160,7 @@ function update_collisions()
       -- then land!
       --log("landed!")
       blob.onGround = true
+      --blob.jumpCounter = 0
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()

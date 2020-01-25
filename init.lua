@@ -4,7 +4,7 @@ blob = {}
 cam = {}
 platforms = {}
 lastPressedState = false
-maxTypeNumber = 3
+maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
 tweens = {}
 
@@ -34,15 +34,17 @@ function init_level()
                     8)
 
   -- create other platforms
-  for i = 2,5+(blob.levelNum*3) do
+  --local platformCount = 3
+  local platformCount = 5+(blob.levelNum*3)
+  for i = 2,platformCount do
     local positions = {10, 56, 102}
     local xpos = positions[irnd(3)+1]
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
 
-    --local pType = PLATFORM_TYPE.SLIDER
-    
     -- randomise types (based on those unlocked)    
     local pType = irnd(maxTypeNumber)+1
+    --local pType = PLATFORM_TYPE.BLOCKER    
+    --local pType = PLATFORM_TYPE.STATIC    
     
     if pType == PLATFORM_TYPE.STATIC then
       platforms[i] = StaticPlatform(xpos, ypos, 1)
@@ -52,6 +54,16 @@ function init_level()
 
     elseif pType == PLATFORM_TYPE.SLIDER then
       platforms[i] = SliderPlatform(56, ypos, 1)
+    
+    elseif pType == PLATFORM_TYPE.BLOCKER 
+     and i < platformCount
+     and platforms[i-1].type ~= PLATFORM_TYPE.BLOCKER then
+      platforms[i] = BlockerPlatform(-56, ypos, 8)
+      log("active state = "..tostring(platforms[i].activeState))
+    
+    else
+      -- default type
+      platforms[i] = StaticPlatform(xpos, ypos, 1)
     end
 
   end
