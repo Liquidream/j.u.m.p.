@@ -103,12 +103,8 @@ do
     end
     if self.activeState then      
       if self.hitsLeft > 1 then 
-        -- hide extra cracks
-        pal(40,54)
+        -- hide cracks
         pal(42,54)
-      else
-        -- show extra cracks
-        pal(40,42)
       end
       -- draw blocker (left-half)
       spr(18, self.x -64, self.y, 6, spr_h)
