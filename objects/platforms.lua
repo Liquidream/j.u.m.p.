@@ -83,7 +83,7 @@ do
       and self.activeState 
      then
       -- block!
-      blob:loseLife()
+      --blob:loseLife()
       blob.vy = 0
       blob.y = self.y + 33
       blob.onGround = false
@@ -102,7 +102,14 @@ do
       --pal(i,54)
     end
     if self.activeState then      
-      if self.hitsLeft > 1 then pal(40,54) end
+      if self.hitsLeft > 1 then 
+        -- hide extra cracks
+        pal(40,54)
+        pal(42,54)
+      else
+        -- show extra cracks
+        pal(40,42)
+      end
       -- draw blocker (left-half)
       spr(18, self.x -64, self.y, 6, spr_h)
       -- draw blocker (right-half)
