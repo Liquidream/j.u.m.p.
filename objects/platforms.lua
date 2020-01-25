@@ -69,7 +69,9 @@ do
 
     self.activeState = true -- default to active "blocking"
     self.hitsLeft = 2       -- number of hits left to break block
-    -- self:Reset()
+    
+    -- explosion
+    self.pieces = {}
   end
 
   function BlockerPlatform:update(dt)
@@ -86,34 +88,116 @@ do
       blob.y = self.y + 33
       blob.onGround = false
     end
+
+    -- update explosion?
+    if not self.activeState then
+      self:updatePieces(dt)
+    end
   end
 
   function BlockerPlatform:draw()
     -- pal swap
-    for i=1,16 do
-      pal(i,54)
+    for i=1,17 do
+      pal(i,self.flash and 47 or 54)
+      --pal(i,54)
     end
     if self.activeState then      
-      --if self.hitsLeft > 1 then pal(42,54) end
       if self.hitsLeft > 1 then pal(40,54) end
       -- draw blocker (left-half)
       spr(18, self.x -64, self.y, 6, spr_h)
       -- draw blocker (right-half)
       spr(18, self.x + 128, self.y, 6, spr_h, false, false)
-      pal()
+    else
+      -- draw exploding pieces
+      self:drawPieces()
     end
+    -- reset palette
+    resetPal(ak54, 35)    
+    self.flash = false
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
   end
 
-  local blockerPieces = {}
-
-  function blockerExplode()
-    --TODO: Create separate piece objects & palt() to only show main seg
+  function BlockerPlatform:createPiece(main_col,rox,roy)
+    -- create a single piece
+    local piece = {
+      x = self.x + rox,
+      y = self.y + roy,
+      a = 0,
+      dx = rnd(200)-100,
+      dy = -rnd(250),
+      da = rnd(2)-1,
+      col = main_col,
+      rox = (rox/192), -- rotation origin x-pos
+      roy = (roy/32),  -- rotation origin y-pos
+    }
+    return piece
   end
 
-  function drawBlockerPieces()
-    --TODO: Draw separate piece using palt() to only show main seg
+  function BlockerPlatform:explode()
+    -- Create separate piece objects & palt() to only show main seg
+    table.insert( self.pieces, self:createPiece(1, 9,15) )
+    table.insert( self.pieces, self:createPiece(2, 36,14) )
+    table.insert( self.pieces, self:createPiece(3, 68,7) )
+    table.insert( self.pieces, self:createPiece(5, 65,24) )
+    table.insert( self.pieces, self:createPiece(6, 100,13) )
+    table.insert( self.pieces, self:createPiece(7, 122,18) )
+    table.insert( self.pieces, self:createPiece(8, 142,21) )
+    table.insert( self.pieces, self:createPiece(9, 164,14) )
+    table.insert( self.pieces, self:createPiece(10,188,10) )
+    table.insert( self.pieces, self:createPiece(11,183,26) )
+    table.insert( self.pieces, self:createPiece(12,87,3) )
+    table.insert( self.pieces, self:createPiece(13,131,4) )
+    table.insert( self.pieces, self:createPiece(14,144,3) )
+    table.insert( self.pieces, self:createPiece(15,134,28) )
+    table.insert( self.pieces, self:createPiece(16,16,2) )
+    table.insert( self.pieces, self:createPiece(17, 90,24) )
+  end
+
+  function BlockerPlatform:updatePieces(dt)
+    local gravity = 400
+    -- Draw separate piece using palt() to only show main seg
+    for key, piece in pairs(self.pieces) do
+      piece.x = piece.x + piece.dx *dt
+      piece.dy = piece.dy + gravity *dt
+      piece.y = piece.y + piece.dy *dt  -- gravity
+      piece.a = piece.a + piece.da *dt  -- spin
+
+      -- remove pieces that fall past screen
+      if piece.y > cam.y+GAME_HEIGHT+100 then
+        table.remove(self.pieces, key)
+      end
+    end
+  end
+
+  function BlockerPlatform:drawPieces()
+    -- Draw separate piece using palt() to only show main seg
+    for key, piece in pairs(self.pieces) do      
+      -- set color trans to single segment      
+      for i=1,17 do
+        if i==piece.col then 
+          pal(i,54)
+        else
+          palt(i,true) 
+        end
+      end
+      palt(40,true) 
+      palt(42,true) 
+      palt(50,true) 
+
+      -- draw piece L+R (shadow)
+      pal(piece.col,40)
+      aspr(18, piece.x-63, piece.y+1, piece.a, 6,1, piece.rox,piece.roy)
+      aspr(18, piece.x+127, piece.y+1, piece.a, 6,1, piece.rox,piece.roy)
+      -- draw piece L+R (shadow)
+      pal(piece.col,self.flash and 47 or 54)
+      aspr(18, piece.x-64, piece.y, piece.a, 6,1, piece.rox,piece.roy)
+      aspr(18, piece.x+128, piece.y, piece.a, 6,1, piece.rox,piece.roy)
+
+      -- reset palette
+      resetPal(ak54, 35)
+     -- self.flash = false
+    end
   end
 
   function BlockerPlatform:setPressedState(is_pressed)
@@ -127,11 +211,20 @@ do
       log("smash "..self.y)
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
+      -- shake blocker
+      -- addTween(
+      --   tween.new(
+      --     0.3, self, 
+      --     {y = self.y}, 
+      --     'inOutBack')
+      -- )
+      self.flash = true
       -- have we destroyed it?
       if self.hitsLeft <= 0 then
         -- destroy blocker        
-        -- TODO: particles here?
         self.activeState = false
+        -- TODO: particles here?
+        self:explode()
       end
      end
   end

@@ -111,9 +111,8 @@ function update_blob(dt)
     if morePlatforms then
       local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
       jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-      -- jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/1.4
     end
-    blob.jumpCounter = blob.jumpCounter + 1-- + jumpPlatformCount  
+    blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
     if blob.jumpCounter == blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
@@ -123,7 +122,6 @@ function update_blob(dt)
       --log("jump!")
     end
 
-    log("blob.jumpCounter="..blob.jumpCounter)
     -- check for level end
     if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
       -- end of level

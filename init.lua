@@ -42,8 +42,8 @@ function init_level()
     local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
 
     -- randomise types (based on those unlocked)    
-    --local pType = irnd(maxTypeNumber)+1
-    local pType = PLATFORM_TYPE.BLOCKER    
+    local pType = irnd(maxTypeNumber)+1
+    --local pType = PLATFORM_TYPE.BLOCKER    
     --local pType = PLATFORM_TYPE.STATIC    
     
     if pType == PLATFORM_TYPE.STATIC then
@@ -56,7 +56,8 @@ function init_level()
       platforms[i] = SliderPlatform(56, ypos, 1)
     
     elseif pType == PLATFORM_TYPE.BLOCKER 
-     and i < platformCount then
+     and i < platformCount
+     and platforms[i-1].type ~= PLATFORM_TYPE.BLOCKER then
       platforms[i] = BlockerPlatform(-56, ypos, 8)
       log("active state = "..tostring(platforms[i].activeState))
     
