@@ -14,7 +14,9 @@ function draw_game()
     --draw_level()??
 
   elseif gameState == GAME_STATE.LVL_PLAY 
-   or gameState == GAME_STATE.LVL_END then
+      or gameState == GAME_STATE.LVL_END 
+      or gameState == GAME_STATE.GAME_OVER 
+   then
     -- normal play (level intro/outro/game-over)    
     draw_level()
 
@@ -101,6 +103,11 @@ function draw_ui()
   if gameState == GAME_STATE.LVL_END then
     pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
     pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+  end
+
+  if gameState == GAME_STATE.GAME_OVER then
+    pprint("GAME OVER", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
+    --pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
   end
 
   if DEBUG_MODE then

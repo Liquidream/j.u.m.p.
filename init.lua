@@ -9,16 +9,19 @@ gameCounter = 0 -- used for countdown delays at end/start of levels
 tweens = {}
 
 function init_game()
-  --init_data()
-  init_sugarcoat()  
-  init_assets()
-  init_input()
+  -- only perform core init once
+  if not _initialized then
+    init_sugarcoat()  
+    init_assets()
+    init_input()
+    on_resize()
+  end
+  _initialized = true
+
   init_blob()
   --init_cam()
   init_level()
 
-  _initialized = true
-  on_resize()
 
   -- show the title
   --init_title()
@@ -95,6 +98,11 @@ function init_blob()
       log("OUCH!!!!")
       self.lives = self.lives - 1
       cls(38) flip()
+      -- game over?
+      if self.lives <= 0 then
+        gameState = GAME_STATE.GAME_OVER      
+        gameCounter = 0
+      end
     end
   }
 end

@@ -51,6 +51,18 @@ function update_game(dt)
     end
     -- update camera
     update_camera(dt)
+
+  elseif gameState == GAME_STATE.GAME_OVER then
+    
+    -- TODO: tally up score, then wait for user to start next round
+    gameCounter = gameCounter + 1
+    if gameCounter > 100 then
+      -- TODO: go back to title?
+      init_game()
+    end
+    -- update camera
+    update_camera(dt)
+  
   
   else
     -- ??
@@ -80,7 +92,7 @@ function update_player_input()
   end
 
   -- remember...
-  lastPressedState = currPressedState
+  lastPressedState = currPressedState  
 end
 
 function update_blob(dt)
