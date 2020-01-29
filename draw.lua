@@ -36,7 +36,8 @@ function draw_level()
   camera(cam.x, cam.y)
   
   -- reset palette
-  resetPal(ak54, 35)
+  --resetPal(ak54, 35)
+
   --pal()
   -- palt(0, false)
   -- palt(35,true)
@@ -106,8 +107,7 @@ function draw_ui()
   end
 
   if gameState == GAME_STATE.GAME_OVER then
-    pprint("GAME OVER", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
-    --pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+    pprint("GAME OVER", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-56, 47)
   end
 
   if DEBUG_MODE then

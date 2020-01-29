@@ -115,7 +115,9 @@ do
       self:drawPieces()
     end
     -- reset palette
-    resetPal(ak54, 35)    
+    pal()
+    palt(35,true)
+    --resetPal(ak54, 35)    
     self.flash = false
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
@@ -198,8 +200,10 @@ do
       aspr(18, piece.x+128, piece.y, piece.a, 6,1, piece.rox,piece.roy)
 
       -- reset palette
-      resetPal(ak54, 35)
-     -- self.flash = false
+      pal()
+      palt()
+      palt(35,true)
+      --resetPal(ak54, 35)
     end
   end
 
