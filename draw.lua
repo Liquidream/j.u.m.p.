@@ -36,6 +36,9 @@ function draw_level()
   camera(cam.x, cam.y)
   
   -- reset palette
+  pal()
+  palt()
+  palt(35,true)
   --resetPal(ak54, 35)
 
   --pal()
@@ -142,14 +145,5 @@ function draw_blob(x,y)
 
   -- draw green blob
   aspr(spr, x,y, 0, 1,1, 0, 0, 1,1)
-
-  -- if surface_exists("photo") then
-  --   -- draw bg frame in player's colour
-  --   rectfill(x-1, y-1, x+dw, y+dh, 4)
-  --   -- draw the actual photo
-  --   spritesheet("photo")
-  --   local w,h = surface_size("photo")
-  --   sspr(0, 0, w, h, x, y, dw, dh)
-  -- end
 
 end
