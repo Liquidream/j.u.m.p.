@@ -24,11 +24,14 @@ function update_game(dt)
 
   -- normal play (level intro/outro/game-over)    
   elseif gameState == GAME_STATE.LVL_PLAY then
+    -- speed factor
+    speed_dt = dt * blob.speedFactor
+
     -- player interactions
     update_player_input()
 
     -- jumping "blob"
-    update_blob(dt)
+    update_blob(speed_dt)
 
     -- platforms
     update_platforms(dt)
@@ -37,7 +40,7 @@ function update_game(dt)
     update_collisions()
 
     -- update camera
-    update_camera(dt)
+    update_camera(speed_dt)
 
   -- normal play (level intro/outro/game-over)    
   elseif gameState == GAME_STATE.LVL_END then
@@ -47,6 +50,10 @@ function update_game(dt)
     if gameCounter > 100 then
       -- level up
       blob.levelNum = blob.levelNum + 1
+      -- speed up?
+      if blob.levelNum > 3 then
+        blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
+      end      
       init_level()
     end
     -- update camera

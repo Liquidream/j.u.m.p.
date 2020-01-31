@@ -62,7 +62,6 @@ function init_level()
      and i < platformCount
      and platforms[i-1].type ~= PLATFORM_TYPE.BLOCKER then
       platforms[i] = BlockerPlatform(-56, ypos, 8)
-      log("active state = "..tostring(platforms[i].activeState))
     
     else
       -- default type
@@ -73,6 +72,7 @@ function init_level()
   
   -- reposition blob at start
   reset_blob(true)
+  log("blob.speedFactor = "..blob.speedFactor)
 
   -- reset camera
   init_cam()
@@ -91,9 +91,10 @@ function init_blob()
     lives = 3,
     score = 0,
     levelNum = 1,
+    speedFactor = 1, -- will increase (up to 2.5?) as game progresses
     hitbox_w = 32,
     hitbox_h = 32,
-    jumpFreq = 10, --50, --100
+    jumpFreq = 10,
     loseLife = function(self)
       log("OUCH!!!!")
       self.lives = self.lives - 1

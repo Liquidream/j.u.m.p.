@@ -64,6 +64,15 @@ function love.draw()
   draw_game()
 end
 
+function love.keypressed( key, scancode, isrepeat )
+  -- Debug switch
+  if key=="d" and love.keyboard.isDown('lctrl') then
+      DEBUG_MODE = not DEBUG_MODE
+      log("Debug mode: "..(DEBUG_MODE and "Enabled" or "Disabled"))
+      return
+  end
+end
+
 function on_resize()
   local winw, winh = window_size()  
   -- auto-set game rotation (landscape/portait)
