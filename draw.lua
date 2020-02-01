@@ -39,11 +39,6 @@ function draw_level()
   pal()
   palt()
   palt(35,true)
-  --resetPal(ak54, 35)
-
-  --pal()
-  -- palt(0, false)
-  -- palt(35,true)
 
   -- draw platforms
   for i = 1,#platforms do
@@ -76,7 +71,7 @@ function draw_background()
   --cls(0) --29
   camera(0,0)
   for y=-2,14 do
-    for x=-1,5 do
+    for x=-1,5 do      
       spr(31,x*32-8,y*32 -(cam.y/2)%32)
     end
   end
