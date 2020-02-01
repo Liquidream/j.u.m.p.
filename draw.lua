@@ -33,6 +33,8 @@ function draw_level()
 
   draw_background()
 
+  draw_far()
+
   camera(cam.x, cam.y)
   
   -- reset palette
@@ -45,14 +47,19 @@ function draw_level()
     -- draw platform (depending on type)
     local platform = platforms[i]
     platform:draw()
-    -- spr(platform.spr, platform.x, platform.y, platform.spr_w, spr_h)
   end
 
   --circfill(60,100,12.5,3)
 
   draw_blob(blob.x,blob.y, 25,25)
 
+  draw_mid()
+
+  draw_near()
+
+
   if DEBUG_MODE then
+    camera(cam.x, cam.y)
     -- draw max height line (camera focus)
     line(0, blob.maxHeight, 50, blob.maxHeight, 39)
     -- draw collision hitboxes
@@ -68,13 +75,48 @@ function draw_level()
 end
 
 function draw_background()
-  --cls(0) --29
   camera(0,0)
+  local d=1.5
   for y=-2,14 do
     for x=-1,5 do      
-      spr(31,x*32-8,y*32 -(cam.y/2)%32)
+      spr(31,x*32-8,y*32 -(cam.y/d)%32)
     end
   end
+end
+
+function draw_far()
+  camera(0,0)
+  local d=1.25
+  for y=-2,14 do    
+    spr(4,-80,y*32 -(cam.y/d)%32, 2,1)
+    spr(4,GAME_WIDTH+16,y*32 -(cam.y/d)%32, 2,1, true)
+  end
+end
+
+function draw_mid()
+  camera(0,0)
+  local d=1
+  for y=-2,14 do    
+    spr(6,-92,y*64 -(cam.y/d)%64, 2,2)
+    spr(6,GAME_WIDTH+28,y*64 -(cam.y/d)%64, 2,2, true)
+  end
+end
+
+function draw_near()
+  camera(0,0)
+  local d=0.75
+  for y=-2,14 do    
+    spr(40,-140,y*96 -(cam.y/d)%96, 3,3)
+    spr(40,GAME_WIDTH+44,y*96 -(cam.y/d)%96, 3,3, true)
+  end
+
+  -- two rects to complete the edges
+  rectfill(-SCREEN_X,-SCREEN_Y, -140, scrh, 36)
+  --log("scrw="..scrw)
+  local r = SCREEN_X + GAME_WIDTH -1
+  --local r = 403 --664
+  -- log("scrh="..scrh)
+  rectfill(r,-SCREEN_Y, r-SCREEN_X+140, scrh, 36)
 end
 
 function draw_hitbox(obj, col)

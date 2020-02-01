@@ -93,7 +93,7 @@ end
 local _camera = camera
 SCREEN_X, SCREEN_Y = 0, 0
 function camera(x,y)
- local scrw, scrh = screen_size()
+ scrw, scrh = screen_size()
  
  if ON_MOBILE and scrh > scrw then
   SCREEN_X = scrw/2 - GAME_WIDTH/2
@@ -104,5 +104,6 @@ function camera(x,y)
  end
  
  _camera(-SCREEN_X+x, -SCREEN_Y+y)
+
 end
 rcamera = _camera
