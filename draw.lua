@@ -111,11 +111,8 @@ function draw_near()
   end
 
   -- two rects to complete the edges
-  rectfill(-SCREEN_X,-SCREEN_Y, -140, scrh, 36)
-  --log("scrw="..scrw)
-  local r = SCREEN_X + GAME_WIDTH -1
-  --local r = 403 --664
-  -- log("scrh="..scrh)
+  rectfill(-SCREEN_X-1,-SCREEN_Y, -140, scrh, 36)
+  local r = SCREEN_X + GAME_WIDTH 
   rectfill(r,-SCREEN_Y, r-SCREEN_X+140, scrh, 36)
 end
 
