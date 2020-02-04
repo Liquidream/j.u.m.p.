@@ -2,7 +2,7 @@
 _t = 0
 blob = {}
 cam = {}
-platforms = {}
+--platforms = {}
 lastPressedState = false
 maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
@@ -27,61 +27,75 @@ function init_game()
   --init_title()
 end
 
--- create level platforms
-function init_level()
-  local platformDist = 150
+-- create initial platforms & reset blobby
+function init_level(num)
+  -- init/clear platforms
+  platforms = {}
   -- create "floor" platform
+  --TODO: if level num > 1 then have diff static type (as resuming)
   platforms[1] = StaticPlatform(
-                    -56,
-                    GAME_HEIGHT,
-                    8)
-
+  -56,
+  GAME_HEIGHT,
+  8)
+  
   -- create other platforms
   --local platformCount = 3
-  local platformCount = 5+(blob.levelNum*3)
-  for i = 2,platformCount do
-    local positions = {10, 56, 102}
-    local xpos = positions[irnd(3)+1]
-    local ypos = GAME_HEIGHT+platformDist-(i*platformDist)
+  blob.numPlatforms = 5+(blob.levelNum*3)
+  --local platformCount = 5+(blob.levelNum*3)
 
-    -- randomise types (based on those unlocked)    
-    local pType = irnd(maxTypeNumber)+1
-    --local pType = PLATFORM_TYPE.BLOCKER    
-    --local pType = PLATFORM_TYPE.STATIC    
-    
-    if pType == PLATFORM_TYPE.STATIC then
-      platforms[i] = StaticPlatform(xpos, ypos, 1)
-    
-    elseif pType == PLATFORM_TYPE.SPIKER then
-      platforms[i] = SpikerPlatform(xpos, ypos, 1)
+  -- generate new platforms (and clear old ones)
+  generate_platforms()
 
-    elseif pType == PLATFORM_TYPE.SLIDER then
-      platforms[i] = SliderPlatform(56, ypos, 1)
-    
-    elseif pType == PLATFORM_TYPE.BLOCKER 
-     and i < platformCount
-     and platforms[i-1].type ~= PLATFORM_TYPE.BLOCKER then
-      platforms[i] = BlockerPlatform(-56, ypos, 8)
-    
-    else
-      -- default type
-      platforms[i] = StaticPlatform(xpos, ypos, 1)
-    end
-
-  end
+  -- for i = 2,platformCount do
+  --   platforms[i] = createNewPlatform()
+  -- end
   
   -- reposition blob at start
   reset_blob(true)
   log("blob.speedFactor = "..blob.speedFactor)
-
+  
   -- reset camera
   init_cam()
-
+  
   -- ready to play
   gameState = GAME_STATE.LVL_PLAY
+end
+  
+-- create & return a random platform
+function createNewPlatform()
+  -- 
+  blob.platformCounter = blob.platformCounter + 1
+  local num = blob.platformCounter
+  -- seed rng for platform
+  srand(num)
+  local platformDist = 150
+  local positions = {10, 56, 102}
+  local xpos = positions[irnd(3)+1]
+  local ypos = GAME_HEIGHT+platformDist-(num*platformDist)
 
-  --gameState = GAME_STATE.LVL_END
-  --gameCounter = 0
+  -- randomise types (based on those unlocked)    
+  local pType = irnd(maxTypeNumber)+1
+  --local pType = PLATFORM_TYPE.BLOCKER    
+  --local pType = PLATFORM_TYPE.STATIC    
+  
+  if pType == PLATFORM_TYPE.STATIC then
+    return StaticPlatform(xpos, ypos, 1)
+  
+  elseif pType == PLATFORM_TYPE.SPIKER then
+    return SpikerPlatform(xpos, ypos, 1)
+
+  elseif pType == PLATFORM_TYPE.SLIDER then
+    return SliderPlatform(56, ypos, 1)
+  
+  elseif pType == PLATFORM_TYPE.BLOCKER 
+    and num < blob.numPlatforms
+    and platforms[num-1].type ~= PLATFORM_TYPE.BLOCKER then
+      return BlockerPlatform(-56, ypos, 8)
+  
+  else
+    -- default type
+    return StaticPlatform(xpos, ypos, 1)
+  end
 end
 
 -- create & initialise blob obj 
@@ -89,12 +103,16 @@ end
 function init_blob()
   blob = {
     lives = 3,
-    score = 0,
+    score = 0,       -- essentially the platform num?
     levelNum = 1,
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
     hitbox_w = 32,
     hitbox_h = 32,
     jumpFreq = 10,
+    numPlatforms = 0, -- number of platforms for the current section
+    platformCounter = 1, -- running counter of platform gen numbers
+    onPlatformNum = 0,
+
     loseLife = function(self)
       log("OUCH!!!!")
       self.lives = self.lives - 1

@@ -177,9 +177,7 @@ function update_collisions()
     -- if collide with platform while falling...
     if platform:hasLanded(blob) then
       -- then land!
-      --log("landed!")
       blob.onGround = true
-      --blob.jumpCounter = 0
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()
@@ -193,9 +191,22 @@ function update_collisions()
         blob.onPlatform = platform
        end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
-      blob.y = platform.y - 32
+      blob.y = platform.y - 32      
+      -- generate new platforms (and clear old ones)
+      generate_platforms()
     end
   end
+end
+
+-- generate new platforms (and clear old ones)
+function generate_platforms()
+  -- create any missing platforms (so there's always 5 ahead)
+  while #platforms < blob.onPlatformNum + 5 do
+    platforms[#platforms + 1] = createNewPlatform()
+  end
+
+  -- TODO: Remove old platforms (e.g. <10 from curr pos) + shift everything down?
+  
 end
 
 function update_camera(dt)
