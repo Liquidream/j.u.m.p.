@@ -2,7 +2,7 @@
 _t = 0
 blob = {}
 cam = {}
---platforms = {}
+platforms = {} -- init/clear platforms
 lastPressedState = false
 maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
@@ -19,18 +19,19 @@ function init_game()
   _initialized = true
 
   init_blob()
-  --init_cam()
+  -- reposition blob at start
+  reset_blob()
+  
+  init_cam()
+  
   init_level()
-
 
   -- show the title
   --init_title()
 end
 
 -- create initial platforms & reset blobby
-function init_level(num)
-  -- init/clear platforms
-  platforms = {}
+function init_level()  
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   platforms[1] = StaticPlatform(
@@ -43,15 +44,10 @@ function init_level(num)
 
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
-
   
-  -- reposition blob at start
-  reset_blob(true)
   log("blob.speedFactor = "..blob.speedFactor)
   
-  -- reset camera
-  init_cam()
-  
+  --
   -- ready to play
   gameState = GAME_STATE.LVL_PLAY
 end
@@ -135,8 +131,8 @@ function init_blob()
 end
 
 -- reset blob back to starting position
--- (either start of game or after losing a life)
-function reset_blob(islevelInit)
+-- (either start of game or section)
+function reset_blob()--islevelInit)
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
   blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
   blob.maxHeight = GAME_HEIGHT-40
@@ -146,11 +142,11 @@ function reset_blob(islevelInit)
   blob.onGround = false
   blob.jumpCounter = 0
   -- init start of level?
-  if islevelInit then
-    blob.score = 0
-    blob.onPlatformNum = 1
-    blob.onPlatform = nil
-  end
+  -- if islevelInit then
+  --   blob.score = 0
+  --   blob.onPlatformNum = 1
+  --   blob.onPlatform = nil
+  -- end
 end
 
 function init_cam()

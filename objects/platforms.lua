@@ -215,7 +215,6 @@ do
     if is_pressed
      and self.y > cam.y 
      and self.hitsLeft > 0 then
-      log("smash "..self.y)
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
       -- shake blocker

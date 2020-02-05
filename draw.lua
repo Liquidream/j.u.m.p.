@@ -136,11 +136,11 @@ function draw_ui()
   end
 
   pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
-  --print("HELLO WORLD!",GAME_WIDTH/4,GAME_HEIGHT/2, 6)
   
   if gameState == GAME_STATE.LVL_END then
-    pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
-    pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+    pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
+    -- pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
+    -- pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
   end
 
   if gameState == GAME_STATE.GAME_OVER then
