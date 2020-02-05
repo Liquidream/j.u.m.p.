@@ -34,10 +34,8 @@ end
 function init_level()  
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
-  platforms[1] = StaticPlatform(
-  -56,
-  GAME_HEIGHT,
-  8)
+  platforms[1] = StaticPlatform(-56, GAME_HEIGHT, 8)
+  platforms[1].num = 1  
   
   -- set the total num platforms for this level/section
   blob.numPlatforms = 5+(blob.levelNum*3)
@@ -59,14 +57,14 @@ function createNewPlatform()
   local num = blob.platformCounter
   log("in createNewPlatform()... seeding:"..tostring(num))
   -- seed rng for platform
-  srand(num)
+  --srand(num)
   local platformDist = 150
   local positions = {10, 56, 102}
   local xpos = positions[irnd(3)+1]
   local ypos = GAME_HEIGHT+platformDist-(num*platformDist)
   
   -- check for end of level/section
-  if blob.platformCounter == blob.numPlatforms then
+  if blob.platformCounter == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
     --TODO: maybe change the platform look/style?
     return StaticPlatform(-56, ypos, 8)
@@ -92,7 +90,7 @@ function createNewPlatform()
     return SliderPlatform(56, ypos, 1)
   
   elseif pType == PLATFORM_TYPE.BLOCKER 
-    and num < blob.numPlatforms
+    and num < blob.startPlatformNum + blob.numPlatforms 
     and platforms[num-1].type ~= PLATFORM_TYPE.BLOCKER then
       return BlockerPlatform(-56, ypos, 8)
   
@@ -116,6 +114,7 @@ function init_blob()
     numPlatforms = 0, -- number of platforms for the current section
     platformCounter = 1, -- running counter of platform gen numbers
     onPlatformNum = 0,
+    startPlatformNum = 1,
 
     loseLife = function(self)
       log("OUCH!!!!")

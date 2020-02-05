@@ -50,6 +50,7 @@ function update_game(dt)
     if gameCounter > 100 then
       -- level up
       blob.levelNum = blob.levelNum + 1
+      blob.startPlatformNum = blob.onPlatform.num
       -- speed up?
       if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
@@ -142,7 +143,7 @@ function update_blob(dt)
     end
 
     -- check for level end
-    if blob.onPlatformNum == blob.numPlatforms 
+    if blob.onPlatformNum == blob.startPlatformNum + blob.numPlatforms 
     --and blob.jumpCounter >= blob.jumpFreq 
     then
       gameState = GAME_STATE.LVL_END
@@ -206,7 +207,9 @@ function generate_platforms()
 
   -- create any missing platforms (so there's always 5 ahead)
   while #platforms < blob.onPlatformNum + 5 do
-    platforms[#platforms + 1] = createNewPlatform()
+    local newPlatform = createNewPlatform()
+    newPlatform.num = platforms[#platforms].num + 1
+    platforms[#platforms + 1] = newPlatform 
   end
 
   -- TODO: Remove old platforms (e.g. <10 from curr pos) + shift everything down?
