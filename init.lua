@@ -56,8 +56,11 @@ function createNewPlatform()
   blob.platformCounter = blob.platformCounter + 1
   local num = blob.platformCounter
   log("in createNewPlatform()... seeding:"..tostring(num))
+  
   -- seed rng for platform
   --srand(num)
+  -- ERROR: Can't do this atm, as it always results in activeState = false?!?
+
   local platformDist = 150
   local positions = {10, 56, 102}
   local xpos = positions[irnd(3)+1]

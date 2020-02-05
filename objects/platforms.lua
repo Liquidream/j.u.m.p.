@@ -13,6 +13,7 @@ do
     self.y = y
     -- randomise which is the "active" state (true/false)
     self.activeState = irnd(2)==0 
+    log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
     self.currState = false
 
