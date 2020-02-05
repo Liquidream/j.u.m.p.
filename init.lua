@@ -38,17 +38,12 @@ function init_level(num)
   GAME_HEIGHT,
   8)
   
-  -- create other platforms
-  --local platformCount = 3
+  -- set the total num platforms for this level/section
   blob.numPlatforms = 5+(blob.levelNum*3)
-  --local platformCount = 5+(blob.levelNum*3)
 
-  -- generate new platforms (and clear old ones)
+  -- generate any missing platforms (and clear old ones)
   generate_platforms()
 
-  -- for i = 2,platformCount do
-  --   platforms[i] = createNewPlatform()
-  -- end
   
   -- reposition blob at start
   reset_blob(true)
@@ -66,17 +61,30 @@ function createNewPlatform()
   -- 
   blob.platformCounter = blob.platformCounter + 1
   local num = blob.platformCounter
+  log("in createNewPlatform()... seeding:"..tostring(num))
   -- seed rng for platform
   srand(num)
   local platformDist = 150
   local positions = {10, 56, 102}
   local xpos = positions[irnd(3)+1]
   local ypos = GAME_HEIGHT+platformDist-(num*platformDist)
+  
+  -- check for end of level/section
+  if blob.platformCounter == blob.numPlatforms then
+    -- create a landing platform for checkpoint
+    --TODO: maybe change the platform look/style?
+    return StaticPlatform(-56, ypos, 8)
+  end
+
+
 
   -- randomise types (based on those unlocked)    
   local pType = irnd(maxTypeNumber)+1
+  log("  > pType:"..tostring(pType))
   --local pType = PLATFORM_TYPE.BLOCKER    
-  --local pType = PLATFORM_TYPE.STATIC    
+  --local pType = PLATFORM_TYPE.STATIC
+
+
   
   if pType == PLATFORM_TYPE.STATIC then
     return StaticPlatform(xpos, ypos, 1)

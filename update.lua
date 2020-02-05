@@ -142,11 +142,14 @@ function update_blob(dt)
     end
 
     -- check for level end
-    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
-      -- end of level
-      gameState = GAME_STATE.LVL_END      
-      gameCounter = 0
+    if blob.onPlatformNum == blob.numPlatforms then
+      gameState = GAME_STATE.LVL_END
     end
+    -- if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
+    --   -- end of level
+    --   gameState = GAME_STATE.LVL_END
+    --   gameCounter = 0
+    -- end
 
   else  
     -- jumping/fallings
@@ -200,13 +203,16 @@ end
 
 -- generate new platforms (and clear old ones)
 function generate_platforms()
+  log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+  log("#platforms "..tostring(#platforms))
+
   -- create any missing platforms (so there's always 5 ahead)
   while #platforms < blob.onPlatformNum + 5 do
     platforms[#platforms + 1] = createNewPlatform()
   end
 
   -- TODO: Remove old platforms (e.g. <10 from curr pos) + shift everything down?
-  
+
 end
 
 function update_camera(dt)
