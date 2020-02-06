@@ -55,10 +55,10 @@ function createNewPlatform()
   -- 
   blob.platformCounter = blob.platformCounter + 1
   local num = blob.platformCounter
-  log("in createNewPlatform()... seeding:"..tostring(num))
+  log("in createNewPlatform()... seeding:"..num)
   
   -- seed rng for platform
-  --srand(num)
+  srand(num)
   -- ERROR: Can't do this atm, as it always results in activeState = false?!?
 
   local platformDist = 150
@@ -80,6 +80,7 @@ function createNewPlatform()
   log("  > pType:"..tostring(pType))
   --local pType = PLATFORM_TYPE.BLOCKER    
   --local pType = PLATFORM_TYPE.STATIC
+  --local pType = PLATFORM_TYPE.SPIKER
 
 
   
