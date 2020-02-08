@@ -79,7 +79,6 @@ function createNewPlatform()
 
   -- randomise types (based on those unlocked)    
   local pType = irnd(maxTypeNumber)+1
-  log("  > pType:"..tostring(pType))
   --local pType = PLATFORM_TYPE.BLOCKER    
   --local pType = PLATFORM_TYPE.STATIC
   --local pType = PLATFORM_TYPE.SPIKER
