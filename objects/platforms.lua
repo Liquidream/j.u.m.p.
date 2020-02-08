@@ -460,8 +460,8 @@ do
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
     self.hitbox_h = 32
-
-    -- self:Reset()
+    self.isCheckpoint = false -- is this a checkpoint?
+    self.checkpoint = false   -- (checkpoint state)
   end
 
   function StaticPlatform:update(dt)
@@ -476,6 +476,18 @@ do
     StaticPlatform.super.draw(self)
 
     -- draw local stuff
+    if self.isCheckpoint then
+      -- flag state?
+      if self.checkpoint then
+        pal(5,9)
+        pal(6,8)
+      end
+      -- draw checkpoint flag
+      spr(29, self.x+64, self.y-32)
+      -- reset palette
+      pal()
+      palt(35,true)
+    end
   end
 
   function StaticPlatform:setPressedState(is_pressed)

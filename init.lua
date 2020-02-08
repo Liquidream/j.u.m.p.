@@ -70,7 +70,9 @@ function createNewPlatform()
   if blob.platformCounter == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
     --TODO: maybe change the platform look/style?
-    return StaticPlatform(-56, ypos, 8)
+    local checkPoint = StaticPlatform(-56, ypos, 8)
+    checkPoint.isCheckpoint = true
+    return checkPoint
   end
 
 

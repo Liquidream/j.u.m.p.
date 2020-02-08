@@ -183,7 +183,7 @@ function update_collisions()
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()
-      end
+      end      
       blob.vy = 0
       if blob.onPlatformNum ~= i
        and blob.onPlatform ~= platform
@@ -193,7 +193,11 @@ function update_collisions()
         blob.onPlatform = platform
        end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
-      blob.y = platform.y - 32      
+      blob.y = platform.y - 32
+      -- is this a checkpoint?
+      if blob.onPlatform.isCheckpoint then
+        blob.onPlatform.checkpoint = true
+      end
       -- generate new platforms (and clear old ones)
       generate_platforms()
     end
