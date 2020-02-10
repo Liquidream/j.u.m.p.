@@ -45,7 +45,9 @@ local function _load_shaders()
           sqrdist = b * sqrd + (1.0 - b) * sqrdist;
         }
         
-        return vec4(floor(mod(c * vec3(1.0, 0.1, 0.01), 10.0)) * 0.1, 1.0);
+        vec3 idx = c / vec3(8.0, 64.0, 512.0);
+        
+        return vec4(mod(idx - mod(idx, 0.125), 1.0), 1.0);
       }
     ]],
     
@@ -58,15 +60,17 @@ local function _load_shaders()
       
       vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
       {
-        vec4 col = floor(Texel(texture, texture_coords) * 10.0 + vec4(0.5));
+        vec3 col = floor(Texel(texture, texture_coords).rgb * vec3(8.0, 8.0, 8.0) + vec3(0.5));
         
-        int c = int(col.r + col.g * 10.0 + col.b * 100.0);
+        int c = int(col.r + col.g * 8.0 + col.b * 64.0);
         
         float trsp = 1.0-trsps[c];
         
         float cb = swaps[c];
 
-        return vec4(floor(mod(cb / vec3(1.0, 10.0, 100.0), 10.0)) * 0.1, trsp);
+        vec3 idx = cb / vec3(8.0, 64.0, 512.0);
+        
+        return vec4(mod(idx - mod(idx, 0.125), 1.0), trsp);
       }
     ]],
     
@@ -77,8 +81,11 @@ local function _load_shaders()
       
       vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
       {
-        vec4 col = floor(Texel(texture, texture_coords) * 10.0 + vec4(0.5));
-        return vec4(PALETTE[ SWAPS[int(col.r + col.g * 10.0 + col.b * 100.0)] ], 1.0);
+        vec3 col = floor(Texel(texture, texture_coords).rgb * vec3(8.0, 8.0, 8.0) + vec3(0.5));
+        
+        int c = int(col.r + col.g * 8.0 + col.b * 64.0);
+        
+        return vec4(PALETTE[ SWAPS[c] ], 1.0);
       }
     ]]
   }
@@ -500,11 +507,12 @@ local function screen_shader(shader_code)
   -- ADD extern vec2 SCREEN_SIZE
   -- + update on resize
   
-  local pre = "int Texel_index(Image texture, vec2 coords); vec4 Texel_color(Image texture, vec2 coords); "
+  local pre = "extern vec2 SCREEN_SIZE; extern vec3 PALETTE[256]; extern int SWAPS[256]; int Texel_index(Image texture, vec2 coords); vec4 Texel_color(Image texture, vec2 coords); "
   local after = [[
     int Texel_index(Image texture, vec2 coords){
-	    vec4 col = floor(Texel(texture, coords) * 10.0 + vec4(0.5));
-      int c = int(col.r + col.g * 10.0 + col.b * 100.0);
+	    vec3 col = floor(Texel(texture, coords).rgb * vec3(8.0, 8.0, 8.0) + vec3(0.5));
+      
+      int c = int(col.r + col.g * 8.0 + col.b * 64.0);
 	  
 	    return SWAPS[c];
 	  }
@@ -619,7 +627,7 @@ local function color(i)
   --i = i % _D.palette_size
   i = _D.pltswp_dw[flr(i) % _D.palette_size]
   
-  _D.love_color = _index_colors[i]
+  _D.love_color = _D._index_colors[i]
   
   love.graphics.setColor(_D.love_color)
   
@@ -648,7 +656,7 @@ end
 
 
 local function clear(c)
-  love.graphics.clear(_index_colors[c or 0])
+  love.graphics.clear(_D._index_colors[c or 0])
 end
 
 local cls = clear
@@ -771,12 +779,12 @@ local function use_palette(plt)
   
   _D.palette_size = #_D.palette + 1
   
-  _index_colors = {}
+  _D._index_colors = {}
   for i = 0, #_D.palette do
-    _index_colors[i] = {
-      (sugar.maths.flr(i) % 10) /10,
-      (sugar.maths.flr(i/10) % 10) /10,
-      (sugar.maths.flr(i/100) % 10) /10,
+    _D._index_colors[i] = {
+      (sugar.maths.flr(i) % 8) * 0.125,
+      (sugar.maths.flr(i/8) % 8) * 0.125,
+      (sugar.maths.flr(i/64) % 8) * 0.125,
       1.0
     }
   end
