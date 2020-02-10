@@ -40,6 +40,7 @@ function draw_level()
   -- reset palette
   pal()
   palt()
+  palt(0, false)
   palt(35,true)
 
   -- draw platforms
@@ -176,7 +177,7 @@ function draw_blob(x,y)
       spr=0   -- normal
     end
   end 
-
+  
   -- draw green blob
   aspr(spr, x,y, 0, 1,1, 0, 0, 1,1)
 
