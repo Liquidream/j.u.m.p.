@@ -178,6 +178,6 @@ function draw_blob(x,y)
   end 
 
   -- draw green blob
-  aspr(spr, x,y-8, 0, 1,1, 0, 0, 1,1)
+  aspr(spr, x,y, 0, 1,1, 0, 0, 1,1)
 
 end
