@@ -117,8 +117,9 @@ do
     end
     -- reset palette
     pal()
-    palt(35,true)
-    --resetPal(ak54, 35)    
+    palt()
+    palt(0, false)
+    palt(35,true)   
     self.flash = false
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
@@ -203,8 +204,8 @@ do
       -- reset palette
       pal()
       palt()
+      palt(0, false)
       palt(35,true)
-      --resetPal(ak54, 35)
     end
   end
 
@@ -486,6 +487,8 @@ do
       spr(29, self.x+64, self.y-32)
       -- reset palette
       pal()
+      palt()
+      palt(0, false)
       palt(35,true)
     end
   end
