@@ -13,6 +13,7 @@ do
     self.y = y
     -- randomise which is the "active" state (true/false)
     self.activeState = irnd(2)==0 
+    log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
     self.currState = false
 
@@ -116,8 +117,9 @@ do
     end
     -- reset palette
     pal()
-    palt(35,true)
-    --resetPal(ak54, 35)    
+    palt()
+    palt(0, false)
+    palt(35,true)   
     self.flash = false
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
@@ -202,8 +204,8 @@ do
       -- reset palette
       pal()
       palt()
+      palt(0, false)
       palt(35,true)
-      --resetPal(ak54, 35)
     end
   end
 
@@ -215,7 +217,6 @@ do
     if is_pressed
      and self.y > cam.y 
      and self.hitsLeft > 0 then
-      log("smash "..self.y)
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
       -- shake blocker
@@ -460,8 +461,8 @@ do
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
     self.hitbox_h = 32
-
-    -- self:Reset()
+    self.isCheckpoint = false -- is this a checkpoint?
+    self.checkpoint = false   -- (checkpoint state)
   end
 
   function StaticPlatform:update(dt)
@@ -476,6 +477,20 @@ do
     StaticPlatform.super.draw(self)
 
     -- draw local stuff
+    if self.isCheckpoint then
+      -- flag state?
+      if self.checkpoint then
+        pal(5,9)
+        pal(6,8)
+      end
+      -- draw checkpoint flag
+      spr(29, self.x+64, self.y-32)
+      -- reset palette
+      pal()
+      palt()
+      palt(0, false)
+      palt(35,true)
+    end
   end
 
   function StaticPlatform:setPressedState(is_pressed)

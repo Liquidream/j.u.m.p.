@@ -50,6 +50,7 @@ function update_game(dt)
     if gameCounter > 100 then
       -- level up
       blob.levelNum = blob.levelNum + 1
+      blob.startPlatformNum = blob.onPlatform.num
       -- speed up?
       if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
@@ -142,9 +143,10 @@ function update_blob(dt)
     end
 
     -- check for level end
-    if not morePlatforms and blob.jumpCounter >= blob.jumpFreq then
-      -- end of level
-      gameState = GAME_STATE.LVL_END      
+    if blob.onPlatformNum == blob.startPlatformNum + blob.numPlatforms 
+    --and blob.jumpCounter >= blob.jumpFreq 
+    then
+      gameState = GAME_STATE.LVL_END
       gameCounter = 0
     end
 
@@ -177,13 +179,11 @@ function update_collisions()
     -- if collide with platform while falling...
     if platform:hasLanded(blob) then
       -- then land!
-      --log("landed!")
       blob.onGround = true
-      --blob.jumpCounter = 0
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()
-      end
+      end      
       blob.vy = 0
       if blob.onPlatformNum ~= i
        and blob.onPlatform ~= platform
@@ -194,8 +194,30 @@ function update_collisions()
        end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
       blob.y = platform.y - 32
+      -- is this a checkpoint?
+      if blob.onPlatform.isCheckpoint then
+        blob.onPlatform.checkpoint = true
+      end
+      -- generate new platforms (and clear old ones)
+      generate_platforms()
     end
   end
+end
+
+-- generate new platforms (and clear old ones)
+function generate_platforms()
+  log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+  log("#platforms "..tostring(#platforms))
+
+  -- create any missing platforms (so there's always 5 ahead)
+  while #platforms < blob.onPlatformNum + 5 do
+    local newPlatform = createNewPlatform()
+    newPlatform.num = platforms[#platforms].num + 1
+    platforms[#platforms + 1] = newPlatform 
+  end
+
+  -- TODO: Remove old platforms (e.g. <10 from curr pos) + shift everything down?
+
 end
 
 function update_camera(dt)
