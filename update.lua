@@ -52,9 +52,9 @@ function update_game(dt)
       blob.levelNum = blob.levelNum + 1
       blob.startPlatformNum = blob.onPlatform.num
       -- speed up?
-      if blob.levelNum > 3 then
+      -- if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
-      end      
+      --end      
       init_level()
     end
     -- update camera

@@ -76,19 +76,18 @@ function createNewPlatform()
   end
 
 
-
+  
   -- randomise types (based on those unlocked)    
-  local pType = irnd(maxTypeNumber)+1
+  local pType = irnd(maxTypeNumber-1)+2
   --local pType = PLATFORM_TYPE.BLOCKER    
   --local pType = PLATFORM_TYPE.STATIC
   --local pType = PLATFORM_TYPE.SPIKER
 
-
+  -- REMOVED Static from RNG, as "inactive Spiker" is same!
+  -- if pType == PLATFORM_TYPE.STATIC then
+  --   return StaticPlatform(xpos, ypos, 1)
   
-  if pType == PLATFORM_TYPE.STATIC then
-    return StaticPlatform(xpos, ypos, 1)
-  
-  elseif pType == PLATFORM_TYPE.SPIKER then
+  if pType == PLATFORM_TYPE.SPIKER then    
     return SpikerPlatform(xpos, ypos, 1)
 
   elseif pType == PLATFORM_TYPE.SLIDER then
@@ -100,8 +99,10 @@ function createNewPlatform()
       return BlockerPlatform(-56, ypos, 8)
   
   else
-    -- default type
-    return StaticPlatform(xpos, ypos, 1)
+    -- default type 
+    -- (now Spiker - as when inactive, same as static!)
+    return SpikerPlatform(xpos, ypos, 1)
+    -- return StaticPlatform(xpos, ypos, 1)
   end
 end
 
