@@ -15,7 +15,8 @@ do
     self.activeState = irnd(2)==0 
     log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
-    self.currState = false
+    self.currState = false    
+    self.completed = false        -- lit up when blobby has landed (on most blocks)
 
     -- self.hitbox_w = 32
     -- self.hitbox_h = 32
@@ -40,6 +41,7 @@ do
     if aabb(blob, self) 
       and blob.vy>0 then
         -- landed
+        self.completed = true
         return true
     end 
     return false
@@ -391,7 +393,7 @@ do
       -- 4 = springers
       -- 5 = blockers
 
-    self.spr = (spr_width==1) and (8 + irnd(2)) or 32
+    self.spr = 9 --(8 + irnd(2))
     self.spr_w = spr_width
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
@@ -410,8 +412,12 @@ do
   function SpikerPlatform:draw()
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
+    
     -- draw (base) platform
-    SpikerPlatform.super.draw(self)
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y, self.spr_w, self.spr_h)
+
+    --SpikerPlatform.super.draw(self)
   end
 
   function SpikerPlatform:setPressedState(is_pressed)

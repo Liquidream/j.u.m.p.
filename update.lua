@@ -80,7 +80,9 @@ end
 function update_platforms(dt)
   for i = 1,#platforms do
     local platform = platforms[i]
-    platform:update(dt)
+    if platform then 
+      platform:update(dt)
+    end
   end
 end
 
@@ -118,6 +120,8 @@ function update_blob(dt)
   local speedFactor = 2
   
   if blob.onGround then
+    log("blob.onPlatformNum+1 = "..blob.onPlatformNum+1)
+    log("#platforms = "..#platforms)
     local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
     local jumpPlatformCount = 1
     -- jump more for blocker platforms
@@ -191,13 +195,16 @@ function update_collisions()
         blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform
+        -- is this a checkpoint?
+        if blob.onPlatform.isCheckpoint then
+          blob.onPlatform.checkpoint = true
+          blob.lastCheckpointPlatNum = blob.onPlatform.num
+          -- clear old ones platforms
+          prune_platforms(i-1)
+        end
        end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
-      blob.y = platform.y - 32
-      -- is this a checkpoint?
-      if blob.onPlatform.isCheckpoint then
-        blob.onPlatform.checkpoint = true
-      end
+      blob.y = platform.y - 32     
       -- generate new platforms (and clear old ones)
       generate_platforms()
     end
@@ -207,6 +214,7 @@ end
 -- generate new platforms (and clear old ones)
 function generate_platforms()
   log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+  log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
   log("#platforms "..tostring(#platforms))
 
   -- create any missing platforms (so there's always 5 ahead)
@@ -216,8 +224,21 @@ function generate_platforms()
     platforms[#platforms + 1] = newPlatform 
   end
 
-  -- TODO: Remove old platforms (e.g. <10 from curr pos) + shift everything down?
+  -- TODO: Remove old platforms e.g. everything below last checkpoint
+  --      (probably best to do it at the last checkpoint)
 
+end
+
+-- clear old ones platforms
+function prune_platforms(numTodeleteTo)
+  -- remove all platforms prior to last checkpoint
+  for i=1,numTodeleteTo-1 do
+    platforms[i] = nil
+    --platforms[i]="nil"
+    --table.remove(platforms, 1)
+  end
+  -- shift blobby platform pos
+  blob.onPlatformNum = 1
 end
 
 function update_camera(dt)

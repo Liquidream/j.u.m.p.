@@ -43,12 +43,8 @@ function draw_level()
   palt(0, false)
   palt(35,true)
 
-  -- draw platforms
-  for i = 1,#platforms do
-    -- draw platform (depending on type)
-    local platform = platforms[i]
-    platform:draw()
-  end
+  -- platforms
+  draw_platforms()
 
   --circfill(60,100,12.5,3)
 
@@ -73,6 +69,16 @@ function draw_level()
 
   draw_ui()
 
+end
+
+function draw_platforms()
+  for i = 1,#platforms do
+    -- draw platform (depending on type)
+    local platform = platforms[i]
+    if platform then 
+      platform:draw()
+    end
+  end
 end
 
 function draw_background()

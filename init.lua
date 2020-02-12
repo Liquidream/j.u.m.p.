@@ -146,6 +146,7 @@ function reset_blob()--islevelInit)
   blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
   blob.onGround = false
   blob.jumpCounter = 0
+  blob.lastCheckpointPlatNum = 1
   -- init start of level?
   -- if islevelInit then
   --   blob.score = 0
