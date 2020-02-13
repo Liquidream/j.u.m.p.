@@ -45,17 +45,17 @@ function update_game(dt)
   -- normal play (level intro/outro/game-over)    
   elseif gameState == GAME_STATE.LVL_END then
     
-    -- TODO: tally up score, then wait for user to start next round
+    --TODO: tally up score, then wait for user to start next round
     gameCounter = gameCounter + 1
     if gameCounter > 100 then
       -- level up
       blob.levelNum = blob.levelNum + 1
-      blob.startPlatformNum = blob.onPlatform.num
+  --    blob.startPlatformNum = blob.onPlatform.num
       -- speed up?
       -- if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
       --end      
-      init_level()
+  --    init_level()
     end
     -- update camera
     update_camera(dt)
@@ -199,10 +199,12 @@ function update_collisions()
         blob.onPlatform = platform
         log("blob.onPlatformNum = "..blob.onPlatformNum)
         log("#platforms = "..#platforms)
+
         -- is this a checkpoint?
         if blob.onPlatform.isCheckpoint then
           blob.onPlatform.checkpoint = true
           blob.lastCheckpointPlatNum = blob.onPlatform.num
+          blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
           log("blob.onPlatformNum. = "..blob.onPlatformNum)
