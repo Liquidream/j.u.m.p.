@@ -45,6 +45,11 @@ function update_game(dt)
   -- normal play (level intro/outro/game-over)    
   elseif gameState == GAME_STATE.LVL_END then
     
+    -- update blob to stand
+    if blob.jumpCounter < 10 then 
+      blob.jumpCounter = blob.jumpCounter + 1
+    end
+
     --TODO: tally up score, then wait for user to start next round
     gameCounter = gameCounter + 1
     if gameCounter > 100 then
@@ -54,8 +59,9 @@ function update_game(dt)
       -- speed up?
       -- if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
+        blob.jumpCounter = 0
       --end      
-      init_level()
+      init_section()
     end
     -- update camera
     update_camera(dt)
@@ -117,10 +123,9 @@ function update_blob(dt)
     1.6, -- two platforms
     1.4  -- three platforms?
   }
-  local speedFactor = 2
   
   if blob.onGround then
-    local morePlatforms = true--platforms[blob.onPlatformNum+1] ~= nil
+    local morePlatforms = true -- endless??
     local jumpPlatformCount = 1
     -- jump more for blocker platforms
     -- TODO: need to ensure the last platform is not a "blocker"
@@ -137,7 +142,7 @@ function update_blob(dt)
     end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
-    if blob.jumpCounter == blob.jumpFreq and morePlatforms then
+    if blob.jumpCounter >= blob.jumpFreq and morePlatforms then
       blob.vy = jumpAmountY
       blob.vx = jumpAmountX
       blob.onGround = false
@@ -147,16 +152,6 @@ function update_blob(dt)
       debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
       
     end
-
-    -- check for level end
-    -- if blob.onPlatformNum == blob.numPlatforms 
-    -- --blob.onPlatformNum == blob.startPlatformNum + blob.numPlatforms 
-    
-    -- --and blob.jumpCounter >= blob.jumpFreq 
-    -- then
-    --   gameState = GAME_STATE.LVL_END
-    --   gameCounter = 0
-    -- end
 
   else  
     -- jumping/fallings
@@ -191,8 +186,11 @@ function update_collisions()
       -- were we hurt?
       if blob.vy > 500 then
         blob:loseLife()
-      end      
+      end
       blob.vy = 0
+      blob.x = platform.x + (platform.spr_w*32/2) - 16
+      blob.y = platform.y - 32    
+
       if blob.onPlatformNum ~= i
        and blob.onPlatform ~= platform
        and blob.onPlatformNum then
@@ -203,8 +201,9 @@ function update_collisions()
         debug_log("#platforms = "..#platforms)
 
         -- is this a checkpoint?
-        if blob.onPlatform.isCheckpoint then
-          blob.onPlatform.checkpoint = true
+        if blob.onPlatform.isCheckpoint 
+         and not blob.onPlatform.checkpointReached then
+          blob.onPlatform.checkpointReached = true
           blob.lastCheckpointPlatNum = blob.onPlatform.num
           blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
@@ -225,8 +224,7 @@ function update_collisions()
           return
         end
        end
-      blob.x = platform.x + (platform.spr_w*32/2) - 16
-      blob.y = platform.y - 32     
+       
       -- generate new platforms (and clear old ones)
       generate_platforms()
     end

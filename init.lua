@@ -2,7 +2,7 @@
 _t = 0
 blob = {}
 cam = {}
-platforms = {} -- init/clear platforms
+--platforms = {} -- init/clear platforms
 lastPressedState = false
 maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
@@ -18,20 +18,23 @@ function init_game()
   end
   _initialized = true
 
+  -- init/clear platforms
+  platforms = {}
+
   init_blob()
   -- reposition blob at start
   reset_blob()
   
   init_cam()
   
-  init_level()
+  init_section()
 
   -- show the title
   --init_title()
 end
 
 -- create initial platforms & reset blobby
-function init_level()  
+function init_section()  
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   if platforms[1] == nil then
@@ -98,8 +101,7 @@ function createNewPlatform()
   elseif pType == PLATFORM_TYPE.BLOCKER 
     and #platforms < blob.startPlatformNum + blob.numPlatforms 
     and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
-      --and num < blob.startPlatformNum + blob.numPlatforms 
-    --and platforms[num-1].type ~= PLATFORM_TYPE.BLOCKER then
+      -- no "double blockers" and no blocker as the final platform
       return BlockerPlatform(-56, ypos, 8)
   
   else
