@@ -147,12 +147,6 @@ function reset_blob()--islevelInit)
   blob.onGround = false
   blob.jumpCounter = 0
   blob.lastCheckpointPlatNum = 1
-  -- init start of level?
-  -- if islevelInit then
-  --   blob.score = 0
-  --   blob.onPlatformNum = 1
-  --   blob.onPlatform = nil
-  -- end
 end
 
 function init_cam()

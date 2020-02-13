@@ -120,9 +120,7 @@ function update_blob(dt)
   local speedFactor = 2
   
   if blob.onGround then
-    log("blob.onPlatformNum+1 = "..blob.onPlatformNum+1)
-    log("#platforms = "..#platforms)
-    local morePlatforms = platforms[blob.onPlatformNum+1] ~= nil
+    local morePlatforms = true--platforms[blob.onPlatformNum+1] ~= nil
     local jumpPlatformCount = 1
     -- jump more for blocker platforms
     -- TODO: need to ensure the last platform is not a "blocker"
@@ -135,6 +133,7 @@ function update_blob(dt)
     if morePlatforms then
       local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
       jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
+      log("nextPlat.num="..tostring(nextPlat.num))
     end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
@@ -143,7 +142,10 @@ function update_blob(dt)
       blob.vx = jumpAmountX
       blob.onGround = false
       blob.jumpCounter = 0
-      --log("jump!")
+      log("jump!")
+      log("jumpPlatformCount="..tostring(jumpPlatformCount))
+      log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
+      
     end
 
     -- check for level end
@@ -195,12 +197,24 @@ function update_collisions()
         blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform
+        log("blob.onPlatformNum = "..blob.onPlatformNum)
+        log("#platforms = "..#platforms)
         -- is this a checkpoint?
         if blob.onPlatform.isCheckpoint then
           blob.onPlatform.checkpoint = true
           blob.lastCheckpointPlatNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
+          log("blob.onPlatformNum. = "..blob.onPlatformNum)
+          log("#platforms = "..#platforms)
+
+          -- DEBUG:
+          for k,p in pairs(platforms) do
+            log(" - ["..k.."]="..p.num)
+          end
+
+          -- bail out now
+          return
         end
        end
       blob.x = platform.x + (platform.spr_w*32/2) - 16
@@ -231,11 +245,12 @@ end
 
 -- clear old ones platforms
 function prune_platforms(numTodeleteTo)
+  log("in prune_platforms("..numTodeleteTo..")...")
   -- remove all platforms prior to last checkpoint
-  for i=1,numTodeleteTo-1 do
-    platforms[i] = nil
+  for i=1,numTodeleteTo do
+    --platforms[i] = nil
     --platforms[i]="nil"
-    --table.remove(platforms, 1)
+    table.remove(platforms, 1)
   end
   -- shift blobby platform pos
   blob.onPlatformNum = 1
