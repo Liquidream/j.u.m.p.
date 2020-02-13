@@ -97,7 +97,7 @@ function createNewPlatform()
   
   elseif pType == PLATFORM_TYPE.BLOCKER 
     and #platforms < blob.startPlatformNum + blob.numPlatforms 
-    and platforms[#platforms-1].type ~= PLATFORM_TYPE.BLOCKER then
+    and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
       --and num < blob.startPlatformNum + blob.numPlatforms 
     --and platforms[num-1].type ~= PLATFORM_TYPE.BLOCKER then
       return BlockerPlatform(-56, ypos, 8)
