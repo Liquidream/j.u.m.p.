@@ -34,8 +34,10 @@ end
 function init_level()  
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
-  platforms[1] = StaticPlatform(-56, GAME_HEIGHT, 8)
-  platforms[1].num = 1  
+  if platforms[1] == nil then
+    platforms[1] = StaticPlatform(-56, GAME_HEIGHT, 8)
+    platforms[1].num = 1  
+  end
   
   -- set the total num platforms for this level/section
   blob.numPlatforms = 5+(blob.levelNum*3)
@@ -55,7 +57,7 @@ function createNewPlatform()
   -- 
   blob.platformCounter = blob.platformCounter + 1
   local num = blob.platformCounter
-  log("in createNewPlatform()... seeding:"..num)
+  debug_log("in createNewPlatform()... seeding:"..num)
   
   -- seed rng for platform
   srand(num)

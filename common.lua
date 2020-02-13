@@ -60,9 +60,8 @@ function addTween(tween)
   table.insert( tweens, tween )
 end
 
--- function resetPal(palette, trans_col)
---   for i=0,#palette do
---     pal(i, i)
---     palt(i, i==trans_col)
---   end
--- end
+function debug_log(msg)
+  if DEBUG_MODE then
+    log(msg)
+  end
+end

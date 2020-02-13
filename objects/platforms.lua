@@ -13,7 +13,7 @@ do
     self.y = y
     -- randomise which is the "active" state (true/false)
     self.activeState = irnd(2)==0 
-    log("self.activeState="..tostring(self.activeState))
+    debug_log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
     self.currState = false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
@@ -32,7 +32,7 @@ do
   -- most platforms will override this
   function BasePlatformObject:setPressedState(is_pressed)
     self.currState = is_pressed
-    --log("setPressedState = "..tostring(is_pressed))
+    --debug_log("setPressedState = "..tostring(is_pressed))
   end
   -- base "landed" test
   -- most platforms will override this
@@ -297,7 +297,7 @@ do
       -- and self.currState == self.activeState 
       then
         -- landed
-        --log("landed!!")
+        --debug_log("landed!!")
         blob.onGround = true
         blob.vy = 0
         blob.y = self.y-32
@@ -354,7 +354,7 @@ do
     then
       -- landed
       return true
-      -- log("landed!!")
+      -- debug_log("landed!!")
       -- blob.onGround = true
       -- blob.vy = 0
       -- blob.y = self.y-32

@@ -55,7 +55,7 @@ function update_game(dt)
       -- if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
       --end      
-  --    init_level()
+      init_level()
     end
     -- update camera
     update_camera(dt)
@@ -133,7 +133,7 @@ function update_blob(dt)
     if morePlatforms then
       local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
       jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-      log("nextPlat.num="..tostring(nextPlat.num))
+      debug_log("nextPlat.num="..tostring(nextPlat.num))
     end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
@@ -142,19 +142,21 @@ function update_blob(dt)
       blob.vx = jumpAmountX
       blob.onGround = false
       blob.jumpCounter = 0
-      log("jump!")
-      log("jumpPlatformCount="..tostring(jumpPlatformCount))
-      log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
+      debug_log("jump!")
+      debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
+      debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
       
     end
 
     -- check for level end
-    if blob.onPlatformNum == blob.startPlatformNum + blob.numPlatforms 
-    --and blob.jumpCounter >= blob.jumpFreq 
-    then
-      gameState = GAME_STATE.LVL_END
-      gameCounter = 0
-    end
+    -- if blob.onPlatformNum == blob.numPlatforms 
+    -- --blob.onPlatformNum == blob.startPlatformNum + blob.numPlatforms 
+    
+    -- --and blob.jumpCounter >= blob.jumpFreq 
+    -- then
+    --   gameState = GAME_STATE.LVL_END
+    --   gameCounter = 0
+    -- end
 
   else  
     -- jumping/fallings
@@ -197,8 +199,8 @@ function update_collisions()
         blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform
-        log("blob.onPlatformNum = "..blob.onPlatformNum)
-        log("#platforms = "..#platforms)
+        debug_log("blob.onPlatformNum = "..blob.onPlatformNum)
+        debug_log("#platforms = "..#platforms)
 
         -- is this a checkpoint?
         if blob.onPlatform.isCheckpoint then
@@ -207,13 +209,17 @@ function update_collisions()
           blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
-          log("blob.onPlatformNum. = "..blob.onPlatformNum)
-          log("#platforms = "..#platforms)
+          debug_log("blob.onPlatformNum. = "..blob.onPlatformNum)
+          debug_log("#platforms = "..#platforms)
 
           -- DEBUG:
           for k,p in pairs(platforms) do
-            log(" - ["..k.."]="..p.num)
+            debug_log(" - ["..k.."]="..p.num)
           end
+
+          -- end of section
+          gameState = GAME_STATE.LVL_END
+          gameCounter = 0
 
           -- bail out now
           return
@@ -229,9 +235,9 @@ end
 
 -- generate new platforms (and clear old ones)
 function generate_platforms()
-  log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
-  log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
-  log("#platforms "..tostring(#platforms))
+  debug_log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+  debug_log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
+  debug_log("#platforms "..tostring(#platforms))
 
   -- create any missing platforms (so there's always 5 ahead)
   while #platforms < blob.onPlatformNum + 5 do

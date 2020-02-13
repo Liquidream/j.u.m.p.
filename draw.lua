@@ -176,7 +176,7 @@ function draw_blob(x,y)
     end
   else    
     -- jumping
-    --log("blob.vy:"..blob.vy)
+    --debug_log("blob.vy:"..blob.vy)
     if blob.vy < -25 then
       spr=2   -- squished
     else
