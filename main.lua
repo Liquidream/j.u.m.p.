@@ -46,6 +46,9 @@ Object = require("lib/classic")
 require("objects/platforms")
 --require("sprinklez")
 
+Sound = require("lib/sound")
+Sounds = {}
+
 
  
 function love.load()

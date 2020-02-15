@@ -31,6 +31,15 @@ function init_game()
 
   -- show the title
   --init_title()
+
+  Sounds.music = Sound:new('Jump_Music_90bpm_DMaj.wav', 1)
+  Sounds.music:setVolume(0.75)
+  Sounds.music:setLooping(true)
+  Sounds.music:play()
+  --
+  -- Sounds.music:playWithPitch(1)
+  -- local tr2 = 1.0594630943592952645
+  -- Sounds.music:playWithPitch(1 * (tr2 ^ 1))
 end
 
 -- create initial platforms & reset blobby
