@@ -72,14 +72,14 @@ function createNewPlatform(platformNum)
     { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockLevel=1 },
     { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockLevel=2 },
     { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockLevel=3 },
+    { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockLevel=3 },
   }
 
   -- seed rng for platform
   srand(platformNum)
 
   local platformDist = 150
-  local positions = {10, 56, 102}
-  local xpos = positions[irnd(3)+1]
+  local xpos = pick(PLATFORM_POSITIONS)
   local ypos = GAME_HEIGHT+platformDist-(platformNum*platformDist)
   local prevPlatform = platforms[#platforms]
   
@@ -98,6 +98,9 @@ function createNewPlatform(platformNum)
     -- pick a platform type
     local pDef = pick(platformDefs)
 
+    -- rigged!!
+    --pDef.type = PLATFORM_TYPE.TRIPLESPIKER
+
     -- BASIC checks
     -- is platform unlocked yet?
     if pDef.unlockLevel > blob.levelNum then goto continue end
@@ -109,14 +112,20 @@ function createNewPlatform(platformNum)
     -- REMOVED Static from RNG, as "inactive Spiker" is same!
     -- if pType == PLATFORM_TYPE.STATIC then
     --   return StaticPlatform(xpos, ypos, 1)
-    
+    ------------------------------------------------
     if pDef.type == PLATFORM_TYPE.SPIKER then    
+    ------------------------------------------------
       newPlatform = SpikerPlatform(xpos, ypos, 1)
 
+    ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.SLIDER then
+    ------------------------------------------------
+
       newPlatform = SliderPlatform(56, ypos, 1)
     
+    ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.BLOCKER 
+    ------------------------------------------------
       and #platforms < blob.startPlatformNum + blob.numPlatforms 
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
         -- no "double blockers" and no blocker as the final platform
@@ -132,6 +141,12 @@ function createNewPlatform(platformNum)
           platforms[#platforms].num = prevPlatform.num
         end
     
+    ------------------------------------------------
+    elseif pDef.type == PLATFORM_TYPE.TRIPLESPIKER then
+    ------------------------------------------------
+      -- create three spikers (Blobby will only jump on ONE of them)
+      newPlatform = TripleSpikerPlatform(xpos, ypos, 1)
+  
     else
       -- do nothing - let it loop again
     end

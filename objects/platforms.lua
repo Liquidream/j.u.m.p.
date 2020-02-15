@@ -48,6 +48,7 @@ do
   end
 end
 
+
 -- ------------------------------------------------------------
 -- BLOCKER platform type (breaks on interation)
 --
@@ -426,6 +427,66 @@ do
   end
 
 end
+
+-- ------------------------------------------------------------
+-- TRIPLESPIKER platform type (toggles on activation)
+--
+do
+  TripleSpikerPlatform = SpikerPlatform:extend()
+
+  function TripleSpikerPlatform:new(x,y,spr_width)
+    TripleSpikerPlatform.super.new(self, x, y, spr_width)
+
+    self.type = PLATFORM_TYPE.TRIPLESPIKER
+    self.spr_w = spr_width
+  end
+
+  function TripleSpikerPlatform:update(dt)
+    -- update base class/values
+    TripleSpikerPlatform.super.update(self, dt)
+
+    -- update local stuff    
+  end
+
+  function TripleSpikerPlatform:draw()
+    -- draw spikes
+    spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
+    
+    -- draw (base) platform
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y, self.spr_w, self.spr_h)
+
+    --SpikerPlatform.super.draw(self)
+
+    -- draw decoys
+    for i=1,3 do
+      local xpos = PLATFORM_POSITIONS[i]
+      if self.x ~= xpos then
+        -- draw spikes
+        spr((self.currState~=self.activeState) and 16 or 17, xpos, self.y-32, self.spr_w, spr_h)
+        
+        -- draw (base) platform
+        spr(self.spr - (self.completed and 1 or 0), 
+        xpos, self.y, self.spr_w, self.spr_h)
+      end
+    end
+
+  end
+
+  function TripleSpikerPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    TripleSpikerPlatform.super.setPressedState(self,is_pressed)
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function TripleSpikerPlatform:hasLanded(blob)
+    -- call base implementation
+    return TripleSpikerPlatform.super.hasLanded(self,blob)
+  end
+
+end
+
 
 -- ------------------------------------------------------------
 -- STATIC platform type (no interaction)

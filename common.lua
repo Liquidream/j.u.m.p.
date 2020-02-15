@@ -13,7 +13,10 @@ GAME_STATE = { SPLASH=0, TITLE=1, INFO=2, LVL_INTRO=3, LVL_PLAY=4, LVL_END=5,
                LOSE_LIFE=6, GAME_OVER=7, COMPLETED=8 }
 
 PLATFORM_TYPE = { STATIC=1, 
-                  SPIKER=2, SLIDER=3, BLOCKER=4, SPRINGER=5, FLOATER=6 }
+                  SPIKER=2, SLIDER=3, BLOCKER=4, TRIPLESPIKER = 5,
+                  SPRINGER=6, FLOATER=7 }
+
+PLATFORM_POSITIONS = {10, 56, 102}
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54
