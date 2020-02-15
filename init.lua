@@ -81,6 +81,7 @@ function createNewPlatform(platformNum)
   local positions = {10, 56, 102}
   local xpos = positions[irnd(3)+1]
   local ypos = GAME_HEIGHT+platformDist-(platformNum*platformDist)
+  local prevPlatform = platforms[#platforms]
   
   -- check for end of level/section
   if platformNum == blob.startPlatformNum + blob.numPlatforms then
@@ -105,11 +106,6 @@ function createNewPlatform(platformNum)
 
     -- ADVANCED checks
 
-    --local pType = irnd(maxTypeNumber-1)+2
-    --local pType = PLATFORM_TYPE.BLOCKER    
-    --local pType = PLATFORM_TYPE.STATIC
-    --local pType = PLATFORM_TYPE.SPIKER
-
     -- REMOVED Static from RNG, as "inactive Spiker" is same!
     -- if pType == PLATFORM_TYPE.STATIC then
     --   return StaticPlatform(xpos, ypos, 1)
@@ -125,18 +121,30 @@ function createNewPlatform(platformNum)
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
         -- no "double blockers" and no blocker as the final platform
         newPlatform = BlockerPlatform(-56, ypos, 8)
+
+        -- be nice to player for early levels
+        -- (don't have "blocker" above a "spiker")
+        if prevPlatform.type == PLATFORM_TYPE.SPIKER 
+         and blob.levelNum < 5 then
+          -- replace "spiker" with a "static"
+          debug_log("> replaced spiker with a static!")
+          platforms[#platforms] = StaticPlatform(prevPlatform.x, prevPlatform.y, 1)
+          platforms[#platforms].num = prevPlatform.num
+        end
     
     else
-      -- do nothing - let it loop again 
-
-      -- default type 
-      -- (now Spiker - as when inactive, same as static!)
-      --return SpikerPlatform(xpos, ypos, 1)
-      -- return StaticPlatform(xpos, ypos, 1)
+      -- do nothing - let it loop again
     end
 
     ::continue::    
   end
+
+  -- log("newPlatform.type == "..tostring(newPlatform.type))
+  -- log("#platforms == "..tostring(#platforms))
+  -- -- DEBUG:
+  -- for k,p in pairs(platforms) do
+  --   debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
+  -- end
 
   -- finally, return new platform
   return newPlatform
@@ -148,7 +156,7 @@ function init_blob()
   blob = {
     lives = 3,
     score = 0,       -- essentially the platform num?
-    levelNum = 1,
+    levelNum = 3, --1
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
     hitbox_w = 32,
     hitbox_h = 32,

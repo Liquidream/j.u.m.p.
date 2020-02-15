@@ -58,12 +58,6 @@ do
     BlockerPlatform.super.new(self, x, y)
 
     self.type = PLATFORM_TYPE.BLOCKER
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = blockers
-      -- 4 = springers
-      -- 5 = floaters
-
     self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1
@@ -261,14 +255,7 @@ do
     -- QUESTION: ignore the x pos?
     SliderPlatform.super.new(self, x, y)
 
-    self.type = 6
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-      -- 6 = sliders
-
+    self.type = PLATFORM_TYPE.SLIDER
     --self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1
@@ -386,13 +373,7 @@ do
   function SpikerPlatform:new(x,y,spr_width)
     SpikerPlatform.super.new(self, x, y)
 
-    self.type = 1
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-
+    self.type = PLATFORM_TYPE.SPIKER
     self.spr = 9 --(8 + irnd(2))
     self.spr_w = spr_width
     self.spr_h = 1
@@ -455,13 +436,7 @@ do
   function StaticPlatform:new(x,y,spr_width)
     StaticPlatform.super.new(self, x, y)
 
-    self.type = 1
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-
+    self.type = PLATFORM_TYPE.STATIC
     self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1

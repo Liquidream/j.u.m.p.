@@ -254,7 +254,7 @@ end
 
 -- clear old ones platforms
 function prune_platforms(numTodeleteTo)
-  log("in prune_platforms("..numTodeleteTo..")...")
+  debug_log("in prune_platforms("..numTodeleteTo..")...")
   -- remove all platforms prior to last checkpoint
   for i=1,numTodeleteTo do
     --platforms[i] = nil
