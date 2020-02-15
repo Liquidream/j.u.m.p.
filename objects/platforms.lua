@@ -468,7 +468,7 @@ do
     self.hitbox_w = 32*spr_width
     self.hitbox_h = 32
     self.isCheckpoint = false -- is this a checkpoint?
-    self.checkpoint = false   -- (checkpoint state)
+    self.checkpointReached = false   -- (checkpoint state)
   end
 
   function StaticPlatform:update(dt)
@@ -485,7 +485,7 @@ do
     -- draw local stuff
     if self.isCheckpoint then
       -- flag state?
-      if self.checkpoint then
+      if self.checkpointReached then
         pal(5,9)
         pal(6,8)
       end

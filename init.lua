@@ -65,60 +65,81 @@ function init_section()
 end
   
 -- create & return a random platform
-function createNewPlatform()
-  -- 
-  blob.platformCounter = blob.platformCounter + 1
-  local num = blob.platformCounter
-  debug_log("in createNewPlatform()... seeding:"..num)
+function createNewPlatform(platformNum)
   
+  -- create platform definitions
+  local platformDefs = {
+    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockLevel=1 },
+    { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockLevel=2 },
+    { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockLevel=3 },
+  }
+
   -- seed rng for platform
-  srand(num)
-  -- ERROR: Can't do this atm, as it always results in activeState = false?!?
+  srand(platformNum)
 
   local platformDist = 150
   local positions = {10, 56, 102}
   local xpos = positions[irnd(3)+1]
-  local ypos = GAME_HEIGHT+platformDist-(num*platformDist)
+  local ypos = GAME_HEIGHT+platformDist-(platformNum*platformDist)
   
   -- check for end of level/section
-  if blob.platformCounter == blob.startPlatformNum + blob.numPlatforms then
+  if platformNum == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
     --TODO: maybe change the platform look/style?
     local checkPoint = StaticPlatform(-56, ypos, 8)
     checkPoint.isCheckpoint = true
     return checkPoint
   end
-
-
   
-  -- randomise types (based on those unlocked)    
-  local pType = irnd(maxTypeNumber-1)+2
-  --local pType = PLATFORM_TYPE.BLOCKER    
-  --local pType = PLATFORM_TYPE.STATIC
-  --local pType = PLATFORM_TYPE.SPIKER
+  -- randomly select a platform type (based on those unlocked)
+  local newPlatform = nil
+  while newPlatform == nil do
+    -- pick a platform type
+    local pDef = pick(platformDefs)
 
-  -- REMOVED Static from RNG, as "inactive Spiker" is same!
-  -- if pType == PLATFORM_TYPE.STATIC then
-  --   return StaticPlatform(xpos, ypos, 1)
-  
-  if pType == PLATFORM_TYPE.SPIKER then    
-    return SpikerPlatform(xpos, ypos, 1)
+    -- BASIC checks
+    -- is platform unlocked yet?
+    if pDef.unlockLevel > blob.levelNum then goto continue end
+    -- did we meet the odds?
+    if rnd(1) > pDef.odds then goto continue end
 
-  elseif pType == PLATFORM_TYPE.SLIDER then
-    return SliderPlatform(56, ypos, 1)
-  
-  elseif pType == PLATFORM_TYPE.BLOCKER 
-    and #platforms < blob.startPlatformNum + blob.numPlatforms 
-    and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
-      -- no "double blockers" and no blocker as the final platform
-      return BlockerPlatform(-56, ypos, 8)
-  
-  else
-    -- default type 
-    -- (now Spiker - as when inactive, same as static!)
-    return SpikerPlatform(xpos, ypos, 1)
-    -- return StaticPlatform(xpos, ypos, 1)
+    -- ADVANCED checks
+
+    --local pType = irnd(maxTypeNumber-1)+2
+    --local pType = PLATFORM_TYPE.BLOCKER    
+    --local pType = PLATFORM_TYPE.STATIC
+    --local pType = PLATFORM_TYPE.SPIKER
+
+    -- REMOVED Static from RNG, as "inactive Spiker" is same!
+    -- if pType == PLATFORM_TYPE.STATIC then
+    --   return StaticPlatform(xpos, ypos, 1)
+    
+    if pDef.type == PLATFORM_TYPE.SPIKER then    
+      newPlatform = SpikerPlatform(xpos, ypos, 1)
+
+    elseif pDef.type == PLATFORM_TYPE.SLIDER then
+      newPlatform = SliderPlatform(56, ypos, 1)
+    
+    elseif pDef.type == PLATFORM_TYPE.BLOCKER 
+      and #platforms < blob.startPlatformNum + blob.numPlatforms 
+      and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
+        -- no "double blockers" and no blocker as the final platform
+        newPlatform = BlockerPlatform(-56, ypos, 8)
+    
+    else
+      -- do nothing - let it loop again 
+
+      -- default type 
+      -- (now Spiker - as when inactive, same as static!)
+      --return SpikerPlatform(xpos, ypos, 1)
+      -- return StaticPlatform(xpos, ypos, 1)
+    end
+
+    ::continue::    
   end
+
+  -- finally, return new platform
+  return newPlatform
 end
 
 -- create & initialise blob obj 

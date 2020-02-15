@@ -239,9 +239,12 @@ function generate_platforms()
 
   -- create any missing platforms (so there's always 5 ahead)
   while #platforms < blob.onPlatformNum + 5 do
-    local newPlatform = createNewPlatform()
+    -- auto-increase the platform count
+    blob.platformCounter = blob.platformCounter + 1 
+    local newPlatform = createNewPlatform(blob.platformCounter)
     newPlatform.num = platforms[#platforms].num + 1
-    platforms[#platforms + 1] = newPlatform 
+    platforms[#platforms + 1] = newPlatform
+    
   end
 
   -- TODO: Remove old platforms e.g. everything below last checkpoint
