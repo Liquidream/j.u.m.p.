@@ -20,14 +20,16 @@ function init_game()
 
   -- init/clear platforms
   platforms = {}
-
+  
   init_blob()
+  
+  init_section(2) -- level/section
+
   -- reposition blob at start
   reset_blob()
   
   init_cam()
   
-  init_section()
 
   -- show the title
   --init_title()
@@ -43,16 +45,28 @@ function init_game()
 end
 
 -- create initial platforms & reset blobby
-function init_section()  
+function init_section(sectionNum)  
+  log("sectionNum="..sectionNum)
+  local startPlatformNum = 0
+  -- calc starting platform number (index)
+  for i=1,sectionNum do
+    startPlatformNum = startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
+  end
+  --local startPlatformNum = (sectionNum>1) and (5+((sectionNum-1)*3)+1) or 1
+  log("startPlatformNum... = "..startPlatformNum)
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   if platforms[1] == nil then
-    platforms[1] = StaticPlatform(-56, GAME_HEIGHT, 8)
-    platforms[1].num = 1  
+    local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(startPlatformNum*PLATFORM_DIST_Y)
+    platforms[1] = StaticPlatform(-56, ypos, 8)
+    platforms[1].num = startPlatformNum
   end
   
+  -- set the level/section num
+  blob.levelNum = sectionNum
   -- set the total num platforms for this level/section
   blob.numPlatforms = 5+(blob.levelNum*3)
+  blob.platformCounter = startPlatformNum
 
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
@@ -78,9 +92,9 @@ function createNewPlatform(platformNum)
   -- seed rng for platform
   srand(platformNum)
 
-  local platformDist = 150
+  
   local xpos = pick(PLATFORM_POSITIONS)
-  local ypos = GAME_HEIGHT+platformDist-(platformNum*platformDist)
+  local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(platformNum*PLATFORM_DIST_Y)
   local prevPlatform = platforms[#platforms]
   
   -- check for end of level/section
@@ -171,14 +185,14 @@ function init_blob()
   blob = {
     lives = 3,
     score = 0,       -- essentially the platform num?
-    levelNum = 3, --1
+    levelNum = 0,    -- ...this gets set in init_section()
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
     hitbox_w = 32,
     hitbox_h = 32,
     jumpFreq = 10,
     numPlatforms = 0, -- number of platforms for the current section
     platformCounter = 1, -- running counter of platform gen numbers
-    onPlatformNum = 0,
+    onPlatformNum = 1,
     startPlatformNum = 1,
 
     loseLife = function(self)
@@ -198,8 +212,10 @@ end
 -- (either start of game or section)
 function reset_blob()--islevelInit)
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
-  blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
-  blob.maxHeight = GAME_HEIGHT-40
+  blob.y = platforms[1].y - 40
+  --blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
+  blob.maxHeight = blob.y-40
+  --blob.maxHeight = GAME_HEIGHT-40
   blob.vy = 0     -- y velocity
   blob.vx = 0     -- x velocity
   blob.state = 0  -- 0=start, 1=jumping, 2=flying, 3=landing?
@@ -212,8 +228,10 @@ function init_cam()
   -- TODO: initialise camera object (smooth panning camera)
   cam = {
     x = 0,
-    y = 0,
+    y = platforms[1].y - GAME_HEIGHT/2,
+    --y = 0,
     trap_y = GAME_HEIGHT/2
+    --trap_y = GAME_HEIGHT/2
   }
 end
 

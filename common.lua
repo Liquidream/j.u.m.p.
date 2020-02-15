@@ -17,6 +17,7 @@ PLATFORM_TYPE = { STATIC=1,
                   SPRINGER=6, FLOATER=7 }
 
 PLATFORM_POSITIONS = {10, 56, 102}
+PLATFORM_DIST_Y = 150
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54

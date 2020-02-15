@@ -50,18 +50,16 @@ function update_game(dt)
       blob.jumpCounter = blob.jumpCounter + 1
     end
 
-    --TODO: tally up score, then wait for user to start next round
+    --TODO: wait for user to start next round?
     gameCounter = gameCounter + 1
-    if gameCounter > 100 then
-      -- level up
-      blob.levelNum = blob.levelNum + 1
-  --    blob.startPlatformNum = blob.onPlatform.num
+    if gameCounter > 100 then  
       -- speed up?
       -- if blob.levelNum > 3 then
         blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
         blob.jumpCounter = 0
       --end      
-      init_section()
+      -- level up
+      init_section(blob.levelNum + 1)
     end
     -- update camera
     update_camera(dt)
@@ -191,9 +189,10 @@ function update_collisions()
       blob.x = platform.x + (platform.spr_w*32/2) - 16
       blob.y = platform.y - 32    
 
-      if blob.onPlatformNum ~= i
-       and blob.onPlatform ~= platform
-       and blob.onPlatformNum then
+      if blob.onPlatform ~= platform
+      --blob.onPlatformNum ~= platform.num       
+       --and blob.onPlatformNum 
+       then
         blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform
@@ -208,7 +207,8 @@ function update_collisions()
           blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
-          debug_log("blob.onPlatformNum. = "..blob.onPlatformNum)
+          log("CHECKPOINT!")
+          log("blob.onPlatform.num = "..blob.onPlatform.num)
           debug_log("#platforms = "..#platforms)
 
           -- DEBUG:
