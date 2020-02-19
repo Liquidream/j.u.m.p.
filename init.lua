@@ -23,7 +23,8 @@ function init_game()
   
   init_blob()
   
-  init_section(2) -- level/section
+  init_section(1) -- level/section
+  --init_section(2) -- level/section
 
   -- reposition blob at start
   reset_blob()
@@ -34,7 +35,7 @@ function init_game()
   -- show the title
   --init_title()
 
-  Sounds.music = Sound:new('Jump_Music_90bpm_DMaj.wav', 1)
+  Sounds.music = Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
   Sounds.music:setVolume(0.75)
   Sounds.music:setLooping(true)
   Sounds.music:play()
@@ -47,26 +48,29 @@ end
 -- create initial platforms & reset blobby
 function init_section(sectionNum)  
   log("sectionNum="..sectionNum)
-  local startPlatformNum = 0
+  blob.startPlatformNum = 0
   -- calc starting platform number (index)
   for i=1,sectionNum do
-    startPlatformNum = startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
+    blob.startPlatformNum = blob.startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
   end
   --local startPlatformNum = (sectionNum>1) and (5+((sectionNum-1)*3)+1) or 1
-  log("startPlatformNum... = "..startPlatformNum)
+  log("blob.startPlatformNum... = "..blob.startPlatformNum)
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   if platforms[1] == nil then
-    local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(startPlatformNum*PLATFORM_DIST_Y)
+    local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
     platforms[1] = StaticPlatform(-56, ypos, 8)
-    platforms[1].num = startPlatformNum
+    platforms[1].num = blob.startPlatformNum
   end
   
   -- set the level/section num
   blob.levelNum = sectionNum
   -- set the total num platforms for this level/section
-  blob.numPlatforms = 5+(blob.levelNum*3)
-  blob.platformCounter = startPlatformNum
+  blob.numPlatforms = 5+(sectionNum*3)
+  log("blob.numPlatforms... = "..blob.numPlatforms)
+  if blob.platformCounter <= 1 then
+    blob.platformCounter = blob.startPlatformNum
+  end
 
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
@@ -210,7 +214,7 @@ end
 
 -- reset blob back to starting position
 -- (either start of game or section)
-function reset_blob()--islevelInit)
+function reset_blob()
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
   blob.y = platforms[1].y - 40
   --blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)

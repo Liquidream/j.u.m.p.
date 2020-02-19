@@ -29,9 +29,10 @@ if CASTLE_PREFETCH then
     "update.lua",
     "assets/spritesheet.png",
     "assets/gomarice_gogono_cocoa_mochi.ttf",
+    "assets/snd/Jump Music Level 1 Game Loop.ogg",
     "lib/classic.lua",
-    "objects/platforms.lua",
     "lib/tween.lua",
+    "objects/platforms.lua",
   })
 end
 

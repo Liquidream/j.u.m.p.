@@ -244,7 +244,7 @@ function generate_platforms()
     local newPlatform = createNewPlatform(blob.platformCounter)
     newPlatform.num = platforms[#platforms].num + 1
     platforms[#platforms + 1] = newPlatform
-    
+    --log("create>> ["..newPlatform.num.."] type="..newPlatform.type.." y="..newPlatform)
   end
 
   -- TODO: Remove old platforms e.g. everything below last checkpoint
