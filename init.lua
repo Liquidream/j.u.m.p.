@@ -18,13 +18,21 @@ function init_game()
   end
   _initialized = true
 
+  -- create platform definitions
+  platformDefs = {
+    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=1 },  -- unlocked=true?
+    { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockAt=11 },
+    { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockAt=14 },
+    { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockAt=20 },
+  }
   -- init/clear platforms
   platforms = {}
+
   
   init_blob()
   
-  --init_section(1) -- level/section
-  init_section(2) -- level/section
+  init_section(1) -- level/section
+  --init_section(2) -- level/section
 
   -- reposition blob at start
   reset_blob()
@@ -47,14 +55,13 @@ end
 
 -- create initial platforms & reset blobby
 function init_section(sectionNum)  
-  log("sectionNum="..sectionNum)
+  debug_log("init_section="..sectionNum)
   blob.startPlatformNum = 0
   -- calc starting platform number (index)
   for i=1,sectionNum do
     blob.startPlatformNum = blob.startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
   end
-  --local startPlatformNum = (sectionNum>1) and (5+((sectionNum-1)*3)+1) or 1
-  log("blob.startPlatformNum... = "..blob.startPlatformNum)
+  debug_log("blob.startPlatformNum... = "..blob.startPlatformNum)
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   if platforms[1] == nil then
@@ -67,7 +74,7 @@ function init_section(sectionNum)
   blob.levelNum = sectionNum
   -- set the total num platforms for this level/section
   blob.numPlatforms = 5+(sectionNum*3)
-  log("blob.numPlatforms... = "..blob.numPlatforms)
+  debug_log("blob.numPlatforms... = "..blob.numPlatforms)
   if blob.platformCounter <= 1 then
     blob.platformCounter = blob.startPlatformNum
   end
@@ -75,7 +82,7 @@ function init_section(sectionNum)
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
   
-  log("blob.speedFactor = "..blob.speedFactor)
+  debug_log("blob.speedFactor = "..blob.speedFactor)
   
   --
   -- ready to play
@@ -85,14 +92,7 @@ end
 -- create & return a random platform
 function createNewPlatform(platformNum)
   
-  -- create platform definitions
-  local platformDefs = {
-    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockLevel=1 },
-    { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockLevel=2 },
-    { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockLevel=3 },
-    { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockLevel=3 },
-  }
-
+  
   -- seed rng for platform
   srand(platformNum)
 
@@ -120,8 +120,8 @@ function createNewPlatform(platformNum)
     --pDef.type = PLATFORM_TYPE.TRIPLESPIKER
 
     -- BASIC checks
-    -- is platform unlocked yet?
-    if pDef.unlockLevel > blob.levelNum then goto continue end
+    -- is platform unlocked yet? (platform number, NOT level)
+    if pDef.unlockAt > platformNum then goto continue end
     -- did we meet the odds?
     if rnd(1) > pDef.odds then goto continue end
 
@@ -151,10 +151,11 @@ function createNewPlatform(platformNum)
 
         -- be nice to player for early levels
         -- (don't have "blocker" above a "spiker")
-        if prevPlatform.type == PLATFORM_TYPE.SPIKER 
-         and blob.levelNum < 5 then
+        if (platformNum < 20 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
+           or (platformNum < 50 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER)
+         then
           -- replace "spiker" with a "static"
-          debug_log("> replaced spiker with a static!")
+          log("> replaced spiker with a static!")
           platforms[#platforms] = StaticPlatform(prevPlatform.x, prevPlatform.y, 1)
           platforms[#platforms].num = prevPlatform.num
         end
@@ -172,8 +173,8 @@ function createNewPlatform(platformNum)
     ::continue::    
   end
 
-  -- log("newPlatform.type == "..tostring(newPlatform.type))
-  -- log("#platforms == "..tostring(#platforms))
+  -- debug_log("newPlatform.type == "..tostring(newPlatform.type))
+  -- debug_log("#platforms == "..tostring(#platforms))
   -- -- DEBUG:
   -- for k,p in pairs(platforms) do
   --   debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
@@ -200,7 +201,7 @@ function init_blob()
     startPlatformNum = 1,
 
     loseLife = function(self)
-      log("OUCH!!!!")
+      debug_log("OUCH!!!!")
       self.lives = self.lives - 1
       cls(38) flip()
       -- game over?

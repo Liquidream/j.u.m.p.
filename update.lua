@@ -208,7 +208,6 @@ function update_collisions()
           -- clear old ones platforms
           prune_platforms(i-1)
           log("CHECKPOINT!")
-          log("blob.onPlatform.num = "..blob.onPlatform.num)
           debug_log("#platforms = "..#platforms)
 
           -- DEBUG:
@@ -241,11 +240,9 @@ function generate_platforms()
   while #platforms < blob.onPlatformNum + 5 do
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
-    log("blob.platformCounter:"..tostring(blob.platformCounter))
     local newPlatform = createNewPlatform(blob.platformCounter)
     newPlatform.num = platforms[#platforms].num + 1
     platforms[#platforms + 1] = newPlatform
-    log("create>> ["..newPlatform.num.."] type="..newPlatform.type.." y="..newPlatform.y)
   end
 
   -- TODO: Remove old platforms e.g. everything below last checkpoint
