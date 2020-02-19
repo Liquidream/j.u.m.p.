@@ -236,15 +236,16 @@ function generate_platforms()
   debug_log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
   debug_log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
   debug_log("#platforms "..tostring(#platforms))
-
+  
   -- create any missing platforms (so there's always 5 ahead)
   while #platforms < blob.onPlatformNum + 5 do
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
+    log("blob.platformCounter:"..tostring(blob.platformCounter))
     local newPlatform = createNewPlatform(blob.platformCounter)
     newPlatform.num = platforms[#platforms].num + 1
     platforms[#platforms + 1] = newPlatform
-    --log("create>> ["..newPlatform.num.."] type="..newPlatform.type.." y="..newPlatform)
+    log("create>> ["..newPlatform.num.."] type="..newPlatform.type.." y="..newPlatform.y)
   end
 
   -- TODO: Remove old platforms e.g. everything below last checkpoint
