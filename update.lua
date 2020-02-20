@@ -193,9 +193,12 @@ function update_collisions()
       --blob.onPlatformNum ~= platform.num       
        --and blob.onPlatformNum 
        then
-        blob.score = blob.score + 1
         blob.onPlatformNum = i
         blob.onPlatform = platform
+        if not blob.onPlatform.completed then
+          blob.score = blob.score + 1
+          blob.onPlatform.completed = true
+        end
         debug_log("blob.onPlatformNum = "..blob.onPlatformNum)
         debug_log("#platforms = "..#platforms)
 

@@ -40,8 +40,7 @@ do
     -- check AABB collisions of platform hitbox
     if aabb(blob, self) 
       and blob.vy>0 then
-        -- landed
-        self.completed = true
+        -- landed        
         return true
     end 
     return false
