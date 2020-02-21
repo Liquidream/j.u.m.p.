@@ -20,7 +20,7 @@ function init_game()
 
   -- create platform definitions
   platformDefs = {
-    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=1 },  -- unlocked=true?
+    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=0 },  -- unlocked=true?
     { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockAt=11 },
     { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockAt=14 },
     { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockAt=20 },
@@ -44,7 +44,7 @@ function init_game()
   --init_title()
 
   Sounds.music = Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
-  Sounds.music:setVolume(0.75)
+  Sounds.music:setVolume(1)
   Sounds.music:setLooping(true)
   Sounds.music:play()
   --
@@ -78,15 +78,53 @@ function init_section(sectionNum)
   if blob.platformCounter <= 1 then
     blob.platformCounter = blob.startPlatformNum
   end
+  blob.jumpCounter = 0
 
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
   
-  debug_log("blob.speedFactor = "..blob.speedFactor)
   
   --
   -- ready to play
   gameState = GAME_STATE.LVL_PLAY
+end
+
+function init_level_end()
+  gameState = GAME_STATE.LVL_END
+  gameCounter = 0
+
+  -- TODO: review speed-ups and new platform messages, etc.
+  
+  -- any announcements? (speed, platform, tips)
+
+  -- speed up?
+  local speedup_levels={2,4,6}
+  if has_value(speedup_levels, blob.levelNum) then
+    blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
+    -- announce speed-up
+    local speedUpNum = table.indexOf(speedup_levels, blob.levelNum)
+    init_popup(1, speedUpNum) -- 1 = speedup msg
+    -- TODO: speed up music (switch track to next speed music)
+  end   
+  log("blob.speedFactor = "..blob.speedFactor)
+  
+  -- new platforms?
+  for pDef in all(platformDefs) do
+    if pDef.unlockAt == blob.levelNum then
+      -- announce platform
+      init_popup(2, pDef.type) -- 2 = platform msg
+    end
+  end
+
+  -- TODO: tips?
+  
+end
+
+function init_popup(info_type, info_value)
+  -- [info_types]
+  -- 1 = speed-ups, 2 = platforms
+
+  
 end
   
 -- create & return a random platform

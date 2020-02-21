@@ -69,3 +69,25 @@ function debug_log(msg)
     log(msg)
   end
 end
+
+function has_value(tab, val)
+  for index, value in ipairs(tab) do
+      if value == val then
+          return true
+      end
+  end
+  return false
+end
+
+--
+-- https://gist.github.com/walterlua/978150/2742d9479cd5bfb3d08d90cfcb014da94021e271
+--
+function table.indexOf(t, object)
+  if type(t) ~= "table" then error("table expected, got " .. type(t), 2) end
+
+  for i, v in pairs(t) do
+      if object == v then
+          return i
+      end
+  end
+end

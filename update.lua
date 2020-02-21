@@ -53,11 +53,12 @@ function update_game(dt)
     --TODO: wait for user to start next round?
     gameCounter = gameCounter + 1
     if gameCounter > 100 then  
-      -- speed up?
-      -- if blob.levelNum > 3 then
-        blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
-        blob.jumpCounter = 0
-      --end      
+      -- -- speed up?
+      -- if blob.levelNum > 1 then
+      --   blob.speedFactor = min(blob.speedFactor + 0.75, 2.5)
+      --   --blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
+      --   blob.jumpCounter = 0
+      -- end      
       -- level up
       init_section(blob.levelNum + 1)
     end
@@ -136,7 +137,7 @@ function update_blob(dt)
     if morePlatforms then
       local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
       jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-      debug_log("nextPlat.num="..tostring(nextPlat.num))
+      --debug_log("nextPlat.num="..tostring(nextPlat.num))
     end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
@@ -219,8 +220,7 @@ function update_collisions()
           end
 
           -- end of section
-          gameState = GAME_STATE.LVL_END
-          gameCounter = 0
+          init_level_end()
 
           -- bail out now
           return
