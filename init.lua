@@ -78,7 +78,6 @@ function init_section(sectionNum)
   if blob.platformCounter <= 1 then
     blob.platformCounter = blob.startPlatformNum
   end
-  blob.jumpCounter = 0
 
   -- generate any missing platforms (and clear old ones)
   generate_platforms()
@@ -167,6 +166,7 @@ function hide_popup()
         log(">>complete!!!!")
         -- start section
         gameState = GAME_STATE.LVL_PLAY
+        blob.jumpCounter = 0
         popup = nil
         hiding_popup = false
       end)

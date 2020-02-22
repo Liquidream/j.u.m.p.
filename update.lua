@@ -38,7 +38,8 @@ function update_game(dt)
         end
       else
         -- start section
-        gameState = GAME_STATE.LVL_PLAY
+        gameState = GAME_STATE.LVL_PLAY        
+        blob.jumpCounter = 0
       end
     end
     -- update camera
@@ -97,27 +98,12 @@ function update_game(dt)
   
 end
 
-function update_platforms(dt)
-  for i = 1,#platforms do
-    local platform = platforms[i]
-    if platform then
-      -- something pressed (this frame)?
-      if somethingPressed then 
-        -- update platform state
-        -- (if either input method used)
-        platform:setPressedState(currPressedState)
-      end
-      platform:update(dt)
-    end
-  end
-end
-
 function update_player_input()
   -- check whether touch/button pressed
   -- and update the world accordingly
   local mousePressed = btn(7)
   local mainKeyPressed = btn(4)
-  local currPressedState = mousePressed or mainKeyPressed
+  currPressedState = mousePressed or mainKeyPressed
 
   -- something pressed (this frame)
   somethingPressed = currPressedState ~= lastPressedState
@@ -133,6 +119,23 @@ function update_player_input()
   -- remember...
   lastPressedState = currPressedState  
 end
+
+
+function update_platforms(dt)
+  for i = 1,#platforms do
+    local platform = platforms[i]
+    if platform then
+      -- something pressed (this frame)?
+      if somethingPressed then 
+        -- update platform state
+        -- (if either input method used)
+        platform:setPressedState(currPressedState)
+      end
+      platform:update(dt)
+    end
+  end
+end
+
 
 function update_blob(dt)
   local gravity = 500
