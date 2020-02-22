@@ -85,8 +85,16 @@ function init_section(sectionNum)
   
   
   --
-  -- ready to play
-  gameState = GAME_STATE.LVL_PLAY
+  -- show intro / popup
+  --
+  init_level_intro()
+end
+
+function init_level_intro()
+  gameState = GAME_STATE.LVL_INTRO
+  gameCounter = 0
+
+  init_popup()
 end
 
 function init_level_end()
@@ -124,7 +132,45 @@ function init_popup(info_type, info_value)
   -- [info_types]
   -- 1 = speed-ups, 2 = platforms
 
+  popup = {
+    -- x = GAME_WIDTH/2,
+    -- y = GAME_HEIGHT/2,
+    sx = 0,
+    sy = 0,
+    -- width = 0,
+    -- height = 0,
+    spr_content = 0
+  }
   
+  addTween(
+    tween.new(
+      0.75, popup, 
+      {sx = 1, 
+       sy = 1}, 
+      'outElastic'
+      -- function(self)
+      --   log("complete!!!!")
+      -- end
+    )
+  )
+end
+
+function hide_popup()
+  hiding_popup = true
+  addTween(
+    tween.new(
+      0.5, popup, 
+      {sx = 0, 
+       sy = 0}, 
+      'inBack',
+      function(self)
+        log(">>complete!!!!")
+        -- start section
+        gameState = GAME_STATE.LVL_PLAY
+        popup = nil
+        hiding_popup = false
+      end)
+  )
 end
   
 -- create & return a random platform
@@ -255,7 +301,7 @@ end
 -- (either start of game or section)
 function reset_blob()
   blob.x = GAME_WIDTH/2 - 16     -- start in the middle
-  blob.y = platforms[1].y - 40
+  blob.y = platforms[1].y - 32
   --blob.y = GAME_HEIGHT-40   -- start near the bottom (on starting platform)
   blob.maxHeight = blob.y-40
   --blob.maxHeight = GAME_HEIGHT-40
@@ -311,7 +357,7 @@ end
 function init_assets()
   -- load gfx
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
-  --load_png("keys", "assets/keys.png", ak54, true)
+  load_png("popups", "assets/popups.png", ak54)
   spritesheet_grid(32,32)
   
   -- todo: load sfx + music

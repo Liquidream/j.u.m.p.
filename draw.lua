@@ -13,7 +13,8 @@ function draw_game()
     -- TODO: title screen
     --draw_level()??
 
-  elseif gameState == GAME_STATE.LVL_PLAY 
+  elseif gameState == GAME_STATE.LVL_INTRO 
+      or gameState == GAME_STATE.LVL_PLAY 
       or gameState == GAME_STATE.LVL_END 
       or gameState == GAME_STATE.GAME_OVER 
    then
@@ -143,6 +144,14 @@ function draw_ui()
   end
 
   pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
+
+  if gameState == GAME_STATE.LVL_INTRO then
+    pprint("GET READY!", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
+
+    if popup then
+      draw_popup()
+    end
+  end
   
   if gameState == GAME_STATE.LVL_END then
     pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
@@ -161,6 +170,15 @@ function draw_ui()
 
     pprint('FPS: ' .. love.timer.getFPS(), 85, GAME_HEIGHT-36, 49)
   end
+end
+
+function draw_popup()
+  --43 (3x3) bg  
+  spritesheet("popups")
+
+  aspr(popup.spr_content, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
+
+  spritesheet("spritesheet")
 end
 
 

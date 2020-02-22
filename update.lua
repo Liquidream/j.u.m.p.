@@ -15,6 +15,9 @@ function update_game(dt)
       table.remove(tweens, key)
     end
   end
+  
+  -- player interactions (always capture latest state)
+  update_player_input()
 
   if gameState == GAME_STATE.SPLASH then
     -- todo: splash screen
@@ -22,13 +25,30 @@ function update_game(dt)
   elseif gameState == GAME_STATE.TITLE then
     -- todo: title screen    
 
-  -- normal play (level intro/outro/game-over)    
+    -- intro (popup/"get ready")
+  elseif gameState == GAME_STATE.LVL_INTRO then    
+
+    --TODO: wait for user to start next round?
+    gameCounter = gameCounter + 1
+    if gameCounter > 200 or somethingPressed then  
+      -- start section
+      if popup then 
+        if not hiding_popup then
+          hide_popup()
+        end
+      else
+        -- start section
+        gameState = GAME_STATE.LVL_PLAY
+      end
+    end
+    -- update camera
+    update_camera(dt)
+
+  -- normal play
   elseif gameState == GAME_STATE.LVL_PLAY then
     -- speed factor
     speed_dt = dt * blob.speedFactor
 
-    -- player interactions
-    update_player_input()
 
     -- jumping "blob"
     update_blob(speed_dt)
@@ -42,7 +62,7 @@ function update_game(dt)
     -- update camera
     update_camera(speed_dt)
 
-  -- normal play (level intro/outro/game-over)    
+  -- level/section end ("checkpoint")
   elseif gameState == GAME_STATE.LVL_END then
     
     -- update blob to stand
@@ -53,12 +73,6 @@ function update_game(dt)
     --TODO: wait for user to start next round?
     gameCounter = gameCounter + 1
     if gameCounter > 100 then  
-      -- -- speed up?
-      -- if blob.levelNum > 1 then
-      --   blob.speedFactor = min(blob.speedFactor + 0.75, 2.5)
-      --   --blob.speedFactor = min(blob.speedFactor + 0.1, 2.5)
-      --   blob.jumpCounter = 0
-      -- end      
       -- level up
       init_section(blob.levelNum + 1)
     end
@@ -79,13 +93,20 @@ function update_game(dt)
   
   else
     -- ??
-  end    
+  end
+  
 end
 
 function update_platforms(dt)
   for i = 1,#platforms do
     local platform = platforms[i]
-    if platform then 
+    if platform then
+      -- something pressed (this frame)?
+      if somethingPressed then 
+        -- update platform state
+        -- (if either input method used)
+        platform:setPressedState(currPressedState)
+      end
       platform:update(dt)
     end
   end
@@ -96,16 +117,19 @@ function update_player_input()
   -- and update the world accordingly
   local mousePressed = btn(7)
   local mainKeyPressed = btn(4)
-  local currPressedState = mousePressed or mainKeyPressed  
+  local currPressedState = mousePressed or mainKeyPressed
 
-  if currPressedState ~= lastPressedState then
-    for key,platform in pairs(platforms) do
-      -- update platform state
-      -- (if either input method used)
-      platform:setPressedState(currPressedState)
-    end
-  end
+  -- something pressed (this frame)
+  somethingPressed = currPressedState ~= lastPressedState
 
+  -- if currPressedState ~= lastPressedState then
+  --   for key,platform in pairs(platforms) do
+  --     -- update platform state
+  --     -- (if either input method used)
+  --     platform:setPressedState(currPressedState)
+  --   end
+  -- end  
+  
   -- remember...
   lastPressedState = currPressedState  
 end
