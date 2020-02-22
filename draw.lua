@@ -174,10 +174,22 @@ end
 
 function draw_popup()
   --43 (3x3) bg  
+  rcamera(0,0)
+  -- dark overlay
+  for x=0,scrw+96,96 do
+    for y=0,scrh+96,96 do
+      aspr(43, x,y, 0, 3,3, 0, 0)
+    end  
+  end
+  circfill(0,0,5,39)
+  
+  camera(0,0)
+  -- pop-up
   spritesheet("popups")
 
   aspr(popup.spr_content, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
 
+  -- restore normal drawing
   spritesheet("spritesheet")
 end
 

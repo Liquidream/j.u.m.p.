@@ -30,7 +30,7 @@ function update_game(dt)
 
     --TODO: wait for user to start next round?
     gameCounter = gameCounter + 1
-    if gameCounter > 200 or somethingPressed then  
+    if gameCounter > 500 or somethingPressed then  
       -- start section
       if popup then 
         if not hiding_popup then
@@ -42,7 +42,7 @@ function update_game(dt)
       end
     end
     -- update camera
-    update_camera(dt)
+    --update_camera(dt)
 
   -- normal play
   elseif gameState == GAME_STATE.LVL_PLAY then

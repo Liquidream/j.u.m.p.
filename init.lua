@@ -144,7 +144,7 @@ function init_popup(info_type, info_value)
   
   addTween(
     tween.new(
-      0.75, popup, 
+      1, popup, 
       {sx = 1, 
        sy = 1}, 
       'outElastic'
@@ -317,8 +317,9 @@ function init_cam()
   -- TODO: initialise camera object (smooth panning camera)
   cam = {
     x = 0,
-    y = platforms[1].y - GAME_HEIGHT/2,
-    --y = 0,
+    y = blob.maxHeight-GAME_HEIGHT/2,
+    --y = platforms[1].y - GAME_HEIGHT/2,
+    
     trap_y = GAME_HEIGHT/2
     --trap_y = GAME_HEIGHT/2
   }
