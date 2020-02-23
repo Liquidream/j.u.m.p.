@@ -14,8 +14,10 @@
   • 
 
 ## ACKNOWLEDGEMENTS
-  • @somepx for Hungry font
-    https://www.patreon.com/posts/new-free-font-27405348
+  • Goma ShinGogono for "Cocoa Mochi Font"
+    https://www.dafont.com/gogono-cocoa-mochi.font
+  • @somepx for Efforts font
+    https://www.patreon.com/posts/efforts-sf-v1-1-18175945
   
 
 ]]
