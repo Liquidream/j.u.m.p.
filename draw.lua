@@ -14,6 +14,7 @@ function draw_game()
     --draw_level()??
 
   elseif gameState == GAME_STATE.LVL_INTRO 
+      or gameState == GAME_STATE.LVL_INTRO2
       or gameState == GAME_STATE.LVL_PLAY 
       or gameState == GAME_STATE.LVL_END 
       or gameState == GAME_STATE.GAME_OVER 
@@ -145,12 +146,17 @@ function draw_ui()
 
   pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
 
-  if gameState == GAME_STATE.LVL_INTRO then
-    pprint("GET READY!", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
 
-    if popup then
+  if gameState == GAME_STATE.LVL_INTRO 
+   and popup then
       draw_popup()
+  end
+
+  if gameState == GAME_STATE.LVL_INTRO2 then
+    if gameCounter > 25 then 
+      pprint("GET READY!", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
     end
+    
   end
   
   if gameState == GAME_STATE.LVL_END then

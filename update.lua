@@ -25,7 +25,7 @@ function update_game(dt)
   elseif gameState == GAME_STATE.TITLE then
     -- todo: title screen    
 
-    -- intro (popup/"get ready")
+    -- intro pt.1 (popup)
   elseif gameState == GAME_STATE.LVL_INTRO then    
 
     --TODO: wait for user to start next round?
@@ -37,13 +37,26 @@ function update_game(dt)
           hide_popup()
         end
       else
-        -- start section
-        gameState = GAME_STATE.LVL_PLAY        
-        blob.jumpCounter = 0
+        -- move to intro pt.2 ("get ready")
+        gameState = GAME_STATE.LVL_INTRO2
+        gameCounter = 0
       end
     end
     -- update camera
     --update_camera(dt)
+
+    -- intro pt.2 ("get ready")
+  elseif gameState == GAME_STATE.LVL_INTRO2 then    
+
+    --TODO: wait for user to start next round?
+    gameCounter = gameCounter + 1
+    if gameCounter > 150 or somethingPressed then  
+      -- start section
+      gameState = GAME_STATE.LVL_PLAY        
+      blob.jumpCounter = 0
+    end
+    -- update camera
+    update_camera(dt)
 
   -- normal play
   elseif gameState == GAME_STATE.LVL_PLAY then

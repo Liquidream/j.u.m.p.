@@ -165,8 +165,8 @@ function hide_popup()
       function(self)
         log(">>complete!!!!")
         -- start section
-        gameState = GAME_STATE.LVL_PLAY
-        blob.jumpCounter = 0
+        gameState = GAME_STATE.LVL_INTRO2
+        gameCounter = 0
         popup = nil
         hiding_popup = false
       end)
