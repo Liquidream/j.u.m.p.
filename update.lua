@@ -42,8 +42,6 @@ function update_game(dt)
         gameCounter = 0
       end
     end
-    -- update camera
-    --update_camera(dt)
 
     -- intro pt.2 ("get ready")
   elseif gameState == GAME_STATE.LVL_INTRO2 then    
