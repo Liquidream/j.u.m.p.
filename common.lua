@@ -16,7 +16,7 @@ PLATFORM_TYPE = { STATIC=1,
                   SPIKER=2, SLIDER=3, BLOCKER=4, TRIPLESPIKER = 5,
                   SPRINGER=6, FLOATER=7 }
 
-PLATFORM_POSITIONS = {10, 56, 102}
+PLATFORM_POSITIONS = {5, 56, 107}
 PLATFORM_DIST_Y = 150
 
 -- Andrew Kensler (+another black!)

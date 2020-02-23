@@ -105,7 +105,7 @@ end
 function draw_mid()
   camera(0,0)
   local d=1
-  for y=-2,14 do    
+  for y=-2,7 do    
     spr(6,-92,y*64 -(cam.y/d)%64, 2,2)
     spr(6,GAME_WIDTH+28,y*64 -(cam.y/d)%64, 2,2, true)
   end
@@ -114,7 +114,7 @@ end
 function draw_near()
   camera(0,0)
   local d=0.75
-  for y=-2,14 do    
+  for y=-2,5 do    
     spr(40,-140,y*96 -(cam.y/d)%96, 3,3)
     spr(40,GAME_WIDTH+44,y*96 -(cam.y/d)%96, 3,3, true)
   end
@@ -154,7 +154,7 @@ function draw_ui()
 
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
-      pprint("GET READY!", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
+      pprint("GET READY!", (GAME_WIDTH/2)-67, (GAME_HEIGHT/2)-56, 47)
     end
     
   end
@@ -186,8 +186,7 @@ function draw_popup()
     for y=0,scrh+96,96 do
       aspr(43, x,y, 0, 3,3, 0, 0)
     end  
-  end
-  circfill(0,0,5,39)
+  end  
   
   camera(0,0)
   -- pop-up
