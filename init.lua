@@ -20,7 +20,7 @@ function init_game()
 
   -- create platform definitions
   platformDefs = {
-    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=0 },  -- unlocked=true?
+    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=1 },  -- unlocked=true?
     { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockAt=11 },
     { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockAt=14 },
     { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockAt=20 },
@@ -33,34 +33,38 @@ function init_game()
   init_blob()
   
   init_section(1) -- level/section
-  --init_section(2) -- level/section
 
   -- reposition blob at start
   reset_blob()
   
   init_cam()
   
+  -- any announcements? (speed, platform, tips)
+  checkSpeedupAndPopups()
 
   -- show the title
   --init_title()
 
-  Sounds.music = Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
+  -- start playing the music (already initialised)
   Sounds.music:setVolume(1)
   Sounds.music:setLooping(true)
   Sounds.music:play()
-  --
-  -- Sounds.music:playWithPitch(1)
-  -- local tr2 = 1.0594630943592952645
-  -- Sounds.music:playWithPitch(1 * (tr2 ^ 1))
 end
 
 -- create initial platforms & reset blobby
 function init_section(sectionNum)  
   debug_log("init_section="..sectionNum)
-  blob.startPlatformNum = 0
-  -- calc starting platform number (index)
-  for i=1,sectionNum do
-    blob.startPlatformNum = blob.startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
+--  blob.startPlatformNum = 0
+
+  -- calc starting platform number (done once)
+  if blob.startPlatformNum == 0 then
+    for i=1,sectionNum do
+      blob.startPlatformNum = blob.startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
+    end
+    -- set starting score (if not at the start)
+    if blob.startPlatformNum>1 then
+      blob.score = blob.startPlatformNum
+    end
   end
   debug_log("blob.startPlatformNum... = "..blob.startPlatformNum)
   -- create "floor" platform
@@ -94,7 +98,14 @@ function init_level_intro()
   gameState = GAME_STATE.LVL_INTRO
   gameCounter = 0
 
-  init_popup()
+end
+
+function init_level_intro2()
+  -- move to intro pt.2 ("get ready")
+  gameState = GAME_STATE.LVL_INTRO2
+  gameCounter = 0
+  popup = nil
+  hiding_popup = false
 end
 
 function init_level_end()
@@ -104,28 +115,32 @@ function init_level_end()
   -- TODO: review speed-ups and new platform messages, etc.
   
   -- any announcements? (speed, platform, tips)
+  checkSpeedupAndPopups()
+  
+end
 
+-- any announcements? (speed, platform, tips)
+function checkSpeedupAndPopups()
   -- speed up?
-  local speedup_levels={2,4,6}
-  if has_value(speedup_levels, blob.levelNum) then
+  local SPEEDUP_LEVELS={2,4,6}
+  if has_value(SPEEDUP_LEVELS, blob.levelNum) then
     blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
+    log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
-    local speedUpNum = table.indexOf(speedup_levels, blob.levelNum)
+    local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
   end   
-  log("blob.speedFactor = "..blob.speedFactor)
   
   -- new platforms?
   for pDef in all(platformDefs) do
     if pDef.unlockAt == blob.levelNum then
       -- announce platform
-      init_popup(2, pDef.type) -- 2 = platform msg
+      init_popup(0, pDef.type) -- 2 = platform msg
     end
   end
 
   -- TODO: tips?
-  
 end
 
 function init_popup(info_type, info_value)
@@ -133,13 +148,10 @@ function init_popup(info_type, info_value)
   -- 1 = speed-ups, 2 = platforms
 
   popup = {
-    -- x = GAME_WIDTH/2,
-    -- y = GAME_HEIGHT/2,
     sx = 0,
     sy = 0,
-    -- width = 0,
-    -- height = 0,
-    spr_content = 0
+    info_type = info_type,
+    info_value = info_value,
   }
   
   addTween(
@@ -164,12 +176,8 @@ function hide_popup()
        sy = 0}, 
       'inBack',
       function(self)
-        log(">>complete!!!!")
-        -- start section
-        gameState = GAME_STATE.LVL_INTRO2
-        gameCounter = 0
-        popup = nil
-        hiding_popup = false
+        -- move to intro pt.2 ("get ready")
+        init_level_intro2()
       end)
   )
 end
@@ -198,7 +206,13 @@ function createNewPlatform(platformNum)
     local checkPoint = StaticPlatform(-56, ypos, 8)
     checkPoint.isCheckpoint = true
     
-    -- TODO: (rig it so prev platform always at a side) 
+    -- TODO: (rig it so prev platform always at a side)
+    if prevPlatform.x == PLATFORM_POSITIONS[2] then
+      -- with a spiker in left/right pos
+      log("> replaced platform with spiker (b4 checkpoint)")
+      platforms[#platforms] = SpikerPlatform(PLATFORM_POSITIONS[(irnd(1)==0 and 1 or 3)], prevPlatform.y, 1)
+      platforms[#platforms].num = prevPlatform.num
+    end
 
     last_xpos = PLATFORM_POSITIONS[2]
     return checkPoint
@@ -238,10 +252,17 @@ function createNewPlatform(platformNum)
     
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.BLOCKER 
-      -- no "double blockers" and no blocker as the final platform
-      and #platforms < blob.startPlatformNum + blob.numPlatforms 
+      -- no blocker as the final platform...
+      and platformNum < blob.startPlatformNum + blob.numPlatforms - 1
+      -- ...and no "double blockers"
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
     ------------------------------------------------
+        -- log("======================")
+        -- log("platformNum = "..platformNum)
+        -- log("blob.startPlatformNum = "..blob.startPlatformNum)
+        -- log("blob.numPlatforms = "..blob.numPlatforms)
+        -- log("blob.startPlatformNum + blob.numPlatforms = "..blob.startPlatformNum + blob.numPlatforms)
+        -- log("======================")
         xpos = last_xpos  -- always prev platform pos
         newPlatform = BlockerPlatform(-56, ypos, 8)
 
@@ -297,7 +318,7 @@ function init_blob()
     numPlatforms = 0, -- number of platforms for the current section
     platformCounter = 1, -- running counter of platform gen numbers
     onPlatformNum = 1,
-    startPlatformNum = 1,
+    startPlatformNum = 0,
 
     loseLife = function(self)
       debug_log("OUCH!!!!")
@@ -356,13 +377,13 @@ function init_sugarcoat()
   set_frame_waiting(60)
 
    -- Get User info  
-   me = castle.user.getMe()    
-   my_id = me.userId
-   my_name = me.username
-   -- get photo
-   if me.photoUrl then
-     load_png("photo", me.photoUrl, ak54) 
-   end
+  --  me = castle.user.getMe()    
+  --  my_id = me.userId
+  --  my_name = me.username
+  --  -- get photo
+  --  if me.photoUrl then
+  --    load_png("photo", me.photoUrl, ak54) 
+  --  end
    
   -- init splash
   -- gameState = GAME_STATE.SPLASH 
@@ -372,12 +393,13 @@ end
 
 function init_assets()
   -- load gfx
+  load_png("popups", "assets/popups.png", ak54, true)
+  --spritesheet_grid(128,128)
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
-  load_png("popups", "assets/popups.png", ak54)
   spritesheet_grid(32,32)
   
   -- todo: load sfx + music
-  --init_sounds()
+  Sounds.music = Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
 end
 
 function init_input()

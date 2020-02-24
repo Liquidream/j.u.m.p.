@@ -192,7 +192,11 @@ function draw_popup()
   -- pop-up
   spritesheet("popups")
 
-  aspr(popup.spr_content, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
+  -- log("popup.info_value="..popup.info_value)
+  -- log("popup.info_type="..popup.info_type)
+  local spr = ((popup.info_value-1)+(4*popup.info_type) *4)
+  --log("spr="..spr)
+  aspr(((popup.info_value-2)+(4*popup.info_type) *4), GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
 
   -- restore normal drawing
   spritesheet("spritesheet")

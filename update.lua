@@ -38,8 +38,7 @@ function update_game(dt)
         end
       else
         -- move to intro pt.2 ("get ready")
-        gameState = GAME_STATE.LVL_INTRO2
-        gameCounter = 0
+        init_level_intro2()
       end
     end
 

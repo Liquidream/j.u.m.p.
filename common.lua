@@ -19,6 +19,8 @@ PLATFORM_TYPE = { STATIC=1,
 PLATFORM_POSITIONS = {5, 56, 107}
 PLATFORM_DIST_Y = 150
 
+SPEEDUP_LEVELS = {2,4,6}
+
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54
 ak54 = {
