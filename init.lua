@@ -24,7 +24,8 @@ function init_game()
     { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockAt=11 },
     { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockAt=14 },
     { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockAt=20 },
-  }
+  }    
+  last_xpos = PLATFORM_POSITIONS[2]
   -- init/clear platforms
   platforms = {}
 
@@ -180,17 +181,26 @@ function createNewPlatform(platformNum)
   -- seed rng for platform
   srand(platformNum)
 
-  
-  local xpos = pick(PLATFORM_POSITIONS)
+  local xpos = nil
+  repeat
+    xpos = pick(PLATFORM_POSITIONS)
+  until xpos ~= last_xpos
+
   local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(platformNum*PLATFORM_DIST_Y)
   local prevPlatform = platforms[#platforms]
   
-  -- check for end of level/section
+  ------------------------------------------------
+  -- checkpoint - end of level/section
+  ------------------------------------------------
   if platformNum == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
-    --TODO: maybe change the platform look/style?
+    --TODO: make a gap either side for blobby to jump through
     local checkPoint = StaticPlatform(-56, ypos, 8)
     checkPoint.isCheckpoint = true
+    
+    -- TODO: (rig it so prev platform always at a side) 
+
+    last_xpos = PLATFORM_POSITIONS[2]
     return checkPoint
   end
   
@@ -220,17 +230,19 @@ function createNewPlatform(platformNum)
       newPlatform = SpikerPlatform(xpos, ypos, 1)
 
     ------------------------------------------------
-    elseif pDef.type == PLATFORM_TYPE.SLIDER then
+    elseif pDef.type == PLATFORM_TYPE.SLIDER 
+      and last_xpos ~= PLATFORM_POSITIONS[2] then
     ------------------------------------------------
-
+      xpos = PLATFORM_POSITIONS[2]  -- always middle pos
       newPlatform = SliderPlatform(56, ypos, 1)
     
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.BLOCKER 
-    ------------------------------------------------
+      -- no "double blockers" and no blocker as the final platform
       and #platforms < blob.startPlatformNum + blob.numPlatforms 
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
-        -- no "double blockers" and no blocker as the final platform
+    ------------------------------------------------
+        xpos = last_xpos  -- always prev platform pos
         newPlatform = BlockerPlatform(-56, ypos, 8)
 
         -- be nice to player for early levels
@@ -263,6 +275,9 @@ function createNewPlatform(platformNum)
   -- for k,p in pairs(platforms) do
   --   debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
   -- end
+
+  -- remember...
+  last_xpos = xpos
 
   -- finally, return new platform
   return newPlatform

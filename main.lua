@@ -9,6 +9,16 @@
 ## IDEAS
   • 
   • 
+
+## SFX Needed
+  • Checkpoint
+  • Hurt (lose life)
+  (OPTIONAL - Will they clash with music?)
+  • Jump
+  • Land (platform progression)
+  • Boost jump (spring bounce)
+  • 
+  • 
   
 ## DONE  
   • 
