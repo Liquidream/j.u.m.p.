@@ -144,19 +144,27 @@ function draw_ui()
     spr(30,i*22,-4)
   end
 
-  pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
-
-
+  use_font ("main-font")
+  
+  
   if gameState == GAME_STATE.LVL_INTRO 
-   and popup then
-      draw_popup()
+  and popup then
+    draw_popup()
   end
-
+  
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
       pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
+      use_font ("small-font")
+      pprint(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
+      use_font ("main-font")
     end
     
+  end
+  
+  if gameState == GAME_STATE.LVL_PLAY then
+    pprint( (blob.onPlatformNum-1).."/"..blob.numPlatforms, GAME_WIDTH-38,-2, 47)
+    --pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
   end
   
   if gameState == GAME_STATE.LVL_END then
@@ -174,6 +182,7 @@ function draw_ui()
     rect(0,0, GAME_WIDTH-1,GAME_HEIGHT-1, 35)
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
 
+    use_font ("small-font")
     pprint('FPS: ' .. love.timer.getFPS(), 85, GAME_HEIGHT-36, 49)
   end
 end

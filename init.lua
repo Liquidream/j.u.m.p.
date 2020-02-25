@@ -136,7 +136,7 @@ function checkSpeedupAndPopups()
 end
 
 function init_popup(info_type, info_value)
-  log("init_popup("..info_type..","..info_value..")...")
+  --log("init_popup("..info_type..","..info_value..")...")
   -- [info_types]
   -- 1 = speed-ups, 2 = platforms
 
@@ -154,7 +154,7 @@ function init_popup(info_type, info_value)
        sy = 1}, 
       'outElastic',
       function(self)
-        log("complete!!!!")
+        --log("complete!!!!")
       end
     )
   )
@@ -202,7 +202,7 @@ function createNewPlatform(platformNum)
     -- TODO: (rig it so prev platform always at a side)
     if prevPlatform.x == PLATFORM_POSITIONS[2] then
       -- with a spiker in left/right pos
-      log("> replaced platform with spiker (b4 checkpoint)")
+      --log("> replaced platform with spiker (b4 checkpoint)")
       platforms[#platforms] = SpikerPlatform(PLATFORM_POSITIONS[(irnd(1)==0 and 1 or 3)], prevPlatform.y, 1)
       platforms[#platforms].num = prevPlatform.num
     end
@@ -261,11 +261,11 @@ function createNewPlatform(platformNum)
 
         -- be nice to player for early levels
         -- (don't have "blocker" above a "spiker")
-        if (platformNum < 20 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
-           or (platformNum < 50 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER)
+        if (platformNum < 100 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
+           or (platformNum < 200 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER)
          then
           -- replace "spiker" with a "static"
-          log("> replaced spiker with a static!")
+          --log("> replaced spiker with a static!")
           platforms[#platforms] = StaticPlatform(prevPlatform.x, prevPlatform.y, 1)
           platforms[#platforms].num = prevPlatform.num
         end
@@ -361,6 +361,7 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
+  load_font ("assets/AweMono.ttf", 16, "small-font", true)
   load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 26, "main-font", true)
   --load_font ("assets/PublicSans-Black.otf", 21, "main-font", true)
   --load_font ("assets/Awesome.ttf", 32, "main-font", true)
