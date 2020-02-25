@@ -7,6 +7,8 @@ lastPressedState = false
 maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
 tweens = {}
+lastPlatformState = false
+countOfSameStates = 0
 
 function init_game()
   -- only perform core init once
@@ -117,7 +119,7 @@ function checkSpeedupAndPopups()
   -- speed up?
   if has_value(SPEEDUP_LEVELS, blob.levelNum) then
     blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
-    log("blob.speedFactor = "..blob.speedFactor)
+    --log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
     local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
@@ -176,9 +178,8 @@ function hide_popup()
 end
   
 -- create & return a random platform
-function createNewPlatform(platformNum)
-  
-  
+function createNewPlatform(platformNum)    
+
   -- seed rng for platform
   srand(platformNum)
 
@@ -290,8 +291,21 @@ function createNewPlatform(platformNum)
   --   debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
   -- end
 
+  -- adjustment to avoid too many in same state
+  if newPlatform.activeState == lastPlatformState then
+    countOfSameStates = countOfSameStates + 1
+    if countOfSameStates > 2 then
+      -- flip the state
+      newPlatform.activeState = not newPlatform.activeState
+      --log("flipped default state, for variety!")
+    end
+  else
+    countOfSameStates = 0
+  end
+
   -- remember...
   last_xpos = xpos
+  lastPlatformState = newPlatform.activeState
 
   -- finally, return new platform
   return newPlatform
