@@ -40,9 +40,10 @@ function init_game()
   --init_title()
 
   -- start playing the music (already initialised)
-  Sounds.music:setVolume(1)
-  Sounds.music:setLooping(true)
-  Sounds.music:play()
+  play_music(1)
+  -- Sounds.music:setVolume(1)
+  -- Sounds.music:setLooping(true)
+  -- Sounds.music:play()
 end
 
 -- create initial platforms & reset blobby
@@ -124,6 +125,7 @@ function checkSpeedupAndPopups()
     local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
+    play_music( min(speedUpNum +1,3) )
   end   
   
   -- new platforms?
@@ -408,7 +410,11 @@ function init_assets()
   spritesheet_grid(32,32)
   
   -- todo: load sfx + music
-  Sounds.music = Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
+  Sounds.music = {
+    Sound:new('Jump Music Level 1 Game Loop.ogg', 1),
+    Sound:new('Jump Music Level 2 Game Loop.ogg', 1),
+    Sound:new('Jump Music Level 3 Game Loop.ogg', 1)
+  }
 end
 
 function init_input()
@@ -432,5 +438,17 @@ function init_input()
   register_btn(6,  0, input_id("mouse_position", "y"))
   register_btn(7,  0, input_id("mouse_button", "lb"))
 
+end
 
+function play_music(num)
+  -- stop current music
+  if Sounds.currentMusicNum then 
+    Sounds.music[Sounds.currentMusicNum]:stop()
+  end
+
+  -- play new music
+  Sounds.music[num]:setVolume(1)
+  Sounds.music[num]:setLooping(true)
+  Sounds.music[num]:play()
+  Sounds.currentMusicNum = num
 end
