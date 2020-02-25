@@ -29,17 +29,17 @@ function update_game(dt)
   elseif gameState == GAME_STATE.LVL_INTRO then    
 
     --TODO: wait for user to start next round?
-    gameCounter = gameCounter + 1
-    if gameCounter > 500 or somethingPressed then  
-      -- start section
-      if popup then 
+    if popup then 
+      gameCounter = gameCounter + 1
+      if gameCounter > 500 or somethingPressed then  
+        -- start section        
         if not hiding_popup then
           hide_popup()
-        end
-      else
-        -- move to intro pt.2 ("get ready")
-        init_level_intro2()
+        end        
       end
+    else
+      -- move to intro pt.2 ("get ready")
+      init_level_intro2()
     end
 
     -- intro pt.2 ("get ready")

@@ -19,12 +19,7 @@ function init_game()
   _initialized = true
 
   -- create platform definitions
-  platformDefs = {
-    { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  unlockAt=1 },  -- unlocked=true?
-    { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, unlockAt=11 },
-    { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, unlockAt=14 },
-    { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, unlockAt=20 },
-  }    
+   
   last_xpos = PLATFORM_POSITIONS[2]
   -- init/clear platforms
   platforms = {}
@@ -39,9 +34,6 @@ function init_game()
   
   init_cam()
   
-  -- any announcements? (speed, platform, tips)
-  checkSpeedupAndPopups()
-
   -- show the title
   --init_title()
 
@@ -60,6 +52,7 @@ function init_section(sectionNum)
   if blob.startPlatformNum == 0 then
     for i=1,sectionNum do
       blob.startPlatformNum = blob.startPlatformNum + ((i>1) and (5+((i-1)*3)) or 1)
+      --log("Section ["..i.."] - blob.startPlatformNum = "..blob.startPlatformNum)
     end
     -- set starting score (if not at the start)
     if blob.startPlatformNum>1 then
@@ -98,6 +91,8 @@ function init_level_intro()
   gameState = GAME_STATE.LVL_INTRO
   gameCounter = 0
 
+  -- any announcements? (speed, platform, tips)
+  checkSpeedupAndPopups()
 end
 
 function init_level_intro2()
@@ -114,15 +109,12 @@ function init_level_end()
 
   -- TODO: review speed-ups and new platform messages, etc.
   
-  -- any announcements? (speed, platform, tips)
-  checkSpeedupAndPopups()
   
 end
 
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
   -- speed up?
-  local SPEEDUP_LEVELS={2,4,6}
   if has_value(SPEEDUP_LEVELS, blob.levelNum) then
     blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
     log("blob.speedFactor = "..blob.speedFactor)
@@ -133,8 +125,8 @@ function checkSpeedupAndPopups()
   end   
   
   -- new platforms?
-  for pDef in all(platformDefs) do
-    if pDef.unlockAt == blob.levelNum then
+  for pDef in all(PLATFORM_DEFS) do
+    if pDef.announceAtLevel == blob.levelNum then
       -- announce platform
       init_popup(0, pDef.type) -- 2 = platform msg
     end
@@ -144,6 +136,7 @@ function checkSpeedupAndPopups()
 end
 
 function init_popup(info_type, info_value)
+  log("init_popup("..info_type..","..info_value..")...")
   -- [info_types]
   -- 1 = speed-ups, 2 = platforms
 
@@ -159,10 +152,10 @@ function init_popup(info_type, info_value)
       1, popup, 
       {sx = 1, 
        sy = 1}, 
-      'outElastic'
-      -- function(self)
-      --   log("complete!!!!")
-      -- end
+      'outElastic',
+      function(self)
+        log("complete!!!!")
+      end
     )
   )
 end
@@ -222,14 +215,14 @@ function createNewPlatform(platformNum)
   local newPlatform = nil
   while newPlatform == nil do
     -- pick a platform type
-    local pDef = pick(platformDefs)
+    local pDef = pick(PLATFORM_DEFS)
 
     -- rigged!!
     --pDef.type = PLATFORM_TYPE.TRIPLESPIKER
 
     -- BASIC checks
     -- is platform unlocked yet? (platform number, NOT level)
-    if pDef.unlockAt > platformNum then goto continue end
+    if pDef.atPlatform > platformNum then goto continue end
     -- did we meet the odds?
     if rnd(1) > pDef.odds then goto continue end
 
@@ -394,6 +387,7 @@ end
 function init_assets()
   -- load gfx
   load_png("popups", "assets/popups.png", ak54, true)
+  spritesheet_grid(32,32)
   --spritesheet_grid(128,128)
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
   spritesheet_grid(32,32)

@@ -154,7 +154,7 @@ function draw_ui()
 
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
-      pprint("GET READY!", (GAME_WIDTH/2)-67, (GAME_HEIGHT/2)-56, 47)
+      pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
     end
     
   end
@@ -192,11 +192,11 @@ function draw_popup()
   -- pop-up
   spritesheet("popups")
 
-  -- log("popup.info_value="..popup.info_value)
-  -- log("popup.info_type="..popup.info_type)
-  local spr = ((popup.info_value-1)+(4*popup.info_type) *4)
+  --log("popup.info_value="..popup.info_value)
+  --log("popup.info_type="..popup.info_type)
+  local spr = (popup.info_value+(4*popup.info_type)) * 4
   --log("spr="..spr)
-  aspr(((popup.info_value-2)+(4*popup.info_type) *4), GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
+  aspr(spr, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
 
   -- restore normal drawing
   spritesheet("spritesheet")
