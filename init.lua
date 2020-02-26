@@ -66,6 +66,8 @@ function init_section(sectionNum)
     local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
     platforms[1] = StaticPlatform(-56, ypos, 8)
     platforms[1].num = blob.startPlatformNum
+    -- test
+    --platforms[1].gapSide=1
   end
   
   -- set the level/section num
@@ -197,8 +199,12 @@ function createNewPlatform(platformNum)
   if platformNum == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
     --TODO: make a gap either side for blobby to jump through
+    -- local chk_xpos = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 50 or -100
+    -- local checkPoint = StaticPlatform(chk_xpos, ypos, 8)
     local checkPoint = StaticPlatform(-56, ypos, 8)
     checkPoint.isCheckpoint = true
+    checkPoint.gapSide = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 1 or 2
+
     
     -- TODO: (rig it so prev platform always at a side)
     if prevPlatform.x == PLATFORM_POSITIONS[2] then

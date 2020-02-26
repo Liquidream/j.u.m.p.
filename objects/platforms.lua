@@ -504,6 +504,7 @@ do
     self.hitbox_h = 32
     self.isCheckpoint = false -- is this a checkpoint?
     self.checkpointReached = false   -- (checkpoint state)
+    self.gapSide = 0 -- (0=no gap, 1=left, 2=right)
   end
 
   function StaticPlatform:update(dt)
@@ -514,8 +515,13 @@ do
   end
 
   function StaticPlatform:draw()
+    local offset = 0
+    if self.gapSide == 1 then offset=offset+100 end
+    if self.gapSide == 2 then offset=offset-100 end
+
+    spr(self.spr, self.x + offset, self.y, self.spr_w, self.spr_h)
     -- draw base class/values
-    StaticPlatform.super.draw(self)
+    --StaticPlatform.super.draw(self)
 
     -- draw local stuff
     if self.isCheckpoint then
@@ -525,7 +531,11 @@ do
         pal(6,8)
       end
       -- draw checkpoint flag
-      spr(29, self.x+64, self.y-32)
+      if self.gapSide ~= 1 then
+        spr(29, self.x+80, self.y-32)
+      else
+        spr(29, self.x+150, self.y-32)
+      end
       -- reset palette
       pal()
       palt()
