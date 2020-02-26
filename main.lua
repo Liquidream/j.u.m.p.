@@ -51,6 +51,7 @@ end
 require("sugarcoat/sugarcoat")
 sugar.utility.using_package(sugar.S, true)
 tween = require 'lib/tween'
+Sound = require("lib/sound")
 require("common")
 require("init")
 require("update")
@@ -59,7 +60,6 @@ Object = require("lib/classic")
 require("objects/platforms")
 --require("sprinklez")
 
-Sound = require("lib/sound")
 MusicManager = require("lib/musicmanager")
 
 

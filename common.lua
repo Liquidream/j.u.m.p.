@@ -20,10 +20,27 @@ PLATFORM_DIST_Y = 150
 PLATFORM_DEFS = {
   { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  atPlatform=1, announceAtLevel=1  },
   { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, atPlatform=9, announceAtLevel=2 },
-  { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=51, announceAtLevel=5 },
+  { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=34, announceAtLevel=4 },
   { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, atPlatform=120, announceAtLevel=8  },
 }
-SPEEDUP_LEVELS = {3,6,9}
+SPEEDUP_LEVELS = {5, 10} --,15}
+
+SPEEDUP_PLAYLISTS = {  
+  [0]={-- x2
+    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+  },
+  {-- x2
+    Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+    Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+  },
+  {-- x3
+    Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+    Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+  },
+}
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54

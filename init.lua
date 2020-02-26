@@ -29,7 +29,7 @@ function init_game()
   
   init_blob()
   
-  init_section(1) -- level/section
+  init_section(4) -- level/section
 
   -- reposition blob at start
   reset_blob()
@@ -119,7 +119,8 @@ function checkSpeedupAndPopups()
     local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
-    --play_music( min(speedUpNum +1,3) )
+    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
+    --play_music( min(speedUpNum +1,3) )  
   end   
   
   -- new platforms?
@@ -404,12 +405,13 @@ function init_assets()
   spritesheet_grid(32,32)
   
   -- todo: load sfx + music
-  MusicManager:playMusic(
-    {
-      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
-    }
-  )
+  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  -- MusicManager:playMusic(
+  --   {
+  --     Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+  --     Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
+  --   }
+  -- )
 end
 
 function init_input()
