@@ -29,7 +29,7 @@ function init_game()
   
   init_blob()
   
-  init_section(4) -- level/section
+  init_section(1) -- level/section
 
   -- reposition blob at start
   reset_blob()
@@ -38,6 +38,9 @@ function init_game()
   
   -- show the title
   --init_title()
+
+  -- play starting music playlist (intro + music loop)
+  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
 end
 
 -- create initial platforms & reset blobby
@@ -259,7 +262,8 @@ function createNewPlatform(platformNum)
 
         -- be nice to player for early levels
         -- (don't have "blocker" above a "spiker")
-        if (platformNum < 100 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
+        if (platformNum < 60 
+           or platformNum < 100 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
            or (platformNum < 200 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER)
          then
           -- replace "spiker" with a "static"
@@ -291,7 +295,8 @@ function createNewPlatform(platformNum)
   -- adjustment to avoid too many in same state
   if newPlatform.activeState == lastPlatformState then
     countOfSameStates = countOfSameStates + 1
-    if countOfSameStates > 2 then
+    if countOfSameStates > 2 
+     and newPlatform.type ~= PLATFORM_TYPE.BLOCKER then
       -- flip the state
       newPlatform.activeState = not newPlatform.activeState
       --log("flipped default state, for variety!")
@@ -402,16 +407,7 @@ function init_assets()
   spritesheet_grid(32,32)
   --spritesheet_grid(128,128)
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
-  spritesheet_grid(32,32)
-  
-  -- todo: load sfx + music
-  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
-  -- MusicManager:playMusic(
-  --   {
-  --     Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-  --     Sound:new('Jump Music Level 1 Game Loop.ogg', 1)
-  --   }
-  -- )
+  spritesheet_grid(32,32)  
 end
 
 function init_input()
