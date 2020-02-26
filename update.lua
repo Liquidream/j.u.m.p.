@@ -19,6 +19,8 @@ function update_game(dt)
   -- player interactions (always capture latest state)
   update_player_input()
 
+  MusicManager:update(dt)
+
   if gameState == GAME_STATE.SPLASH then
     -- todo: splash screen
 

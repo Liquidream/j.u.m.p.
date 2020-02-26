@@ -60,7 +60,7 @@ require("objects/platforms")
 --require("sprinklez")
 
 Sound = require("lib/sound")
-Sounds = {}
+MusicManager = require("lib/musicmanager")
 
 
  

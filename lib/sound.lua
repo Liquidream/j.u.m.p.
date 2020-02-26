@@ -52,4 +52,15 @@ function Sound:seek(position, unit)
   end
 end
 
+function Sound:isPlaying()
+  -- has any of the instances stopped?
+  -- TODO: perhaps change this to only check the first one?
+  for i = 1, self.cacheSize do
+    if self.sources[i]:isPlaying() then
+     return true
+    end
+  end
+  return false
+end
+
 return Sound;
