@@ -9,13 +9,25 @@
 ## IDEAS
   • 
   • 
+
+## SFX Needed
+  • Checkpoint
+  • Hurt (lose life)
+  (OPTIONAL - Will they clash with music?)
+  • Jump
+  • Land (platform progression)
+  • Boost jump (spring bounce)
+  • 
+  • 
   
 ## DONE  
   • 
 
 ## ACKNOWLEDGEMENTS
-  • @somepx for Hungry font
-    https://www.patreon.com/posts/new-free-font-27405348
+  • Goma ShinGogono for "Cocoa Mochi Font"
+    https://www.dafont.com/gogono-cocoa-mochi.font
+  • @somepx for Efforts font
+    https://www.patreon.com/posts/efforts-sf-v1-1-18175945
   
 
 ]]
@@ -23,28 +35,40 @@
 if CASTLE_PREFETCH then
   CASTLE_PREFETCH({
     "sugarcoat/sugarcoat.lua",
+    "lib/classic.lua",
+    "lib/tween.lua",
+    "lib/sound.lua",
+    "objects/platforms.lua",
     "common.lua",
     "init.lua",
-    "draw.lua",
     "update.lua",
+    "draw.lua",
     "assets/spritesheet.png",
     "assets/gomarice_gogono_cocoa_mochi.ttf",
-    "lib/classic.lua",
-    "objects/platforms.lua",
-    "lib/tween.lua",
+    "assets/snd/Jump Music Level 1 Intro Loop.ogg",
+    "assets/snd/Jump Music Level 1 Game Loop.ogg",
+    "assets/snd/Jump Music Level 1-2 Transition.ogg",
+    "assets/snd/Jump Music Level 2 Intro Loop.ogg",
+    "assets/snd/Jump Music Level 2 Game Loop.ogg",
+    "assets/snd/Jump Music Level 2-3 Transition.ogg",
+    "assets/snd/Jump Music Level 3 Intro Loop.ogg",
+    "assets/snd/Jump Music Level 3 Game Loop.ogg",
   })
 end
 
 require("sugarcoat/sugarcoat")
 sugar.utility.using_package(sugar.S, true)
 tween = require 'lib/tween'
+Sound = require("lib/sound")
+Object = require("lib/classic")
+require("objects/platforms")
 require("common")
 require("init")
 require("update")
 require("draw")
-Object = require("lib/classic")
-require("objects/platforms")
 --require("sprinklez")
+
+MusicManager = require("lib/musicmanager")
 
 
  

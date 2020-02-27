@@ -9,11 +9,38 @@ GAME_WIDTH_PORTRAIT = 144   -- 16:9 aspect ratio
 GAME_HEIGHT_PORTRAIT = 256  -- (Portrait, for mobiles)
 GAME_SCALE = 3
 
-GAME_STATE = { SPLASH=0, TITLE=1, INFO=2, LVL_INTRO=3, LVL_PLAY=4, LVL_END=5, 
+GAME_STATE = { SPLASH=0, TITLE=1, INFO=2, LVL_INTRO=3, LVL_INTRO2=3.5, LVL_PLAY=4, LVL_END=5, 
                LOSE_LIFE=6, GAME_OVER=7, COMPLETED=8 }
 
-PLATFORM_TYPE = { STATIC=1, 
-                  SPIKER=2, SLIDER=3, BLOCKER=4, SPRINGER=5, FLOATER=6 }
+PLATFORM_TYPE = { STATIC=0, 
+                  SPIKER=1, SLIDER=2, BLOCKER=3, TRIPLESPIKER = 4,
+                  SPRINGER=5, FLOATER=6 }
+PLATFORM_POSITIONS = {5, 56, 107}
+PLATFORM_DIST_Y = 150
+PLATFORM_DEFS = {
+  { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  atPlatform=1, announceAtLevel=1  },
+  { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, atPlatform=9, announceAtLevel=2 },
+  { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=34, announceAtLevel=4 },
+  { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, atPlatform=120, announceAtLevel=8  },
+}
+SPEEDUP_LEVELS = {5, 10} --,15}
+
+SPEEDUP_PLAYLISTS = {  
+  [0]={-- x2
+    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+  },
+  {-- x2
+    Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+    Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+  },
+  {-- x3
+    Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+    Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+  },
+}
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54
@@ -60,9 +87,30 @@ function addTween(tween)
   table.insert( tweens, tween )
 end
 
--- function resetPal(palette, trans_col)
---   for i=0,#palette do
---     pal(i, i)
---     palt(i, i==trans_col)
---   end
--- end
+function debug_log(msg)
+  if DEBUG_MODE then
+    log(msg)
+  end
+end
+
+function has_value(tab, val)
+  for index, value in ipairs(tab) do
+      if value == val then
+          return true
+      end
+  end
+  return false
+end
+
+--
+-- https://gist.github.com/walterlua/978150/2742d9479cd5bfb3d08d90cfcb014da94021e271
+--
+function table.indexOf(t, object)
+  if type(t) ~= "table" then error("table expected, got " .. type(t), 2) end
+
+  for i, v in pairs(t) do
+      if object == v then
+          return i
+      end
+  end
+end

@@ -277,12 +277,13 @@ local function checkSubjectAndTargetRecursively(subject, target, path)
   end
 end
 
-local function checkNewParams(duration, subject, target, easing)
+local function checkNewParams(duration, subject, target, easing, callback)
   assert(type(duration) == 'number' and duration > 0, "duration must be a positive number. Was " .. tostring(duration))
   local tsubject = type(subject)
   assert(tsubject == 'table' or tsubject == 'userdata', "subject must be a table or userdata. Was " .. tostring(subject))
   assert(type(target)== 'table', "target must be a table. Was " .. tostring(target))
   assert(type(easing)=='function', "easing must be a function. Was " .. tostring(easing))
+  assert(type(callback)=='function' or callback==nil, "callback must be a function. Was " .. tostring(callback))
   checkSubjectAndTargetRecursively(subject, target)
 end
 
@@ -330,7 +331,12 @@ function Tween:set(clock)
 
     self.clock = self.duration
     copyTables(self.subject, self.target)
-
+    -- (PN) Execute callback function on completion
+    if (self.callback) then
+      self.callback(self.subject)
+      -- stop multiple calls
+      self.callback = nil
+    end
   else
 
     performEasingOnSubject(self.subject, self.target, self.initial, self.clock, self.duration, self.easing)
@@ -352,14 +358,15 @@ end
 
 -- Public interface
 
-function tween.new(duration, subject, target, easing)
+function tween.new(duration, subject, target, easing, callback)
   easing = getEasingFunction(easing)
-  checkNewParams(duration, subject, target, easing)
+  checkNewParams(duration, subject, target, easing, callback)
   return setmetatable({
     duration  = duration,
     subject   = subject,
     target    = target,
     easing    = easing,
+    callback  = callback,
     clock     = 0
   }, Tween_mt)
 end

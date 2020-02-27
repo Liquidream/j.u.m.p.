@@ -13,9 +13,10 @@ do
     self.y = y
     -- randomise which is the "active" state (true/false)
     self.activeState = irnd(2)==0 
-    log("self.activeState="..tostring(self.activeState))
+    debug_log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
-    self.currState = false
+    self.currState = false    
+    self.completed = false        -- lit up when blobby has landed (on most blocks)
 
     -- self.hitbox_w = 32
     -- self.hitbox_h = 32
@@ -31,7 +32,7 @@ do
   -- most platforms will override this
   function BasePlatformObject:setPressedState(is_pressed)
     self.currState = is_pressed
-    --log("setPressedState = "..tostring(is_pressed))
+    --debug_log("setPressedState = "..tostring(is_pressed))
   end
   -- base "landed" test
   -- most platforms will override this
@@ -39,12 +40,13 @@ do
     -- check AABB collisions of platform hitbox
     if aabb(blob, self) 
       and blob.vy>0 then
-        -- landed
+        -- landed        
         return true
     end 
     return false
   end
 end
+
 
 -- ------------------------------------------------------------
 -- BLOCKER platform type (breaks on interation)
@@ -56,12 +58,6 @@ do
     BlockerPlatform.super.new(self, x, y)
 
     self.type = PLATFORM_TYPE.BLOCKER
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = blockers
-      -- 4 = springers
-      -- 5 = floaters
-
     self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1
@@ -259,14 +255,7 @@ do
     -- QUESTION: ignore the x pos?
     SliderPlatform.super.new(self, x, y)
 
-    self.type = 6
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-      -- 6 = sliders
-
+    self.type = PLATFORM_TYPE.SLIDER
     --self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1
@@ -295,7 +284,7 @@ do
       -- and self.currState == self.activeState 
       then
         -- landed
-        --log("landed!!")
+        --debug_log("landed!!")
         blob.onGround = true
         blob.vy = 0
         blob.y = self.y-32
@@ -352,7 +341,7 @@ do
     then
       -- landed
       return true
-      -- log("landed!!")
+      -- debug_log("landed!!")
       -- blob.onGround = true
       -- blob.vy = 0
       -- blob.y = self.y-32
@@ -384,14 +373,8 @@ do
   function SpikerPlatform:new(x,y,spr_width)
     SpikerPlatform.super.new(self, x, y)
 
-    self.type = 1
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-
-    self.spr = (spr_width==1) and (8 + irnd(2)) or 32
+    self.type = PLATFORM_TYPE.SPIKER
+    self.spr = 9 --(8 + irnd(2))
     self.spr_w = spr_width
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
@@ -410,8 +393,12 @@ do
   function SpikerPlatform:draw()
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
+    
     -- draw (base) platform
-    SpikerPlatform.super.draw(self)
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y, self.spr_w, self.spr_h)
+
+    --SpikerPlatform.super.draw(self)
   end
 
   function SpikerPlatform:setPressedState(is_pressed)
@@ -441,6 +428,66 @@ do
 end
 
 -- ------------------------------------------------------------
+-- TRIPLESPIKER platform type (toggles on activation)
+--
+do
+  TripleSpikerPlatform = SpikerPlatform:extend()
+
+  function TripleSpikerPlatform:new(x,y,spr_width)
+    TripleSpikerPlatform.super.new(self, x, y, spr_width)
+
+    self.type = PLATFORM_TYPE.TRIPLESPIKER
+    self.spr_w = spr_width
+  end
+
+  function TripleSpikerPlatform:update(dt)
+    -- update base class/values
+    TripleSpikerPlatform.super.update(self, dt)
+
+    -- update local stuff    
+  end
+
+  function TripleSpikerPlatform:draw()
+    -- draw spikes
+    spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
+    
+    -- draw (base) platform
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y, self.spr_w, self.spr_h)
+
+    --SpikerPlatform.super.draw(self)
+
+    -- draw decoys
+    for i=1,3 do
+      local xpos = PLATFORM_POSITIONS[i]
+      if self.x ~= xpos then
+        -- draw spikes
+        spr((self.currState~=self.activeState) and 16 or 17, xpos, self.y-32, self.spr_w, spr_h)
+        
+        -- draw (base) platform
+        spr(self.spr - (self.completed and 1 or 0), 
+        xpos, self.y, self.spr_w, self.spr_h)
+      end
+    end
+
+  end
+
+  function TripleSpikerPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    TripleSpikerPlatform.super.setPressedState(self,is_pressed)
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function TripleSpikerPlatform:hasLanded(blob)
+    -- call base implementation
+    return TripleSpikerPlatform.super.hasLanded(self,blob)
+  end
+
+end
+
+
+-- ------------------------------------------------------------
 -- STATIC platform type (no interaction)
 --
 do
@@ -449,20 +496,15 @@ do
   function StaticPlatform:new(x,y,spr_width)
     StaticPlatform.super.new(self, x, y)
 
-    self.type = 1
-      -- 1 = solid block
-      -- 2 = spikers
-      -- 3 = floaters
-      -- 4 = springers
-      -- 5 = blockers
-
+    self.type = PLATFORM_TYPE.STATIC
     self.spr = (spr_width==1) and (8 + irnd(2)) or 32
     self.spr_w = spr_width
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
     self.hitbox_h = 32
     self.isCheckpoint = false -- is this a checkpoint?
-    self.checkpoint = false   -- (checkpoint state)
+    self.checkpointReached = false   -- (checkpoint state)
+    self.gapSide = 0 -- (0=no gap, 1=left, 2=right)
   end
 
   function StaticPlatform:update(dt)
@@ -473,23 +515,38 @@ do
   end
 
   function StaticPlatform:draw()
+    local offset = 0
+    if self.gapSide == 1 then offset=offset+100 end
+    if self.gapSide == 2 then offset=offset-100 end
+
+    spr(self.spr, self.x + offset, self.y, self.spr_w, self.spr_h)
     -- draw base class/values
-    StaticPlatform.super.draw(self)
+    --StaticPlatform.super.draw(self)
 
     -- draw local stuff
     if self.isCheckpoint then
       -- flag state?
-      if self.checkpoint then
+      if self.checkpointReached then
         pal(5,9)
         pal(6,8)
       end
       -- draw checkpoint flag
-      spr(29, self.x+64, self.y-32)
+      if self.gapSide ~= 1 then
+        -- left
+        spr(29, self.x+80, self.y-32)
+        -- draw level number
+        print(self.levelNum, self.x+25, self.y+2, 24)
+      else
+        -- right
+        spr(29, self.x+150, self.y-32)
+        -- draw level number
+        print(self.levelNum, self.x+210, self.y+2, 24)
+      end
       -- reset palette
       pal()
       palt()
       palt(0, false)
-      palt(35,true)
+      palt(35,true)      
     end
   end
 
