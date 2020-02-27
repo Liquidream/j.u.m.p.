@@ -9,6 +9,11 @@ gameCounter = 0 -- used for countdown delays at end/start of levels
 tweens = {}
 lastPlatformState = false
 countOfSameStates = 0
+-- shake tells how much to
+-- shake the screen
+shake=0
+shake_x=0
+shake_y=0
 
 function init_game()
   -- only perform core init once
@@ -337,6 +342,8 @@ function init_blob()
     loseLife = function(self)
       debug_log("OUCH!!!!")
       self.lives = self.lives - 1
+      -- shake camera
+      shake = shake + 0.25
       cls(38) flip()
       -- game over?
       if self.lives <= 0 then

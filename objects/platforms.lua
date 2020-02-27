@@ -546,9 +546,7 @@ do
       pal()
       palt()
       palt(0, false)
-      palt(35,true)
-
-      
+      palt(35,true)      
     end
   end
 

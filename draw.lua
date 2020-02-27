@@ -37,7 +37,17 @@ function draw_level()
 
   draw_far()
 
-  camera(cam.x, cam.y)
+  -- calc shake amount
+  shake_x = rnd(32) * shake
+  shake_y = rnd(32) * shake
+
+  -- set camera pos for level draw
+  camera(cam.x+shake_x, cam.y+shake_y)
+
+  -- finally, fade out the shake
+ shake = shake * 0.95
+ -- reset to 0 when very low
+ if shake < 0.05 then  shake = 0 end
   
   -- reset palette
   pal()
@@ -58,7 +68,7 @@ function draw_level()
 
 
   if DEBUG_MODE then
-    camera(cam.x, cam.y)
+    camera(cam.x+shake_x, cam.y+shake_y)
     -- draw max height line (camera focus)
     line(0, blob.maxHeight, 50, blob.maxHeight, 39)
     -- draw collision hitboxes
@@ -84,7 +94,7 @@ function draw_platforms()
 end
 
 function draw_background()
-  camera(0,0)
+  camera(shake_x,shake_y)
   local d=1.5
   for y=-2,14 do
     for x=-1,5 do      
@@ -94,7 +104,7 @@ function draw_background()
 end
 
 function draw_far()
-  camera(0,0)
+  camera(shake_x,shake_y)
   local d=1.25
   for y=-2,14 do    
     spr(4,-80,y*32 -(cam.y/d)%32, 2,1)
@@ -103,7 +113,7 @@ function draw_far()
 end
 
 function draw_mid()
-  camera(0,0)
+  camera(shake_x,shake_y)
   local d=1
   for y=-2,7 do    
     spr(6,-92,y*64 -(cam.y/d)%64, 2,2)
@@ -112,7 +122,7 @@ function draw_mid()
 end
 
 function draw_near()
-  camera(0,0)
+  camera(shake_x,shake_y)
   local d=0.75
   for y=-2,5 do    
     spr(40,-140,y*96 -(cam.y/d)%96, 3,3)
@@ -121,8 +131,8 @@ function draw_near()
 
   -- two rects to complete the edges
   rectfill(-SCREEN_X-1,-SCREEN_Y, -140, scrh, 36)
-  local r = SCREEN_X + GAME_WIDTH 
-  rectfill(r,-SCREEN_Y, r-SCREEN_X+140, scrh, 36)
+  local r = SCREEN_X + GAME_WIDTH +10
+  rectfill(r,-SCREEN_Y, r-SCREEN_X+130, scrh, 36)
 end
 
 function draw_hitbox(obj, col)
@@ -130,7 +140,7 @@ function draw_hitbox(obj, col)
 end
 
 function draw_ui()
-  camera(0,0)
+  camera(shake_x,shake_y)
   
   -- set default pprint style
   printp(
@@ -197,7 +207,7 @@ function draw_popup()
     end  
   end  
   
-  camera(0,0)
+  camera(shake_x,shake_y)
   -- pop-up
   spritesheet("popups")
 
