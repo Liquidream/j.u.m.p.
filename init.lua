@@ -198,21 +198,20 @@ function createNewPlatform(platformNum)
   ------------------------------------------------
   if platformNum == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
-    --TODO: make a gap either side for blobby to jump through
-    -- local chk_xpos = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 50 or -100
-    -- local checkPoint = StaticPlatform(chk_xpos, ypos, 8)
     local checkPoint = StaticPlatform(-56, ypos, 8)
     checkPoint.isCheckpoint = true
-    checkPoint.gapSide = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 1 or 2
+    checkPoint.levelNum = blob.levelNum + 1
 
-    
-    -- TODO: (rig it so prev platform always at a side)
+    -- rig it so prev platform always at a side
     if prevPlatform.x == PLATFORM_POSITIONS[2] then
       -- with a spiker in left/right pos
       --log("> replaced platform with spiker (b4 checkpoint)")
       platforms[#platforms] = SpikerPlatform(PLATFORM_POSITIONS[(irnd(1)==0 and 1 or 3)], prevPlatform.y, 1)
       platforms[#platforms].num = prevPlatform.num
     end
+
+    -- make a gap either side for blobby to jump through
+    checkPoint.gapSide = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 1 or 2
 
     last_xpos = PLATFORM_POSITIONS[2]
     return checkPoint
