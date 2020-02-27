@@ -21,7 +21,7 @@ PLATFORM_DEFS = {
   { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  atPlatform=1, announceAtLevel=1  },
   { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, atPlatform=9, announceAtLevel=2 },
   { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=34, announceAtLevel=4 },
-  { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.95, atPlatform=120, announceAtLevel=8  },
+  { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.25, atPlatform=94, announceAtLevel=7  },
 }
 SPEEDUP_LEVELS = {5, 10} --,15}
 
