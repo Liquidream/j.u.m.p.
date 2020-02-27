@@ -151,7 +151,7 @@ function draw_ui()
   printp_color(47, 0, 0, 0)
 
   for i=0,blob.lives-1 do
-    spr(30,i*22,-4)
+    spr(30,i*16-4,-4)
   end
 
   use_font ("main-font")
@@ -173,7 +173,8 @@ function draw_ui()
   end
   
   if gameState == GAME_STATE.LVL_PLAY then
-    pprint( (blob.onPlatformNum-1).."/"..blob.numPlatforms, GAME_WIDTH-38,-2, 47)
+    local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
+    pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
     --pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
   end
   
@@ -193,7 +194,7 @@ function draw_ui()
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
 
     use_font ("small-font")
-    pprint('FPS: ' .. love.timer.getFPS(), 85, GAME_HEIGHT-36, 49)
+    pprint('FPS:' .. love.timer.getFPS(), 92, GAME_HEIGHT-16, 49)
   end
 end
 
