@@ -68,6 +68,7 @@ function init_section(sectionNum)
   -- create "floor" platform
   --TODO: if level num > 1 then have diff static type (as resuming)
   if platforms[1] == nil then
+    debug_log("create 'floor' platform...")
     local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
     platforms[1] = StaticPlatform(-56, ypos, 8)
     platforms[1].num = blob.startPlatformNum
@@ -189,10 +190,12 @@ function createNewPlatform(platformNum)
 
   -- seed rng for platform
   srand(platformNum)
+  debug_log("srand("..platformNum..")")
 
   local xpos = nil
   repeat
     xpos = pick(PLATFORM_POSITIONS)
+    debug_log("  >> picked xpos="..xpos)
   until xpos ~= last_xpos
 
   local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(platformNum*PLATFORM_DIST_Y)
@@ -227,7 +230,7 @@ function createNewPlatform(platformNum)
   while newPlatform == nil do
     -- pick a platform type
     local pDef = pick(PLATFORM_DEFS)
-
+    debug_log("  >> picked type="..pDef.type)
     -- rigged!!
     --pDef.type = PLATFORM_TYPE.TRIPLESPIKER
 
@@ -257,7 +260,7 @@ function createNewPlatform(platformNum)
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.BLOCKER 
       -- no blocker as the final platform...
-      and platformNum < blob.startPlatformNum + blob.numPlatforms - 1
+      and platformNum ~= blob.startPlatformNum + blob.numPlatforms - 1
       -- ...and no "double blockers"
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
     ------------------------------------------------
@@ -273,8 +276,9 @@ function createNewPlatform(platformNum)
         -- be nice to player for early levels
         -- (don't have "blocker" above a "spiker")
         if (platformNum < 60 
-           or platformNum < 100 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
-           or (platformNum < 200 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER)
+           or (platformNum < 100 and prevPlatform.type == PLATFORM_TYPE.SPIKER)
+           or (platformNum < 200 and prevPlatform.type == PLATFORM_TYPE.TRIPLESPIKER))
+           and prevPlatform.type ~= PLATFORM_TYPE.STATIC
          then
           -- replace "spiker" with a "static"
           --log("> replaced spiker with a static!")
@@ -295,12 +299,12 @@ function createNewPlatform(platformNum)
     ::continue::    
   end
 
-  -- debug_log("newPlatform.type == "..tostring(newPlatform.type))
-  -- debug_log("#platforms == "..tostring(#platforms))
+   debug_log("newPlatform.type == "..tostring(newPlatform.type))
+   debug_log("#platforms == "..tostring(#platforms))
   -- -- DEBUG:
-  -- for k,p in pairs(platforms) do
-  --   debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
-  -- end
+  for k,p in pairs(platforms) do
+    debug_log(" - ["..k.."|"..tostring(p.num).."]="..p.type)
+  end
 
   -- adjustment to avoid too many in same state
   if newPlatform.activeState == lastPlatformState then
