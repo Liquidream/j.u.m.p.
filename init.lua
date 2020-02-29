@@ -240,16 +240,6 @@ function createNewPlatform(platformNum)
     -- did we meet the odds?
     if rnd(1) > pDef.odds then goto continue end
 
-    if pDef.type == PLATFORM_TYPE.BLOCKER then
-      log("======================")
-      log("platformNum = "..platformNum)
-      log("blob.startPlatformNum = "..blob.startPlatformNum)
-      log("blob.numPlatforms = "..blob.numPlatforms)
-      log("blob.startPlatformNum + blob.numPlatforms - 1 = "..blob.startPlatformNum + blob.numPlatforms - 1)
-      log("platforms[#platforms].type = "..platforms[#platforms].type)
-      log("======================")
-    end
-
     -- ADVANCED checks
 
     -- REMOVED Static from RNG, as "inactive Spiker" is same!
