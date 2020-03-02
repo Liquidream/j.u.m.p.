@@ -151,7 +151,7 @@ function draw_ui()
   printp_color(47, 0, 0, 0)
 
   for i=0,blob.lives-1 do
-    spr(30,i*16-4,-4)
+    spr(30,i*22,-4)
   end
 
   use_font ("main-font")

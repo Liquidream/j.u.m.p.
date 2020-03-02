@@ -271,7 +271,7 @@ function createNewPlatform(platformNum)
         -- log("blob.startPlatformNum + blob.numPlatforms = "..blob.startPlatformNum + blob.numPlatforms)
         -- log("======================")
         xpos = last_xpos  -- always prev platform pos
-        newPlatform = BlockerPlatform(-56, ypos, 8)
+        newPlatform = BlockerPlatform(-56, ypos, 8, (platformNum < 60) and 1 or (1+irnd(2)))
 
         -- be nice to player for early levels
         -- (don't have "blocker" above a "spiker")

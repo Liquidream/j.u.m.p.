@@ -54,7 +54,7 @@ end
 do
   BlockerPlatform = BasePlatformObject:extend()
 
-  function BlockerPlatform:new(x,y,spr_width)
+  function BlockerPlatform:new(x, y, spr_width, hitsLeft)
     BlockerPlatform.super.new(self, x, y)
 
     self.type = PLATFORM_TYPE.BLOCKER
@@ -65,7 +65,7 @@ do
     self.hitbox_h = 32
 
     self.activeState = true -- default to active "blocking"
-    self.hitsLeft = 2       -- number of hits left to break block
+    self.hitsLeft = hitsLeft or 1 -- number of hits left to break block   
     
     -- explosion
     self.pieces = {}
