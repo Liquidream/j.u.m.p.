@@ -4,7 +4,6 @@ blob = {}
 cam = {}
 --platforms = {} -- init/clear platforms
 lastPressedState = false
-maxTypeNumber = 4
 gameCounter = 0 -- used for countdown delays at end/start of levels
 tweens = {}
 lastPlatformState = false
@@ -291,6 +290,12 @@ function createNewPlatform(platformNum)
     ------------------------------------------------
       -- create three spikers (Blobby will only jump on ONE of them)
       newPlatform = TripleSpikerPlatform(xpos, ypos, 1)
+
+    ------------------------------------------------
+    elseif pDef.type == PLATFORM_TYPE.SPRINGER then
+    ------------------------------------------------
+        newPlatform = SpringerPlatform(xpos, ypos, 1)
+    
   
     else
       -- do nothing - let it loop again

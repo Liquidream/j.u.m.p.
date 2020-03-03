@@ -47,6 +47,70 @@ do
   end
 end
 
+-- ------------------------------------------------------------
+-- BOOSTER platform type (boosts player on activation - if close enough)
+--
+do
+  SpringerPlatform = BasePlatformObject:extend()
+
+  function SpringerPlatform:new(x,y,spr_width)
+    SpringerPlatform.super.new(self, x, y)
+
+    self.activeState = true
+    self.type = PLATFORM_TYPE.SPRINGER
+    self.spr = 9
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+
+    -- self:Reset()
+  end
+
+  function SpringerPlatform:update(dt)
+    -- update base class/values
+    SpringerPlatform.super.update(self, dt)
+
+    -- update local stuff
+  end
+
+  function SpringerPlatform:draw()
+    -- (draw everything offset down a bit - top of spring is platform)
+    local yoff = -16
+    -- draw springer
+    spr((self.currState==self.activeState) and 25 or 24, self.x, self.y+yoff, self.spr_w, spr_h)
+    
+    -- draw (base) platform
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y+yoff+32, self.spr_w, self.spr_h)
+  end
+
+  function SpringerPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    SpringerPlatform.super.setPressedState(self,is_pressed)
+
+    -- check for spring "boost"
+    if blob.onGround
+     and blob.onPlatform == self
+     and self.currState == self.activeState then
+      -- launch Blobby higher than usual (3 platforms)
+      jump_blob(3)
+    end
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SpringerPlatform:hasLanded(blob)
+    -- check for spikes
+    -- if aabb(blob, self) and blob.vy>0 
+    --  and self.currState == self.activeState then
+    --   blob:loseLife()
+    -- end 
+    -- call base implementation
+    return SpringerPlatform.super.hasLanded(self,blob)
+  end
+
+end
 
 -- ------------------------------------------------------------
 -- BLOCKER platform type (breaks on interation)
