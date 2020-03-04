@@ -84,8 +84,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
 
-    pprint(tostring(self.currState), 
-      self.x+50,self.y,7)
+    -- pprint(tostring(self.currState), 
+    --   self.x+50,self.y,7)
     -- pprint(tostring(self.currState), 
     --   self.x+50,self.y,7)
   end
@@ -101,7 +101,7 @@ do
      and is_pressed then 
       self.currState = is_pressed
 
-      log(distance( blob.x, blob.y+32, self.x, self.y ))
+      --log(distance( blob.x, blob.y+32, self.x, self.y ))
       -- close enough to perform boost?
       if distance( blob.x, blob.y+32, self.x, self.y ) < 15 then
         -- adjust score/platform, depending on state
@@ -173,11 +173,18 @@ do
     if aabb(blob, self) 
       and self.activeState 
      then
-      -- block!
-      --blob:loseLife()
-      blob.vy = 0
-      blob.y = self.y + 33
-      blob.onGround = false
+      -- are we "boosting"?
+      if blob.lastJumpPlatformCount > 2 then
+        -- explode now
+        self.hitsLeft = 0
+        self.activeState = false        
+        self:explode()
+      else
+        -- block!      
+        blob.vy = 0
+        blob.y = self.y + 33
+        blob.onGround = false
+      end
     end
 
     -- update explosion?
