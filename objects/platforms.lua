@@ -83,19 +83,49 @@ do
     -- draw (base) platform
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
+
+    pprint(tostring(self.currState), 
+      self.x+50,self.y,7)
+    -- pprint(tostring(self.currState), 
+    --   self.x+50,self.y,7)
   end
 
   function SpringerPlatform:setPressedState(is_pressed)
     -- call base implementation
-    SpringerPlatform.super.setPressedState(self,is_pressed)
+    --SpringerPlatform.super.setPressedState(self,is_pressed)
 
-    -- check for spring "boost"
-    if blob.onGround
-     and blob.onPlatform == self
-     and self.currState == self.activeState then
-      -- launch Blobby higher than usual (3 platforms)
-      jump_blob(3)
+    -- one-time activation
+    -- (only activate if pressed while on-screen)
+    if not self.currState
+     and self.y > cam.y 
+     and is_pressed then 
+      self.currState = is_pressed
+
+      log(distance( blob.x, blob.y+32, self.x, self.y ))
+      -- close enough to perform boost?
+      if distance( blob.x, blob.y+32, self.x, self.y ) < 15 then
+        -- adjust score/platform, depending on state
+        if blob.onPlatform ~= self then
+          -- "land"
+          blob.onPlatformNum = blob.onPlatformNum + blob.lastJumpPlatformCount
+          blob.onPlatform = self
+          blob.onPlatform.completed = true
+          blob.score = blob.score + 2  -- already done "1"
+        else
+          blob.score = blob.score + 3
+        end
+        -- launch Blobby higher than usual (3 platforms)
+        jump_blob(3)
+      end
     end
+
+    -- (v1) - requires being ON platform
+    -- if blob.onGround
+    --  and blob.onPlatform == self
+    --  and self.currState == self.activeState then
+    --   -- launch Blobby higher than usual (3 platforms)
+    --   jump_blob(3)
+    -- end
   end
 
   -- override "landed" test

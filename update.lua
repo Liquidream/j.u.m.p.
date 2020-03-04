@@ -163,6 +163,14 @@ function jump_blob(jumpPlatformCount)
   local jumpAmountY = jumpYAmounts[jumpPlatformCount]
   local jumpAmountX = 0  
   local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
+  
+  if nextPlat==nil then
+    log("---------------------------")
+    log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+    log("jumpPlatformCount = "..tostring(jumpPlatformCount))
+    log("#platforms = "..tostring(#platforms))
+    log("blob.onPlatformNum+jumpPlatformCount = "..tostring(blob.onPlatformNum+jumpPlatformCount))
+  end
   jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
   --debug_log("nextPlat.num="..tostring(nextPlat.num))
 
@@ -170,6 +178,7 @@ function jump_blob(jumpPlatformCount)
   blob.vx = jumpAmountX
   blob.onGround = false
   blob.jumpCounter = 0
+  blob.lastJumpPlatformCount = jumpPlatformCount
   debug_log("jump!")
   debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
   debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
