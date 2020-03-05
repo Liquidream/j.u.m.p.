@@ -317,8 +317,8 @@ function generate_platforms()
   debug_log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
   debug_log("#platforms "..tostring(#platforms))
   
-  -- create any missing platforms (so there's always 5 ahead)
-  while #platforms < blob.onPlatformNum + 5 do
+  -- create any missing platforms (so there's always enough ahead)
+  while #platforms < blob.onPlatformNum + 10 do
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
     local newPlatform = createNewPlatform(blob.platformCounter)

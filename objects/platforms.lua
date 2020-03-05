@@ -76,7 +76,7 @@ do
 
   function SpringerPlatform:draw()
     -- (draw everything offset down a bit - top of spring is platform)
-    local yoff = -16
+    local yoff = -32
     -- draw springer
     spr((self.currState==self.activeState) and 25 or 24, self.x, self.y+yoff, self.spr_w, spr_h)
     
@@ -93,17 +93,18 @@ do
   function SpringerPlatform:setPressedState(is_pressed)
     -- call base implementation
     --SpringerPlatform.super.setPressedState(self,is_pressed)
-
+    
+    local dist = distance( blob.x, blob.y+32, self.x, self.y )
     -- one-time activation
     -- (only activate if pressed while on-screen)
     if not self.currState
-     and self.y > cam.y 
+     and dist < 100
      and is_pressed then 
       self.currState = is_pressed
 
-      --log(distance( blob.x, blob.y+32, self.x, self.y ))
+      --log(dist)
       -- close enough to perform boost?
-      if distance( blob.x, blob.y+32, self.x, self.y ) < 15 then
+      if dist < 30 and dist > 0 then
         -- adjust score/platform, depending on state
         if blob.onPlatform ~= self then
           -- "land"
