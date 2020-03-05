@@ -109,14 +109,22 @@ do
         if blob.onPlatform ~= self then
           -- "land"
           blob.onPlatformNum = blob.onPlatformNum + blob.lastJumpPlatformCount
+          log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+          log("blob.lastJumpPlatformCount = "..tostring(blob.lastJumpPlatformCount))
           blob.onPlatform = self
           blob.onPlatform.completed = true
-          blob.score = blob.score + 2  -- already done "1"
-        else
-          blob.score = blob.score + 3
+          blob.score = blob.score + blob.lastJumpPlatformCount
+
+          blob.vy = 0
+          blob.x = self.x + (self.spr_w*32/2) - 16
+          blob.y = self.y - 48
+
+          -- generate new platforms (and clear old ones)
+          generate_platforms()
+
+          -- launch Blobby higher than usual (3 platforms)
+          jump_blob(3)
         end
-        -- launch Blobby higher than usual (3 platforms)
-        jump_blob(3)
       end
     end
 

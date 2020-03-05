@@ -318,7 +318,7 @@ function generate_platforms()
   debug_log("#platforms "..tostring(#platforms))
   
   -- create any missing platforms (so there's always enough ahead)
-  while #platforms < blob.onPlatformNum + 10 do
+  while #platforms < blob.onPlatformNum + 5 do
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
     local newPlatform = createNewPlatform(blob.platformCounter)
@@ -346,7 +346,7 @@ end
 
 function update_camera(dt)
   -- make camera follow blob's highest height
-  cam.y = lerp(cam.y, blob.maxHeight-cam.trap_y, 2*dt)
+  cam.y = lerp(cam.y, blob.maxHeight-cam.trap_y, 3*dt)
 end
 
 
