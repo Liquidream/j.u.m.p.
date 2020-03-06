@@ -261,7 +261,10 @@ function createNewPlatform(platformNum)
       -- no blocker as the final platform...
       and platformNum ~= blob.startPlatformNum + blob.numPlatforms - 1
       -- ...and no "double blockers"
-      and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER then
+      and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER 
+      -- # then check on blockers, only if not 3 ahead of springer
+      and platforms[#platforms-2] ~= PLATFORM_TYPE.SPRINGER
+      then
     ------------------------------------------------
         -- log("======================")
         -- log("platformNum = "..platformNum)
@@ -292,9 +295,12 @@ function createNewPlatform(platformNum)
       newPlatform = TripleSpikerPlatform(xpos, ypos, 1)
 
     ------------------------------------------------
-    elseif pDef.type == PLATFORM_TYPE.SPRINGER then
+    elseif pDef.type == PLATFORM_TYPE.SPRINGER 
+    -- Can't spring OVER a Checkpoint
+     and platformNum <= blob.startPlatformNum + blob.numPlatforms - 3  -- if >= 3 from checkpoint
+     then
     ------------------------------------------------
-        newPlatform = SpringerPlatform(xpos, ypos, 1)
+      newPlatform = SpringerPlatform(xpos, ypos, 1)
     
   
     else
