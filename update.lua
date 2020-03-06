@@ -322,7 +322,11 @@ function generate_platforms()
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
     local newPlatform = createNewPlatform(blob.platformCounter)
-    newPlatform.num = platforms[#platforms].num + 1
+    newPlatform.num = blob.platformCounter --platforms[#platforms].num + 1
+    --blob.platformCounter
+    --newPlatform.num
+    newPlatform.sectionNum = (newPlatform.num < blob.startPlatformNum + blob.numPlatforms) 
+                                  and blob.levelNum or blob.levelNum + 1
     platforms[#platforms + 1] = newPlatform
   end
 

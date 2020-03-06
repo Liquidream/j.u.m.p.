@@ -71,6 +71,7 @@ function init_section(sectionNum)
     local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
     platforms[1] = StaticPlatform(-56, ypos, 8)
     platforms[1].num = blob.startPlatformNum
+    platforms[1].sectionNum = sectionNum
     -- test
     --platforms[1].gapSide=1
   end
@@ -191,6 +192,7 @@ function createNewPlatform(platformNum)
   srand(platformNum)
   debug_log("srand("..platformNum..")")
 
+  local newPlatform = nil
   local xpos = nil
   repeat
     xpos = pick(PLATFORM_POSITIONS)
@@ -205,9 +207,9 @@ function createNewPlatform(platformNum)
   ------------------------------------------------
   if platformNum == blob.startPlatformNum + blob.numPlatforms then
     -- create a landing platform for checkpoint
-    local checkPoint = StaticPlatform(-56, ypos, 8)
-    checkPoint.isCheckpoint = true
-    checkPoint.levelNum = blob.levelNum + 1
+    newPlatform = StaticPlatform(-56, ypos, 8)
+    newPlatform.isCheckpoint = true
+    newPlatform.levelNum = blob.levelNum + 1
 
     -- rig it so prev platform always at a side
     if prevPlatform.x == PLATFORM_POSITIONS[2] then
@@ -218,14 +220,15 @@ function createNewPlatform(platformNum)
     end
 
     -- make a gap either side for blobby to jump through
-    checkPoint.gapSide = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 1 or 2
+    newPlatform.gapSide = (platforms[#platforms].x == PLATFORM_POSITIONS[1]) and 1 or 2
 
     last_xpos = PLATFORM_POSITIONS[2]
-    return checkPoint
+    goto end_createPlatform
+    --return checkPoint
   end
   
   -- randomly select a platform type (based on those unlocked)
-  local newPlatform = nil
+  
   while newPlatform == nil do
     -- pick a platform type
     local pDef = pick(PLATFORM_DEFS)
@@ -263,7 +266,7 @@ function createNewPlatform(platformNum)
       -- ...and no "double blockers"
       and platforms[#platforms].type ~= PLATFORM_TYPE.BLOCKER 
       -- # then check on blockers, only if not 3 ahead of springer
-      and platforms[#platforms-2] ~= PLATFORM_TYPE.SPRINGER
+      and (#platforms<3 or platforms[#platforms-2].type ~= PLATFORM_TYPE.SPRINGER)
       then
     ------------------------------------------------
         -- log("======================")
@@ -286,6 +289,13 @@ function createNewPlatform(platformNum)
           --log("> replaced spiker with a static!")
           platforms[#platforms] = StaticPlatform(prevPlatform.x, prevPlatform.y, 1)
           platforms[#platforms].num = prevPlatform.num
+          platforms[#platforms].sectionNum = prevPlatform.sectionNum
+        end
+
+        -- is blocker straight after a checkpoint?
+        if prevPlatform.isCheckpoint then
+          -- flag it, so can't destroy until next section
+          newPlatform.isAfterCheckpoint = true
         end
     
     ------------------------------------------------
@@ -321,7 +331,9 @@ function createNewPlatform(platformNum)
   if newPlatform.activeState == lastPlatformState then
     countOfSameStates = countOfSameStates + 1
     if countOfSameStates > 2 
-     and newPlatform.type ~= PLATFORM_TYPE.BLOCKER then
+     and newPlatform.type ~= PLATFORM_TYPE.BLOCKER
+     and newPlatform.type ~= PLATFORM_TYPE.SPRINGER 
+     then
       -- flip the state
       newPlatform.activeState = not newPlatform.activeState
       --log("flipped default state, for variety!")
@@ -329,6 +341,10 @@ function createNewPlatform(platformNum)
   else
     countOfSameStates = 0
   end
+
+  ::end_createPlatform::
+
+  newPlatform.num = platformNum
 
   -- remember...
   last_xpos = xpos

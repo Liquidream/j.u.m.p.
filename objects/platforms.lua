@@ -17,9 +17,6 @@ do
     -- default to false state (could be active or inactive)
     self.currState = false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
-
-    -- self.hitbox_w = 32
-    -- self.hitbox_h = 32
   end
   function BasePlatformObject:update(dt)
     -- anything?
@@ -27,6 +24,9 @@ do
   function BasePlatformObject:draw()
     -- anything?
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
   -- base state switcher (e.g. on "press")
   -- most platforms will override this
@@ -48,7 +48,7 @@ do
 end
 
 -- ------------------------------------------------------------
--- BOOSTER platform type (boosts player on activation - if close enough)
+-- SPRINGER platform type (boosts player on activation - if close enough)
 --
 do
   SpringerPlatform = BasePlatformObject:extend()
@@ -84,8 +84,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
 
-    -- pprint(tostring(self.currState), 
-    --   self.x+50,self.y,7)
+       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+        self.x+50,self.y,7) end
     -- pprint(tostring(self.currState), 
     --   self.x+50,self.y,7)
   end
@@ -227,6 +227,9 @@ do
     palt(0, false)
     palt(35,true)   
     self.flash = false
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
   end
@@ -321,7 +324,8 @@ do
     
     -- smash block (only if visible)?    
     if is_pressed
-     and self.y > cam.y 
+     and self.y > cam.y
+     and self.sectionNum == blob.levelNum
      and self.hitsLeft > 0 then
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
@@ -420,6 +424,10 @@ do
       x = x + 32
       spr(13, x, self.y, 1, self.spr_h)
     end
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
+
     -- draw (base) platform?
     --SliderPlatform.super.draw(self)
   end
@@ -508,6 +516,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y, self.spr_w, self.spr_h)
 
+       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+        self.x+50,self.y,7) end
     --SpikerPlatform.super.draw(self)
   end
 
@@ -580,6 +590,8 @@ do
       end
     end
 
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
 
   function TripleSpikerPlatform:setPressedState(is_pressed)
@@ -658,6 +670,9 @@ do
       palt(0, false)
       palt(35,true)      
     end
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
 
   function StaticPlatform:setPressedState(is_pressed)
