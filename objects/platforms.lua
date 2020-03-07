@@ -51,7 +51,7 @@ end
 -- ------------------------------------------------------------
 -- SIDE-SWITCHER platform type (switches left/right on press)
 --
-SLIDER_MAX_MOVEMENT = 64
+SLIDER_MAX_MOVEMENT = 200
 do
   SideSwitcherPlatform = BasePlatformObject:extend()
 
@@ -63,10 +63,16 @@ do
     self.spr_h = 1
     self.hitbox_w = 32*spr_width
     self.hitbox_h = 32
+    
+    -- randomise current state
+    self.currState = irnd(2)==0
 
     self.side = (self.activeState) and 1 or 3 -- 1=left, 3=right
     self.x = PLATFORM_POSITIONS[self.side]
-    self.platform_x = (irnd(2)==0) and -50 or 100
+    self.openAmount = (not self.currState) 
+                         and 0 or SLIDER_MAX_MOVEMENT
+    -- self.openAmount = (self.currState==self.activeState) 
+    --                      and 0 or SLIDER_MAX_OPEN_AMOUNT
 
     self.id = irnd(100000)
   end
@@ -98,22 +104,31 @@ do
     pal(19,33)
     pal(24,33)
     -- draw left "door"
-    x = (GAME_WIDTH/2) - 66 - self.platform_x
+    x = (GAME_WIDTH/2) - 263 + self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
     for i=1,4 do
       x = x - 32
       spr(10, x, self.y, 1, self.spr_h)
     end
     -- draw right "door"
-    x = (GAME_WIDTH) + 28 - self.platform_x
+    x = (GAME_WIDTH) + -40 + self.openAmount
     spr(12, x, self.y, 1, self.spr_h)
     for i=1,4 do
       x = x + 32
       spr(13, x, self.y, 1, self.spr_h)
     end
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    if DEBUG_MODE then 
+      use_font ("small-font")
+      local tx=self.x
+      pprint("C:"..tostring(self.currState), tx,self.y-60,7) 
+      pprint("A:"..tostring(self.activeState), tx,self.y-48,7) 
+      pprint("=:"..tostring(self.currState==self.activeState), tx,self.y-36,7) 
+      pprint("O:"..tostring(flr(self.openAmount)), tx,self.y-24,9) 
+      pprint("S:"..tostring(self.sectionNum), tx,self.y-12,7) 
+      use_font ("main-font")
+    end
+
 
     -- reset palette
     pal(19,19)
@@ -134,7 +149,7 @@ do
     addTween(
       tween.new(
         0.3, self, 
-        {platform_x = (self.currState==self.activeState) and 0 or SLIDER_MAX_MOVEMENT}, 
+        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
         'outCirc')
     )
   end
@@ -142,8 +157,19 @@ do
   -- override "landed" test
   -- to also check for spikes
   function SideSwitcherPlatform:hasLanded(blob)
-    -- call base implementation
-    return SideSwitcherPlatform.super.hasLanded(self,blob)
+    -- check for landed
+    -- landed?
+    if 
+     blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
+     and blob.vy>=0 
+     and self.currState == self.activeState 
+     --and self.openAmount < 40
+    then
+      -- landed
+      return true
+    end
+    
+    return false -- landing handled in update!
   end
 
 end

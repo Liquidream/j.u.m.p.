@@ -233,8 +233,9 @@ function createNewPlatform(platformNum)
     -- pick a platform type
     local pDef = pick(PLATFORM_DEFS)
     debug_log("  >> picked type="..pDef.type)
+    
     -- rigged!!
-    pDef.type = PLATFORM_TYPE.SIDESWITCHER
+    --pDef.type = PLATFORM_TYPE.SIDESWITCHER
 
     -- BASIC checks
     -- is platform unlocked yet? (platform number, NOT level)
@@ -338,6 +339,7 @@ function createNewPlatform(platformNum)
     if countOfSameStates > 2 
      and newPlatform.type ~= PLATFORM_TYPE.BLOCKER
      and newPlatform.type ~= PLATFORM_TYPE.SPRINGER 
+     and newPlatform.type ~= PLATFORM_TYPE.SIDESWITCHER 
      then
       -- flip the state
       newPlatform.activeState = not newPlatform.activeState
