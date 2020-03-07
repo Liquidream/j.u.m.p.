@@ -214,7 +214,7 @@ function draw_popup()
 
   --log("popup.info_value="..popup.info_value)
   --log("popup.info_type="..popup.info_type)
-  local spr = (popup.info_value+(4*popup.info_type)) * 4
+  local spr = (popup.info_value+(7*popup.info_type)) * 4
   --log("spr="..spr)
   aspr(spr, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
 

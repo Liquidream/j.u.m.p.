@@ -33,7 +33,7 @@ function init_game()
   
   init_blob()
   
-  init_section(1) -- level/section
+  init_section(5) -- level/section
 
   -- reposition blob at start
   reset_blob()

@@ -109,8 +109,8 @@ do
         if blob.onPlatform ~= self then
           -- "land"
           blob.onPlatformNum = blob.onPlatformNum + blob.lastJumpPlatformCount
-          log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
-          log("blob.lastJumpPlatformCount = "..tostring(blob.lastJumpPlatformCount))
+          -- log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+          -- log("blob.lastJumpPlatformCount = "..tostring(blob.lastJumpPlatformCount))
           blob.onPlatform = self
           blob.onPlatform.completed = true
           blob.score = blob.score + blob.lastJumpPlatformCount
