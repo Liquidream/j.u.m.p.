@@ -139,11 +139,15 @@ do
   end
 
   function SideSwitcherPlatform:setPressedState(is_pressed)
-
-    if is_pressed then
-      -- call base implementation
-      SideSwitcherPlatform.super.setPressedState(self, not self.currState)
-    end
+    -- call base implementation
+    --SliderPlatform.super.setPressedState(self,is_pressed)
+    
+    self.currState = not self.currState
+    
+    -- if is_pressed then
+    --   -- call base implementation
+    --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
+    -- end
 
     -- NOTE: Slider movement will happen in update   
     addTween(
