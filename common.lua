@@ -1,7 +1,7 @@
 --
 -- Constants
 --
-DEBUG_MODE = false
+DEBUG_MODE = true
 
 GAME_WIDTH_LANDSCAPE = 256  -- 16:9 aspect ratio
 GAME_HEIGHT_LANDSCAPE = 144 -- (Landscape)
@@ -23,6 +23,7 @@ PLATFORM_DEFS = {
   { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=34, announceAtLevel=4 },
   { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.25, atPlatform=71, announceAtLevel=6  },
   { type = PLATFORM_TYPE.SPRINGER, odds = 0.25, atPlatform=120, announceAtLevel=8  },
+  { type = PLATFORM_TYPE.SIDESWITCHER, odds = 0.25, atPlatform=1, announceAtLevel=1  },
 }
 SPEEDUP_LEVELS = {5, 10} --,15}
 

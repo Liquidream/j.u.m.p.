@@ -47,6 +47,108 @@ do
   end
 end
 
+
+-- ------------------------------------------------------------
+-- SIDE-SWITCHER platform type (switches left/right on press)
+--
+SLIDER_MAX_MOVEMENT = 64
+do
+  SideSwitcherPlatform = BasePlatformObject:extend()
+
+  function SideSwitcherPlatform:new(x,y,spr_width)
+    SideSwitcherPlatform.super.new(self, x, y)
+
+    self.type = PLATFORM_TYPE.SIDESWITCHER
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+
+    self.side = (self.activeState) and 1 or 3 -- 1=left, 3=right
+    self.x = PLATFORM_POSITIONS[self.side]
+    self.platform_x = (irnd(2)==0) and -50 or 100
+
+    self.id = irnd(100000)
+  end
+
+
+
+  function SideSwitcherPlatform:update(dt)
+    -- update base class/values
+    SideSwitcherPlatform.super.update(self, dt)
+
+    -- is blob near this platform?
+    if blob.y+32 >= self.y-5 and blob.y+32<=self.y+16 
+     and not blob.onGround then
+      -- landed?    
+      if self:hasLanded(blob) then
+        -- landed
+        debug_log("landed!!")
+        blob.onGround = true
+        blob.vy = 0
+        blob.y = self.y-32
+      else
+        blob.onGround = false
+      end
+
+    end
+  end
+
+  function SideSwitcherPlatform:draw()
+    pal(19,33)
+    pal(24,33)
+    -- draw left "door"
+    x = (GAME_WIDTH/2) - 66 - self.platform_x
+    spr(11, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x - 32
+      spr(10, x, self.y, 1, self.spr_h)
+    end
+    -- draw right "door"
+    x = (GAME_WIDTH) + 28 - self.platform_x
+    spr(12, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x + 32
+      spr(13, x, self.y, 1, self.spr_h)
+    end
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
+
+    -- reset palette
+    pal(19,19)
+    pal(24,24)
+
+    -- draw (base) platform?
+    --SideSwitcherPlatform.super.draw(self)
+  end
+
+  function SideSwitcherPlatform:setPressedState(is_pressed)
+
+    if is_pressed then
+      -- call base implementation
+      SideSwitcherPlatform.super.setPressedState(self, not self.currState)
+    end
+
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {platform_x = (self.currState==self.activeState) and 0 or SLIDER_MAX_MOVEMENT}, 
+        'outCirc')
+    )
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SideSwitcherPlatform:hasLanded(blob)
+    -- call base implementation
+    return SideSwitcherPlatform.super.hasLanded(self,blob)
+  end
+
+end
+
+
 -- ------------------------------------------------------------
 -- SPRINGER platform type (boosts player on activation - if close enough)
 --

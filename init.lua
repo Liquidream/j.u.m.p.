@@ -33,7 +33,7 @@ function init_game()
   
   init_blob()
   
-  init_section(5) -- level/section
+  init_section(1) -- level/section
 
   -- reposition blob at start
   reset_blob()
@@ -234,7 +234,7 @@ function createNewPlatform(platformNum)
     local pDef = pick(PLATFORM_DEFS)
     debug_log("  >> picked type="..pDef.type)
     -- rigged!!
-    --pDef.type = PLATFORM_TYPE.TRIPLESPIKER
+    pDef.type = PLATFORM_TYPE.SIDESWITCHER
 
     -- BASIC checks
     -- is platform unlocked yet? (platform number, NOT level)
@@ -256,8 +256,7 @@ function createNewPlatform(platformNum)
     elseif pDef.type == PLATFORM_TYPE.SLIDER 
       and last_xpos ~= PLATFORM_POSITIONS[2] then
     ------------------------------------------------
-      xpos = PLATFORM_POSITIONS[2]  -- always middle pos
-      newPlatform = SliderPlatform(56, ypos, 1)
+      newPlatform = SliderPlatform(PLATFORM_POSITIONS[2], ypos, 1) -- always middle pos
     
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.BLOCKER 
@@ -312,6 +311,12 @@ function createNewPlatform(platformNum)
     ------------------------------------------------
       newPlatform = SpringerPlatform(xpos, ypos, 1)
     
+    ------------------------------------------------
+    elseif pDef.type == PLATFORM_TYPE.SIDESWITCHER then
+    ------------------------------------------------
+      -- xpos is generated inside constructor
+      newPlatform = SideSwitcherPlatform(56, ypos, 1)
+  
   
     else
       -- do nothing - let it loop again
