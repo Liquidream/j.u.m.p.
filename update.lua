@@ -148,9 +148,8 @@ function update_platforms(dt)
   end
 end
 
-
-function update_blob(dt)
-  local gravity = 500
+function jump_blob(jumpPlatformCount)
+  debug_log("in jump_blob()...")
   local jumpYAmounts = {
     -450, -- one platform
     -600, -- two platforms
@@ -161,6 +160,36 @@ function update_blob(dt)
     1.6, -- two platforms
     1.4  -- three platforms?
   }
+  local jumpAmountY = jumpYAmounts[jumpPlatformCount]
+  local jumpAmountX = 0  
+  local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
+  
+  jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
+
+  blob.vy = jumpAmountY
+  blob.vx = jumpAmountX
+  blob.onGround = false
+  blob.jumpCounter = 0
+  blob.lastJumpPlatformCount = jumpPlatformCount
+  debug_log("jump!")
+  debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
+  debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
+  
+end
+
+
+function update_blob(dt)
+  local gravity = 500
+  -- local jumpYAmounts = {
+  --   -450, -- one platform
+  --   -600, -- two platforms
+  --   -670  -- three platforms?
+  -- }
+  -- local jumpXAmountAdjust = {
+  --   1.4, -- one platform
+  --   1.6, -- two platforms
+  --   1.4  -- three platforms?
+  -- }
   
   if blob.onGround then
     local morePlatforms = true -- endless??
@@ -170,25 +199,27 @@ function update_blob(dt)
     if platforms[min(blob.onPlatformNum+1,#platforms)].type == PLATFORM_TYPE.BLOCKER then
       jumpPlatformCount = 2
     end
-    local jumpAmountY = jumpYAmounts[jumpPlatformCount]
-    local jumpAmountX = 0
+    -- local jumpAmountY = jumpYAmounts[jumpPlatformCount]
+    -- local jumpAmountX = 0
 
-    if morePlatforms then
-      local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
-      jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-      --debug_log("nextPlat.num="..tostring(nextPlat.num))
-    end
+    -- if morePlatforms then
+    --   local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
+    --   jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
+    --   --debug_log("nextPlat.num="..tostring(nextPlat.num))
+    -- end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
     if blob.jumpCounter >= blob.jumpFreq and morePlatforms then
-      blob.vy = jumpAmountY
-      blob.vx = jumpAmountX
-      blob.onGround = false
-      blob.jumpCounter = 0
-      debug_log("jump!")
-      debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
-      debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
-      
+
+      jump_blob(jumpPlatformCount)
+
+      -- blob.vy = jumpAmountY
+      -- blob.vx = jumpAmountX
+      -- blob.onGround = false
+      -- blob.jumpCounter = 0
+      -- debug_log("jump!")
+      -- debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
+      -- debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
     end
 
   else  
@@ -278,12 +309,16 @@ function generate_platforms()
   debug_log("blob.lastCheckpointPlatNum = "..tostring(blob.lastCheckpointPlatNum))
   debug_log("#platforms "..tostring(#platforms))
   
-  -- create any missing platforms (so there's always 5 ahead)
+  -- create any missing platforms (so there's always enough ahead)
   while #platforms < blob.onPlatformNum + 5 do
     -- auto-increase the platform count
     blob.platformCounter = blob.platformCounter + 1 
     local newPlatform = createNewPlatform(blob.platformCounter)
-    newPlatform.num = platforms[#platforms].num + 1
+    newPlatform.num = blob.platformCounter --platforms[#platforms].num + 1
+    --blob.platformCounter
+    --newPlatform.num
+    newPlatform.sectionNum = (newPlatform.num < blob.startPlatformNum + blob.numPlatforms) 
+                                  and blob.levelNum or blob.levelNum + 1
     platforms[#platforms + 1] = newPlatform
   end
 
@@ -307,7 +342,7 @@ end
 
 function update_camera(dt)
   -- make camera follow blob's highest height
-  cam.y = lerp(cam.y, blob.maxHeight-cam.trap_y, 2*dt)
+  cam.y = lerp(cam.y, blob.maxHeight-cam.trap_y, 3*dt)
 end
 
 

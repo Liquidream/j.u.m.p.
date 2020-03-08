@@ -17,9 +17,6 @@ do
     -- default to false state (could be active or inactive)
     self.currState = false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
-
-    -- self.hitbox_w = 32
-    -- self.hitbox_h = 32
   end
   function BasePlatformObject:update(dt)
     -- anything?
@@ -27,6 +24,9 @@ do
   function BasePlatformObject:draw()
     -- anything?
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
   -- base state switcher (e.g. on "press")
   -- most platforms will override this
@@ -47,6 +47,241 @@ do
   end
 end
 
+
+-- ------------------------------------------------------------
+-- SIDE-SWITCHER platform type (switches left/right on press)
+--
+SLIDER_MAX_MOVEMENT = 200
+do
+  SideSwitcherPlatform = BasePlatformObject:extend()
+
+  function SideSwitcherPlatform:new(x,y,spr_width)
+    SideSwitcherPlatform.super.new(self, x, y)
+
+    self.type = PLATFORM_TYPE.SIDESWITCHER
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+    
+    -- randomise current state
+    self.currState = irnd(2)==0
+
+    self.side = (self.activeState) and 1 or 3 -- 1=left, 3=right
+    self.x = PLATFORM_POSITIONS[self.side]
+    self.openAmount = (not self.currState) 
+                         and 0 or SLIDER_MAX_MOVEMENT
+    -- self.openAmount = (self.currState==self.activeState) 
+    --                      and 0 or SLIDER_MAX_OPEN_AMOUNT
+
+    self.id = irnd(100000)
+  end
+
+
+
+  function SideSwitcherPlatform:update(dt)
+    -- update base class/values
+    SideSwitcherPlatform.super.update(self, dt)
+
+    -- is blob near this platform?
+    if blob.y+32 >= self.y-5 and blob.y+32<=self.y+16 
+     and not blob.onGround then
+      -- landed?    
+      if self:hasLanded(blob) then
+        -- landed
+        debug_log("landed!!")
+        blob.onGround = true
+        blob.vy = 0
+        blob.y = self.y-32
+      else
+        blob.onGround = false
+      end
+
+    end
+  end
+
+  function SideSwitcherPlatform:draw()
+    pal(19,33)
+    pal(24,33)
+    -- draw left "door"
+    x = (GAME_WIDTH/2) - 263 + self.openAmount
+    spr(11, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x - 32
+      spr(10, x, self.y, 1, self.spr_h)
+    end
+    -- draw right "door"
+    x = (GAME_WIDTH) + -40 + self.openAmount
+    spr(12, x, self.y, 1, self.spr_h)
+    for i=1,4 do
+      x = x + 32
+      spr(13, x, self.y, 1, self.spr_h)
+    end
+
+    if DEBUG_MODE then 
+      use_font ("small-font")
+      local tx=self.x
+      pprint("C:"..tostring(self.currState), tx,self.y-60,7) 
+      pprint("A:"..tostring(self.activeState), tx,self.y-48,7) 
+      pprint("=:"..tostring(self.currState==self.activeState), tx,self.y-36,7) 
+      pprint("O:"..tostring(flr(self.openAmount)), tx,self.y-24,9) 
+      pprint("S:"..tostring(self.sectionNum), tx,self.y-12,7) 
+      use_font ("main-font")
+    end
+
+
+    -- reset palette
+    pal(19,19)
+    pal(24,24)
+
+    -- draw (base) platform?
+    --SideSwitcherPlatform.super.draw(self)
+  end
+
+  function SideSwitcherPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    --SliderPlatform.super.setPressedState(self,is_pressed)
+    
+    self.currState = not self.currState
+    
+    -- if is_pressed then
+    --   -- call base implementation
+    --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
+    -- end
+
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
+        'outCirc')
+    )
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SideSwitcherPlatform:hasLanded(blob)
+    -- check for landed
+    -- landed?
+    if 
+     blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
+     and blob.vy>=0 
+     and self.currState == self.activeState 
+     --and self.openAmount < 40
+    then
+      -- landed
+      return true
+    end
+    
+    return false -- landing handled in update!
+  end
+
+end
+
+
+-- ------------------------------------------------------------
+-- SPRINGER platform type (boosts player on activation - if close enough)
+--
+do
+  SpringerPlatform = BasePlatformObject:extend()
+
+  function SpringerPlatform:new(x,y,spr_width)
+    SpringerPlatform.super.new(self, x, y)
+
+    self.activeState = true
+    self.type = PLATFORM_TYPE.SPRINGER
+    self.spr = 9
+    self.spr_w = spr_width
+    self.spr_h = 1
+    self.hitbox_w = 32*spr_width
+    self.hitbox_h = 32
+
+    -- self:Reset()
+  end
+
+  function SpringerPlatform:update(dt)
+    -- update base class/values
+    SpringerPlatform.super.update(self, dt)
+
+    -- update local stuff
+  end
+
+  function SpringerPlatform:draw()
+    -- (draw everything offset down a bit - top of spring is platform)
+    local yoff = -32
+    -- draw springer
+    spr((self.currState==self.activeState) and 25 or 24, self.x, self.y+yoff, self.spr_w, spr_h)
+    
+    -- draw (base) platform
+    spr(self.spr - (self.completed and 1 or 0), 
+       self.x, self.y+yoff+32, self.spr_w, self.spr_h)
+
+       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+        self.x+50,self.y,7) end
+    -- pprint(tostring(self.currState), 
+    --   self.x+50,self.y,7)
+  end
+
+  function SpringerPlatform:setPressedState(is_pressed)
+    -- call base implementation
+    --SpringerPlatform.super.setPressedState(self,is_pressed)
+    
+    local dist = distance( blob.x, blob.y+32, self.x, self.y )
+    -- one-time activation
+    -- (only activate if pressed while on-screen)
+    if not self.currState
+     and dist < 100
+     and is_pressed then 
+      self.currState = is_pressed
+
+      --log(dist)
+      -- close enough to perform boost?
+      if dist < 30 and dist > 0 then
+        -- adjust score/platform, depending on state
+        if blob.onPlatform ~= self then
+          -- "land"
+          blob.onPlatformNum = blob.onPlatformNum + blob.lastJumpPlatformCount
+          -- log("blob.onPlatformNum = "..tostring(blob.onPlatformNum))
+          -- log("blob.lastJumpPlatformCount = "..tostring(blob.lastJumpPlatformCount))
+          blob.onPlatform = self
+          blob.onPlatform.completed = true
+          blob.score = blob.score + blob.lastJumpPlatformCount
+
+          blob.vy = 0
+          blob.x = self.x + (self.spr_w*32/2) - 16
+          blob.y = self.y - 48
+
+          -- generate new platforms (and clear old ones)
+          generate_platforms()
+
+          -- launch Blobby higher than usual (3 platforms)
+          jump_blob(3)
+        end
+      end
+    end
+
+    -- (v1) - requires being ON platform
+    -- if blob.onGround
+    --  and blob.onPlatform == self
+    --  and self.currState == self.activeState then
+    --   -- launch Blobby higher than usual (3 platforms)
+    --   jump_blob(3)
+    -- end
+  end
+
+  -- override "landed" test
+  -- to also check for spikes
+  function SpringerPlatform:hasLanded(blob)
+    -- check for spikes
+    -- if aabb(blob, self) and blob.vy>0 
+    --  and self.currState == self.activeState then
+    --   blob:loseLife()
+    -- end 
+    -- call base implementation
+    return SpringerPlatform.super.hasLanded(self,blob)
+  end
+
+end
 
 -- ------------------------------------------------------------
 -- BLOCKER platform type (breaks on interation)
@@ -79,11 +314,18 @@ do
     if aabb(blob, self) 
       and self.activeState 
      then
-      -- block!
-      --blob:loseLife()
-      blob.vy = 0
-      blob.y = self.y + 33
-      blob.onGround = false
+      -- are we "boosting"?
+      if blob.lastJumpPlatformCount > 2 then
+        -- explode now
+        self.hitsLeft = 0
+        self.activeState = false        
+        self:explode()
+      else
+        -- block!      
+        blob.vy = 0
+        blob.y = self.y + 33
+        blob.onGround = false
+      end
     end
 
     -- update explosion?
@@ -117,6 +359,9 @@ do
     palt(0, false)
     palt(35,true)   
     self.flash = false
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
   end
@@ -211,7 +456,8 @@ do
     
     -- smash block (only if visible)?    
     if is_pressed
-     and self.y > cam.y 
+     and self.y > cam.y
+     and self.sectionNum == blob.levelNum
      and self.hitsLeft > 0 then
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
@@ -310,6 +556,10 @@ do
       x = x + 32
       spr(13, x, self.y, 1, self.spr_h)
     end
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
+
     -- draw (base) platform?
     --SliderPlatform.super.draw(self)
   end
@@ -398,6 +648,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y, self.spr_w, self.spr_h)
 
+       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+        self.x+50,self.y,7) end
     --SpikerPlatform.super.draw(self)
   end
 
@@ -470,6 +722,8 @@ do
       end
     end
 
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
 
   function TripleSpikerPlatform:setPressedState(is_pressed)
@@ -548,6 +802,9 @@ do
       palt(0, false)
       palt(35,true)      
     end
+
+    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+      self.x+50,self.y,7) end
   end
 
   function StaticPlatform:setPressedState(is_pressed)

@@ -14,14 +14,16 @@ GAME_STATE = { SPLASH=0, TITLE=1, INFO=2, LVL_INTRO=3, LVL_INTRO2=3.5, LVL_PLAY=
 
 PLATFORM_TYPE = { STATIC=0, 
                   SPIKER=1, SLIDER=2, BLOCKER=3, TRIPLESPIKER = 4,
-                  SPRINGER=5, FLOATER=6 }
+                  SPRINGER=5, SIDESWITCHER=6 }
 PLATFORM_POSITIONS = {5, 56, 107}
 PLATFORM_DIST_Y = 150
 PLATFORM_DEFS = {
-  { type = PLATFORM_TYPE.SPIKER,  odds = 0.5,  atPlatform=1, announceAtLevel=1  },
+  { type = PLATFORM_TYPE.SPIKER,  odds = 0.25,  atPlatform=1, announceAtLevel=1  },
   { type = PLATFORM_TYPE.SLIDER,  odds = 0.25, atPlatform=9, announceAtLevel=2 },
   { type = PLATFORM_TYPE.BLOCKER, odds = 0.25, atPlatform=34, announceAtLevel=4 },
-  { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.25, atPlatform=94, announceAtLevel=7  },
+  { type = PLATFORM_TYPE.TRIPLESPIKER, odds = 0.25, atPlatform=71, announceAtLevel=6  },
+  { type = PLATFORM_TYPE.SIDESWITCHER, odds = 0.25, atPlatform=120, announceAtLevel=8  },
+  { type = PLATFORM_TYPE.SPRINGER, odds = 0.25, atPlatform=149, announceAtLevel=9  },
 }
 SPEEDUP_LEVELS = {5, 10} --,15}
 
@@ -81,6 +83,12 @@ function aabb(a,b)
     and a.y < b.y + b.hitbox_h 
     and a.y + a.hitbox_h > b.y
   )
+end
+
+function distance( x1, y1, x2, y2 )
+  local dx = x1 - x2
+  local dy = y1 - y2
+  return math.sqrt ( dx * dx + dy * dy )
 end
 
 function addTween(tween)
