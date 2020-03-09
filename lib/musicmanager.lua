@@ -5,7 +5,7 @@
 MusicManager = {}
 MusicManager.queue = {}
 MusicManager.playlist = {}
-MusicManager.currentSong = -1
+MusicManager.currentsong = -1
 
 --do the magic
 function MusicManager:play(sound)  

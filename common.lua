@@ -25,7 +25,12 @@ PLATFORM_DEFS = {
   { type = PLATFORM_TYPE.SIDESWITCHER, odds = 0.25, atPlatform=120, announceAtLevel=8  },
   { type = PLATFORM_TYPE.SPRINGER, odds = 0.25, atPlatform=149, announceAtLevel=9  },
 }
-SPEEDUP_LEVELS = {5, 10} --,15}
+SPEEDUP_LEVELS = {
+--level, speed, playlist #
+   [5] = {1.25, 1},
+   [10]= {1.5,  2},
+   [15]= {1.75, 2}
+} 
 
 SPEEDUP_PLAYLISTS = {  
   [0]={-- x2

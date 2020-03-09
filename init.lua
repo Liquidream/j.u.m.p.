@@ -34,7 +34,7 @@ function init_game()
   init_blob()
   
   init_section(1) -- level/section
-
+  
   -- reposition blob at start
   reset_blob()
   
@@ -44,7 +44,11 @@ function init_game()
   --init_title()
 
   -- play starting music playlist (intro + music loop)
-  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  -- (only if not already playing something
+  --  e.g. coz started at higher level/tempo)
+  if MusicManager.currentsong == -1 then
+   MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  end
 end
 
 -- create initial platforms & reset blobby
@@ -123,15 +127,16 @@ end
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
   -- speed up?
-  if has_value(SPEEDUP_LEVELS, blob.levelNum) then
-    blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
-    --log("blob.speedFactor = "..blob.speedFactor)
+  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum]
+  if speedUpDef then
+    blob.speedFactor = speedUpDef[1]
+    log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
-    local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
+    local speedUpNum = speedUpDef[2]
+    log("speedUpNum = "..speedUpNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
-    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
-    --play_music( min(speedUpNum +1,3) )  
+    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])    
   end   
   
   -- new platforms?
