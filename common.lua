@@ -27,9 +27,9 @@ PLATFORM_DEFS = {
 }
 SPEEDUP_LEVELS = {
 --level, speed, playlist #
-   [5] = {1.25, 1},
-   [10]= {1.5,  2},
-   [15]= {1.75, 2}
+   [5] = {1.125, 1},
+   [10]= {1.25,  2},
+   [15]= {1.5,   2}
 } 
 
 -- SPEEDUP_PLAYLISTS = {  

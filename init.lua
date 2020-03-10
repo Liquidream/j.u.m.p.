@@ -392,6 +392,7 @@ function init_blob()
       if self.lives <= 0 then
         gameState = GAME_STATE.GAME_OVER      
         gameCounter = 0
+        MusicManager.currentsong = -1 -- force start back to first song        
       end
     end
   }
