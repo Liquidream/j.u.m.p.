@@ -25,7 +25,11 @@ function update_game(dt)
     -- todo: splash screen
 
   elseif gameState == GAME_STATE.TITLE then
-    -- todo: title screen    
+    -- todo: title screen
+    if somethingPressed then
+      -- start game
+      init_game()
+    end
 
     -- intro pt.1 (popup)
   elseif gameState == GAME_STATE.LVL_INTRO then    
@@ -97,8 +101,10 @@ function update_game(dt)
     -- TODO: tally up score, then wait for user to start next round
     gameCounter = gameCounter + 1
     if gameCounter > 100 then
-      -- TODO: go back to title?
-      init_game()
+      -- TODO: go back to title?      
+      MusicManager.currentsong = -1 -- force start back to first song 
+      init_title()
+      --init_game()
     end
     -- update camera
     update_camera(dt)

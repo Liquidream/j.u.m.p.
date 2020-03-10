@@ -73,7 +73,16 @@ MusicManager = require("lib/musicmanager")
 
  
 function love.load()
-  init_game()
+  -- only perform core init once
+  init_sugarcoat()  
+  init_assets()
+  init_input()
+  on_resize()
+
+  _initialized = true
+
+  -- start at title screen
+  init_title()
 end
 
 function love.update(dt)

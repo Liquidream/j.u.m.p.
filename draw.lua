@@ -11,7 +11,7 @@ function draw_game()
   elseif gameState == GAME_STATE.TITLE then
 
     -- TODO: title screen
-    --draw_level()??
+    draw_level()
 
   elseif gameState == GAME_STATE.LVL_INTRO 
       or gameState == GAME_STATE.LVL_INTRO2
@@ -150,13 +150,26 @@ function draw_ui()
     0x0)
   printp_color(47, 0, 0, 0)
 
-  for i=0,blob.lives-1 do
-    spr(30,i*22,-4)
-  end
+  
 
   use_font ("main-font")
+
+  if gameState == GAME_STATE.TITLE then
+    pprint("J.U.M.P.", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-116, 9)
+    use_font ("small-font")
+    pprint("Just Understand My Peril", (GAME_WIDTH/2)-98, (GAME_HEIGHT/2)-88, 3)
+
+    use_font ("main-font")
+    pprint("< TITLE >", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
+  end
   
-  
+  -- draw blobby's lives
+  if gameState ~= GAME_STATE.TITLE then    
+    for i=0,blob.lives-1 do
+      spr(30,i*22,-4)
+    end
+  end
+
   if gameState == GAME_STATE.LVL_INTRO 
   and popup then
     draw_popup()

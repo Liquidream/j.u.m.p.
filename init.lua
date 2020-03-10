@@ -14,18 +14,36 @@ shake=0
 shake_x=0
 shake_y=0
 
-function init_game()
-  -- only perform core init once
-  if not _initialized then
-    init_sugarcoat()  
-    init_assets()
-    init_input()
-    on_resize()
-  end
-  _initialized = true
 
-  -- create platform definitions
-   
+function init_title()
+  gameState = GAME_STATE.TITLE
+
+  -- create platform definitions   
+  last_xpos = PLATFORM_POSITIONS[2]
+  -- init/clear platforms
+  platforms = {}
+    
+  init_blob()
+  
+  init_section(1) -- level/section
+  
+  -- reposition blob at start
+  reset_blob()
+  
+  init_cam()
+  
+  -- play starting music playlist (intro + music loop)
+  -- (only if not already playing something
+  --  e.g. coz started at higher level/tempo)
+  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  
+  gameState = GAME_STATE.TITLE
+end
+
+function init_game()
+  gameState = GAME_STATE.LVL_INTRO
+
+  -- create platform definitions   
   last_xpos = PLATFORM_POSITIONS[2]
   -- init/clear platforms
   platforms = {}
@@ -40,14 +58,10 @@ function init_game()
   
   init_cam()
   
-  -- show the title
-  --init_title()
-
-  -- play starting music playlist (intro + music loop)
-  -- (only if not already playing something
-  --  e.g. coz started at higher level/tempo)
-  if MusicManager.currentsong == -1 then
-   MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  -- if playing music...
+  if MusicManager.currentsong ~= -1 then
+    -- release title music loop
+    MusicManager.playlist[1]:setLooping(false)
   end
 end
 
@@ -89,14 +103,13 @@ function init_section(sectionNum)
     blob.platformCounter = blob.startPlatformNum
   end
 
-  -- generate any missing platforms (and clear old ones)
-  generate_platforms()
-  
-  
-  --
-  -- show intro / popup
-  --
-  init_level_intro()
+  -- if not title screen
+  if gameState ~= GAME_STATE.TITLE then
+    -- generate any missing platforms (and clear old ones)
+    generate_platforms()     
+    -- show intro / popup
+    init_level_intro()
+  end
 end
 
 function init_level_intro()
@@ -391,8 +404,7 @@ function init_blob()
       -- game over?
       if self.lives <= 0 then
         gameState = GAME_STATE.GAME_OVER      
-        gameCounter = 0
-        MusicManager.currentsong = -1 -- force start back to first song        
+        gameCounter = 0       
       end
     end
   }
@@ -415,14 +427,11 @@ function reset_blob()
 end
 
 function init_cam()
-  -- TODO: initialise camera object (smooth panning camera)
+  -- initialise camera object (smooth panning camera)
   cam = {
     x = 0,
-    y = blob.maxHeight-GAME_HEIGHT/2,
-    --y = platforms[1].y - GAME_HEIGHT/2,
-    
+    y = blob.maxHeight-GAME_HEIGHT/2,    
     trap_y = GAME_HEIGHT/2
-    --trap_y = GAME_HEIGHT/2
   }
 end
 
@@ -471,7 +480,8 @@ function init_assets()
   -- init music  
   SPEEDUP_PLAYLISTS = {  
     [0]={-- x2
-      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+    Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
+    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
       Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
     },
     {-- x2
