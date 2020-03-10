@@ -32,22 +32,22 @@ SPEEDUP_LEVELS = {
    [15]= {1.75, 2}
 } 
 
-SPEEDUP_PLAYLISTS = {  
-  [0]={-- x2
-    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
-  },
-  {-- x2
-    Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
-    Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
-  },
-  {-- x3
-    Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
-    Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
-  },
-}
+-- SPEEDUP_PLAYLISTS = {  
+--   [0]={-- x2
+--     Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+--   },
+--   {-- x2
+--     Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+--     Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+--   },
+--   {-- x3
+--     Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+--     Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+--   },
+-- }
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54

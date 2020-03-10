@@ -2,10 +2,10 @@
 _t = 0
 blob = {}
 cam = {}
---platforms = {} -- init/clear platforms
+tweens = {}
+sounds = {}
 lastPressedState = false
 gameCounter = 0 -- used for countdown delays at end/start of levels
-tweens = {}
 lastPlatformState = false
 countOfSameStates = 0
 -- shake tells how much to
@@ -462,7 +462,33 @@ function init_assets()
   spritesheet_grid(32,32)
   --spritesheet_grid(128,128)
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
-  spritesheet_grid(32,32)  
+  spritesheet_grid(32,32)
+
+  -- init sounds
+  local musicVol = 0.25
+  local sfxVol = 0.25
+  -- init music  
+  SPEEDUP_PLAYLISTS = {  
+    [0]={-- x2
+      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+    },
+    {-- x2
+      Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+      Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+    },
+    {-- x3
+      Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+      Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+    },
+  }
+
+  -- init sfx  
+  sounds.checkpoint = Sound:new('Jump SFX Checkpoint1.ogg', 1)
+  sounds.checkpoint:setVolume(sfxVol)
+  
 end
 
 function init_input()
@@ -487,16 +513,3 @@ function init_input()
   register_btn(7,  0, input_id("mouse_button", "lb"))
 
 end
-
--- function play_music(num)
---   -- stop current music
---   if Sounds.currentMusicNum then 
---     Sounds.music[Sounds.currentMusicNum]:stop()
---   end
-
---   -- play new music
---   Sounds.music[num]:setVolume(1)
---   Sounds.music[num]:setLooping(true)
---   Sounds.music[num]:play()
---   Sounds.currentMusicNum = num
--- end

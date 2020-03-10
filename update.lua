@@ -281,8 +281,11 @@ function update_collisions()
           blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
-          --log("CHECKPOINT!")
+          --log("CHECKPOINT!")          
           debug_log("#platforms = "..#platforms)
+
+          sounds.checkpoint:play()
+
 
           -- DEBUG:
           for k,p in pairs(platforms) do
