@@ -1,0 +1,57 @@
+
+-- Defines all the button object types
+
+-- ------------------------------------------------------------
+-- Base button properties, shared by all button types
+--
+do
+  BaseButtonObject = Object:extend()
+  -- base constructor
+  function BaseButtonObject:new(x,y,text,w,h,col,hcol,font)
+    -- initialising
+    self.x = x
+    self.y = y
+    self.text = text
+    self.hovered = false
+    -- cols?
+    self.col = col or 17
+    self.hcol = hcol or 47
+
+    -- font?
+    self.font = font or "main-font"
+    -- auto-calc size?
+    if w == nil then
+      self.w = #text*16
+      self.h = 24
+    else      
+      self.w = w
+      self.h = h
+    end
+    -- hitbox
+    self.hitbox_w = self.w
+    self.hitbox_h = self.h
+  end
+  function BaseButtonObject:update(dt)
+    -- collision detection
+    self.hovered = false
+    if aabb(cursor, self) then
+      -- hovering
+      self.hovered = true
+    end
+  end
+  function BaseButtonObject:draw()
+    use_font (self.font)
+
+    pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
+
+    if DEBUG_MODE then 
+      -- draw bounding box
+      rect(self.x, self.y, self.x+self.hitbox_w, self.y+self.hitbox_h,36)
+    end
+  end
+  -- base state switcher (e.g. on "press")
+  -- most platforms will override this
+  -- function BaseButtonObject:setPressedState(is_pressed)
+  --   self.currState = is_pressed
+  -- end
+end

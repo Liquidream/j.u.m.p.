@@ -18,6 +18,10 @@ function update_game(dt)
   
   -- player interactions (always capture latest state)
   update_player_input()
+  -- update all buttons
+  for k, button in pairs(buttons) do
+    button:update(dt)
+  end
 
   MusicManager:update(dt)
 
@@ -121,19 +125,16 @@ function update_player_input()
   -- and update the world accordingly
   local mousePressed = btn(7)
   local mainKeyPressed = btn(4)
+  local mx = flr(btnv(5)) - SCREEN_X
+  local my = flr(btnv(6)) - SCREEN_Y
+
+  cursor.x = mx
+  cursor.y = my
   currPressedState = mousePressed or mainKeyPressed
 
   -- something pressed (this frame)
   somethingPressed = currPressedState ~= lastPressedState
 
-  -- if currPressedState ~= lastPressedState then
-  --   for key,platform in pairs(platforms) do
-  --     -- update platform state
-  --     -- (if either input method used)
-  --     platform:setPressedState(currPressedState)
-  --   end
-  -- end  
-  
   -- remember...
   lastPressedState = currPressedState  
 end

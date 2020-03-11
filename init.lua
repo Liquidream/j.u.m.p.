@@ -4,6 +4,8 @@ blob = {}
 cam = {}
 tweens = {}
 sounds = {}
+buttons = {} -- menu/other buttons
+cursor = {}
 lastPressedState = false
 gameCounter = 0 -- used for countdown delays at end/start of levels
 lastPlatformState = false
@@ -14,9 +16,34 @@ shake=0
 shake_x=0
 shake_y=0
 
+function init_cursor()
+  -- re-show the mouse cursor 
+  -- (for menu on Desktop)
+  if not ON_MOBILE then    
+    love.mouse.setVisible(true)
+  end
 
-function init_title()
+  -- define cursor obj, for collision testing later
+  cursor = {
+    x = 0,
+    y = 0,
+    hitbox_w = 0,
+    hitbox_h = 0,
+  }
+end
+
+
+function init_title()  
   gameState = GAME_STATE.TITLE
+
+  -- init mouse/touch controls
+  init_cursor()
+
+  -- init menu buttons
+  buttons = {}
+  startButton = BaseButtonObject(56, GAME_HEIGHT/2, "START GAME")
+  table.insert(buttons, startButton)
+  
 
   -- create platform definitions   
   last_xpos = PLATFORM_POSITIONS[2]
@@ -42,6 +69,9 @@ end
 
 function init_game()
   gameState = GAME_STATE.LVL_INTRO
+
+  -- re-hide the mouse cursor
+  love.mouse.setVisible(false)
 
   -- create platform definitions   
   last_xpos = PLATFORM_POSITIONS[2]

@@ -159,8 +159,8 @@ function draw_ui()
     use_font ("small-font")
     pprint("Just Understand My Peril", (GAME_WIDTH/2)-98, (GAME_HEIGHT/2)-88, 3)
 
-    use_font ("main-font")
-    pprint("< TITLE >", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
+    --use_font ("main-font")
+    --pprint("< TITLE >", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
   end
   
   -- draw blobby's lives
@@ -199,6 +199,11 @@ function draw_ui()
 
   if gameState == GAME_STATE.GAME_OVER then
     pprint("GAME OVER", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-56, 47)
+  end
+
+  -- regardless of state, draw buttons
+  for k, button in pairs(buttons) do
+    button:draw(dt)
   end
 
   if DEBUG_MODE then

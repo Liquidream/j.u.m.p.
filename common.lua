@@ -1,7 +1,7 @@
 --
 -- Constants
 --
-DEBUG_MODE = false
+DEBUG_MODE = true
 
 GAME_WIDTH_LANDSCAPE = 256  -- 16:9 aspect ratio
 GAME_HEIGHT_LANDSCAPE = 144 -- (Landscape)

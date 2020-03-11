@@ -62,6 +62,7 @@ tween = require 'lib/tween'
 Sound = require("lib/sound")
 Object = require("lib/classic")
 require("objects/platforms")
+require("objects/buttons")
 require("common")
 require("init")
 require("update")
