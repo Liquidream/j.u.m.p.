@@ -7,7 +7,7 @@
 do
   BaseButtonObject = Object:extend()
   -- base constructor
-  function BaseButtonObject:new(x,y,text,w,h,col,hcol,font)
+  function BaseButtonObject:new(x,y,text,funcOnClick,w,h,col,hcol,font)
     -- initialising
     self.x = x
     self.y = y
@@ -30,6 +30,12 @@ do
     -- hitbox
     self.hitbox_w = self.w
     self.hitbox_h = self.h
+
+    -- event handlers
+    self.onClick = funcOnClick or function()
+      -- no base functionality
+      debug_log("'"..tostring(self.text).."' button clicked")
+    end
   end
   function BaseButtonObject:update(dt)
     -- collision detection
@@ -37,6 +43,11 @@ do
     if aabb(cursor, self) then
       -- hovering
       self.hovered = true
+    end
+    -- clicked?
+    if somethingPressed and self.hovered then
+      somethingPressed = false
+      self:onClick()      
     end
   end
   function BaseButtonObject:draw()
@@ -49,9 +60,5 @@ do
       rect(self.x, self.y, self.x+self.hitbox_w, self.y+self.hitbox_h,36)
     end
   end
-  -- base state switcher (e.g. on "press")
-  -- most platforms will override this
-  -- function BaseButtonObject:setPressedState(is_pressed)
-  --   self.currState = is_pressed
-  -- end
+  
 end

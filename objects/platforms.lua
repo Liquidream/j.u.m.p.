@@ -25,8 +25,8 @@ do
     -- anything?
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
   end
   -- base state switcher (e.g. on "press")
   -- most platforms will override this
@@ -51,8 +51,8 @@ end
 -- ------------------------------------------------------------
 -- SIDE-SWITCHER platform type (switches left/right on press)
 --
-SLIDER_MAX_MOVEMENT = 200
 do
+  SLIDER_MAX_MOVEMENT = 200
   SideSwitcherPlatform = BasePlatformObject:extend()
 
   function SideSwitcherPlatform:new(x,y,spr_width)
@@ -118,16 +118,16 @@ do
       spr(13, x, self.y, 1, self.spr_h)
     end
 
-    if DEBUG_MODE then 
-      use_font ("small-font")
-      local tx=self.x
-      pprint("C:"..tostring(self.currState), tx,self.y-60,7) 
-      pprint("A:"..tostring(self.activeState), tx,self.y-48,7) 
-      pprint("=:"..tostring(self.currState==self.activeState), tx,self.y-36,7) 
-      pprint("O:"..tostring(flr(self.openAmount)), tx,self.y-24,9) 
-      pprint("S:"..tostring(self.sectionNum), tx,self.y-12,7) 
-      use_font ("main-font")
-    end
+    -- if DEBUG_MODE then 
+    --   use_font ("small-font")
+    --   local tx=self.x
+    --   pprint("C:"..tostring(self.currState), tx,self.y-60,7) 
+    --   pprint("A:"..tostring(self.activeState), tx,self.y-48,7) 
+    --   pprint("=:"..tostring(self.currState==self.activeState), tx,self.y-36,7) 
+    --   pprint("O:"..tostring(flr(self.openAmount)), tx,self.y-24,9) 
+    --   pprint("S:"..tostring(self.sectionNum), tx,self.y-12,7) 
+    --   use_font ("main-font")
+    -- end
 
 
     -- reset palette
@@ -216,8 +216,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
 
-       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-        self.x+50,self.y,7) end
+    --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
     -- pprint(tostring(self.currState), 
     --   self.x+50,self.y,7)
   end
@@ -360,8 +360,8 @@ do
     palt(35,true)   
     self.flash = false
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
     -- draw (base) platform
     --BlockerPlatform.super.draw(self)
   end
@@ -493,8 +493,8 @@ end
 -- ------------------------------------------------------------
 -- SLIDER platform type (closes/opens when activated)
 --
-SLIDER_MAX_OPEN_AMOUNT = 64
 do
+  SLIDER_MAX_OPEN_AMOUNT = 64
   SliderPlatform = BasePlatformObject:extend()
 
   function SliderPlatform:new(x,y,spr_width)
@@ -557,8 +557,8 @@ do
       spr(13, x, self.y, 1, self.spr_h)
     end
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
 
     -- draw (base) platform?
     --SliderPlatform.super.draw(self)
@@ -648,8 +648,8 @@ do
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y, self.spr_w, self.spr_h)
 
-       if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-        self.x+50,self.y,7) end
+    --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
     --SpikerPlatform.super.draw(self)
   end
 
@@ -722,8 +722,8 @@ do
       end
     end
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
   end
 
   function TripleSpikerPlatform:setPressedState(is_pressed)
@@ -803,8 +803,8 @@ do
       palt(35,true)      
     end
 
-    if DEBUG_MODE then pprint(tostring(self.sectionNum), 
-      self.x+50,self.y,7) end
+    -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
+    --   self.x+50,self.y,7) end
   end
 
   function StaticPlatform:setPressedState(is_pressed)

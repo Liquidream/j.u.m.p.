@@ -41,7 +41,10 @@ function init_title()
 
   -- init menu buttons
   buttons = {}
-  startButton = BaseButtonObject(56, GAME_HEIGHT/2, "START GAME")
+  startButton = BaseButtonObject(0, GAME_HEIGHT/2, "START GAME", function()
+    -- start game
+    init_game()
+  end)
   table.insert(buttons, startButton)
   
 
@@ -58,6 +61,8 @@ function init_title()
   reset_blob()
   
   init_cam()
+  -- force cam to be a bit higher on title
+  cam.y = blob.maxHeight - GAME_HEIGHT/2 -40
   
   -- play starting music playlist (intro + music loop)
   -- (only if not already playing something
@@ -69,6 +74,9 @@ end
 
 function init_game()
   gameState = GAME_STATE.LVL_INTRO
+
+  -- clear all menu buttons
+  buttons = {}
 
   -- re-hide the mouse cursor
   love.mouse.setVisible(false)

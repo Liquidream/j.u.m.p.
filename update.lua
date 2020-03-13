@@ -30,10 +30,10 @@ function update_game(dt)
 
   elseif gameState == GAME_STATE.TITLE then
     -- todo: title screen
-    if somethingPressed then
-      -- start game
-      init_game()
-    end
+    -- if somethingPressed then
+    --   -- start game
+    --   init_game()
+    -- end
 
     -- intro pt.1 (popup)
   elseif gameState == GAME_STATE.LVL_INTRO then    
@@ -133,7 +133,8 @@ function update_player_input()
   currPressedState = mousePressed or mainKeyPressed
 
   -- something pressed (this frame)
-  somethingPressed = currPressedState ~= lastPressedState
+  somethingPressed = currPressedState and (currPressedState ~= lastPressedState)
+  pressedStateChanged = currPressedState ~= lastPressedState
 
   -- remember...
   lastPressedState = currPressedState  
@@ -144,8 +145,8 @@ function update_platforms(dt)
   for i = 1,#platforms do
     local platform = platforms[i]
     if platform then
-      -- something pressed (this frame)?
-      if somethingPressed then 
+      -- something changed in pressed state (this frame)?
+      if pressedStateChanged then 
         -- update platform state
         -- (if either input method used)
         platform:setPressedState(currPressedState)
