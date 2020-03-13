@@ -41,11 +41,24 @@ function init_title()
 
   -- init menu buttons
   buttons = {}
-  startButton = BaseButtonObject(0, GAME_HEIGHT/2, "START GAME", function()
+  local menu_xpos = 25
+  local menu_ypos = GAME_HEIGHT/2 - 10
+
+  local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
     -- start game
-    init_game()
-  end)
-  table.insert(buttons, startButton)
+    init_game(1)
+  end,nil,nil,20)
+  local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
+    -- start game
+    init_game(5)
+  end,nil,nil,20)
+  local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
+    -- start game
+    init_game(10)
+  end,nil,nil,20)
+  table.insert(buttons, easyButton)
+  table.insert(buttons, mediumButton)
+  table.insert(buttons, hardButton)
   
 
   -- create platform definitions   
@@ -72,7 +85,7 @@ function init_title()
   gameState = GAME_STATE.TITLE
 end
 
-function init_game()
+function init_game(startSection)
   gameState = GAME_STATE.LVL_INTRO
 
   -- clear all menu buttons
@@ -89,7 +102,7 @@ function init_game()
   
   init_blob()
   
-  init_section(8) -- level/section
+  init_section(startSection or 1) -- level/section
   
   -- reposition blob at start
   reset_blob()

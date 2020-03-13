@@ -21,7 +21,7 @@ do
     self.font = font or "main-font"
     -- auto-calc size?
     if w == nil then
-      self.w = #text*16
+      self.w = #text*15
       self.h = 24
     else      
       self.w = w

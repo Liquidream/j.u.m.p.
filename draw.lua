@@ -155,9 +155,14 @@ function draw_ui()
   use_font ("main-font")
 
   if gameState == GAME_STATE.TITLE then
-    pprint("J.U.M.P.", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-116, 9)
+    pprint("J.U.M.P.", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-125, 9)
     use_font ("small-font")
-    pprint("Just Understand My Peril", (GAME_WIDTH/2)-98, (GAME_HEIGHT/2)-88, 3)
+    pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
+      (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 3)
+    pprint("J\n   U\n      M\n         P", 
+      (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
+
+    pprint("CHOOSE DIFFICULTY:", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-28, 19)
 
     --use_font ("main-font")
     --pprint("< TITLE >", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
