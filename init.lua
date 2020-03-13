@@ -89,7 +89,7 @@ function init_game()
   
   init_blob()
   
-  init_section(1) -- level/section
+  init_section(8) -- level/section
   
   -- reposition blob at start
   reset_blob()
@@ -255,6 +255,9 @@ function createNewPlatform(platformNum)
     debug_log("  >> picked xpos="..xpos)
   until xpos ~= last_xpos
 
+  -- re-seed rng for platform
+  srand(platformNum)
+
   local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(platformNum*PLATFORM_DIST_Y)
   local prevPlatform = platforms[#platforms]
   
@@ -283,7 +286,10 @@ function createNewPlatform(platformNum)
     --return checkPoint
   end
   
-  -- randomly select a platform type (based on those unlocked)
+  
+  -- randomly select a platform type (based on those unlocked)  
+  -- re-seed rng for platform
+  srand(platformNum)
   
   while newPlatform == nil do
     -- pick a platform type

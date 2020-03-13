@@ -91,6 +91,10 @@ do
         -- landed
         debug_log("landed!!")
         blob.onGround = true
+        -- were we hurt?
+        if blob.vy > 500 then
+          blob:loseLife()
+        end
         blob.vy = 0
         blob.y = self.y-32
       else
@@ -532,6 +536,10 @@ do
         -- landed
         --debug_log("landed!!")
         blob.onGround = true
+        -- were we hurt?
+        if blob.vy > 500 then
+          blob:loseLife()
+        end
         blob.vy = 0
         blob.y = self.y-32
       else
