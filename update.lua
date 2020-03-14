@@ -29,7 +29,8 @@ function update_game(dt)
     -- todo: splash screen
 
   elseif gameState == GAME_STATE.TITLE then
-    -- todo: title screen
+    -- move the camera a bit
+    cam.y = cam.y + sin(t()/4)/6
     -- if somethingPressed then
     --   -- start game
     --   init_game()
