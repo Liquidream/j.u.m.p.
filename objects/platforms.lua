@@ -796,19 +796,22 @@ do
       if self.gapSide ~= 1 then
         -- left
         spr(29, self.x+80, self.y-32)
-        -- draw level number
-        print(self.levelNum, self.x+25, self.y+2, 24)
       else
         -- right
         spr(29, self.x+150, self.y-32)
-        -- draw level number
-        print(self.levelNum, self.x+210, self.y+2, 24)
       end
       -- reset palette
       pal()
       palt()
       palt(0, false)
       palt(35,true)      
+    end
+
+    -- draw level number
+    if self.gapSide ~= 1 then
+      print(self.sectionNum, self.x+25, self.y+2, 24)
+    else
+      print(self.sectionNum, self.x+210, self.y+2, 24)
     end
 
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 

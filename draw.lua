@@ -152,22 +152,32 @@ function draw_ui()
 
   
 
-  use_font ("main-font")
-
+  
   if gameState == GAME_STATE.TITLE then
-    pprint("J.U.M.P.", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-125, 9)
+    use_font("big-font")
+    pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)
     use_font ("small-font")
     pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
-      (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 3)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 3,0)
     pprint("J\n   U\n      M\n         P", 
-      (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
-
-    pprint("CHOOSE DIFFICULTY:", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-28, 19)
-
-    --use_font ("main-font")
-    --pprint("< TITLE >", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
+    
+    if #buttons > 0 then
+      -- dark overlay
+      local menu_x = (GAME_WIDTH/2)-72
+      local menu_y = (GAME_HEIGHT/2)-28
+      for x=menu_x,menu_x+(7*16),16 do
+        for y=menu_y,menu_y+(4*16),16 do
+          aspr(43, x,y, 0, 1,1, 0, 0)
+        end  
+      end  
+      pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
+    end
+    
   end
   
+  use_font("main-font")
+
   -- draw blobby's lives
   if gameState ~= GAME_STATE.TITLE then    
     for i=0,blob.lives-1 do
@@ -183,9 +193,9 @@ function draw_ui()
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
       pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
-      use_font ("small-font")
+      use_font("small-font")
       pprint(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
-      use_font ("main-font")
+      use_font("main-font")
     end
     
   end
@@ -203,7 +213,20 @@ function draw_ui()
   end
 
   if gameState == GAME_STATE.GAME_OVER then
-    pprint("GAME OVER", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-56, 47)
+    if #buttons > 0 then
+      use_font("big-font")
+      pprint("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 36)
+      use_font("small-font")
+      -- dark overlay
+      local menu_x = (GAME_WIDTH/2)-72
+      local menu_y = (GAME_HEIGHT/2)-28
+      for x=menu_x,menu_x+(7*16),16 do
+        for y=menu_y,menu_y+(4*16),16 do
+          aspr(43, x,y, 0, 1,1, 0, 0)
+        end  
+      end  
+      pprint("CONTINUE..?", menu_x, menu_y, 19)
+    end
   end
 
   -- regardless of state, draw buttons
@@ -220,6 +243,7 @@ function draw_ui()
     pprint('FPS:' .. love.timer.getFPS(), 92, GAME_HEIGHT-16, 49)
   end
 end
+
 
 function draw_popup()
   --43 (3x3) bg  

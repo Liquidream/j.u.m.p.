@@ -39,27 +39,8 @@ function init_title()
   -- init mouse/touch controls
   init_cursor()
 
-  -- init menu buttons
+  -- -- reset menu buttons
   buttons = {}
-  local menu_xpos = 25
-  local menu_ypos = GAME_HEIGHT/2 - 10
-
-  local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
-    -- start game
-    init_game(1)
-  end,nil,nil,20)
-  local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
-    -- start game
-    init_game(5)
-  end,nil,nil,20)
-  local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
-    -- start game
-    init_game(10)
-  end,nil,nil,20)
-  table.insert(buttons, easyButton)
-  table.insert(buttons, mediumButton)
-  table.insert(buttons, hardButton)
-  
 
   -- create platform definitions   
   last_xpos = PLATFORM_POSITIONS[2]
@@ -75,14 +56,32 @@ function init_title()
   
   init_cam()
 
-  cam.y = -400
+  cam.y = -200
   addTween(
     tween.new(
-     4, cam, 
+     2, cam, 
       {y = blob.maxHeight - GAME_HEIGHT/2 -35 }, 
-      'outQuad',
+      'outBounce',
       function(self)
-        --log("complete!!!!")
+        -- init menu buttons        
+        local menu_xpos = 25
+        local menu_ypos = GAME_HEIGHT/2 - 10
+
+        local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
+          -- start game
+          init_game(1)
+        end,nil,nil,17)
+        local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
+          -- start game
+          init_game(5)
+        end,nil,nil,17)
+        local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
+          -- start game
+          init_game(10)
+        end,nil,nil,17)
+        table.insert(buttons, easyButton)
+        table.insert(buttons, mediumButton)
+        table.insert(buttons, hardButton)
       end
     )
   )
@@ -95,6 +94,10 @@ function init_title()
   MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
   
   gameState = GAME_STATE.TITLE
+end
+
+function createTextObj(text, fontName, col1, col2)
+
 end
 
 function init_game(startSection)
@@ -150,9 +153,10 @@ function init_section(sectionNum)
   if platforms[1] == nil then
     debug_log("create 'floor' platform...")
     local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
-    platforms[1] = StaticPlatform(-56, ypos, 8)
-    platforms[1].num = blob.startPlatformNum
-    platforms[1].sectionNum = sectionNum
+    local startPlatform = StaticPlatform(-56, ypos, 8)
+    startPlatform.num = blob.startPlatformNum
+    startPlatform.sectionNum = sectionNum
+    platforms[1] = startPlatform
     -- test
     --platforms[1].gapSide=1
   end
@@ -196,9 +200,10 @@ function init_level_end()
   gameState = GAME_STATE.LVL_END
   gameCounter = 0
 
-  -- TODO: review speed-ups and new platform messages, etc.
-  
-  
+  -- record progress for continue?
+  if blob.lives == 3 then
+    blob.last_level_full_lives = blob.levelNum + 1
+  end
 end
 
 -- any announcements? (speed, platform, tips)
@@ -294,8 +299,6 @@ function createNewPlatform(platformNum)
     -- create a landing platform for checkpoint
     newPlatform = StaticPlatform(-56, ypos, 8)
     newPlatform.isCheckpoint = true
-    newPlatform.levelNum = blob.levelNum + 1
-
     -- rig it so prev platform always at a side
     if prevPlatform.x == PLATFORM_POSITIONS[2] then
       -- with a spiker in left/right pos
@@ -464,6 +467,7 @@ function init_blob()
     platformCounter = 1, -- running counter of platform gen numbers
     onPlatformNum = 1,
     startPlatformNum = 0,
+    last_level_full_lives = 0,
 
     loseLife = function(self)
       debug_log("OUCH!!!!")
@@ -473,11 +477,34 @@ function init_blob()
       cls(38) flip()
       -- game over?
       if self.lives <= 0 then
-        gameState = GAME_STATE.GAME_OVER      
-        gameCounter = 0       
+        init_game_over()   
       end
     end
   }
+end
+
+function init_game_over()
+  gameState = GAME_STATE.GAME_OVER      
+  gameCounter = 0       
+
+  -- init mouse/touch controls
+  init_cursor()
+
+  -- init menu buttons
+  buttons = {}
+  local menu_xpos = 50
+  local menu_ypos = GAME_HEIGHT/2 - 10
+
+  local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
+    -- continue game
+    init_game(blob.last_level_full_lives)
+  end,nil,nil,17)
+  local titleButton = BaseButtonObject(menu_xpos, menu_ypos+40, "NO", function()
+    -- exit to title
+    init_title()
+  end,nil,nil,17)
+  table.insert(buttons, continueButton)
+  table.insert(buttons, titleButton)
 end
 
 -- reset blob back to starting position
@@ -512,7 +539,8 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
-  load_font ("assets/AweMono.ttf", 16, "small-font", true)
+  load_font ("assets/AweMono.ttf", 16, "small-font")
+  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 40, "big-font")
   load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 26, "main-font", true)
   --load_font ("assets/PublicSans-Black.otf", 21, "main-font", true)
   --load_font ("assets/Awesome.ttf", 32, "main-font", true)

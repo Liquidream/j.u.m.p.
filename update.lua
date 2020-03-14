@@ -98,14 +98,9 @@ function update_game(dt)
 
   elseif gameState == GAME_STATE.GAME_OVER then
     
-    -- TODO: tally up score, then wait for user to start next round
-    gameCounter = gameCounter + 1
-    if gameCounter > 100 then
-      -- TODO: go back to title?      
-      MusicManager.currentsong = -1 -- force start back to first song 
-      init_title()
-      --init_game()
-    end
+    -- TODO: tally up score, then wait for user to decide (continue/exit)
+ 
+
     -- update camera
     update_camera(dt)
   
