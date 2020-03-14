@@ -74,8 +74,20 @@ function init_title()
   reset_blob()
   
   init_cam()
+
+  cam.y = -400
+  addTween(
+    tween.new(
+     4, cam, 
+      {y = blob.maxHeight - GAME_HEIGHT/2 -35 }, 
+      'outQuad',
+      function(self)
+        --log("complete!!!!")
+      end
+    )
+  )
   -- force cam to be a bit higher on title
-  cam.y = blob.maxHeight - GAME_HEIGHT/2 -40
+  --cam.y = blob.maxHeight - GAME_HEIGHT/2 -40
   
   -- play starting music playlist (intro + music loop)
   -- (only if not already playing something
@@ -155,9 +167,10 @@ function init_section(sectionNum)
   end
 
   -- if not title screen
-  if gameState ~= GAME_STATE.TITLE then
+ -- if gameState ~= GAME_STATE.TITLE then
     -- generate any missing platforms (and clear old ones)
     generate_platforms()     
+  if gameState ~= GAME_STATE.TITLE then
     -- show intro / popup
     init_level_intro()
   end
