@@ -142,7 +142,7 @@ end
 
 function pprint_shiny(str, x, y, c1, c2, c3, yoff, yheight)
   pprint(str, x, y, c1, c2)
-  clip(x, y+(yoff or 5), GAME_WIDTH, yheight or 4)
+  clip(x, y+(yoff or 5), GAME_WIDTH*2, yheight or 6)
   --rectfill(0,0,GAME_WIDTH,GAME_HEIGHT, 38)
   pprint(str, x, y, c3)
   clip()
@@ -164,8 +164,8 @@ function draw_ui()
   
   if gameState == GAME_STATE.TITLE then
     use_font("big-font")
-    --pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 15,10)
-    pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
+    pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
+    --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
     use_font ("small-font")
     pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
     (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
@@ -225,7 +225,8 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_PLAY then
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
+    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2,  52, 0, 45, 7,15)
+    --pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
     --pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
   end
   
@@ -237,7 +238,7 @@ function draw_ui()
   if gameState == GAME_STATE.GAME_OVER then
     if #buttons > 0 then
       use_font("big-font")
-      pprint("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 36)
+      pprint_shiny("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 39, 0, 38, 9,27)
       use_font("small-font")
       -- dark overlay
       local menu_x = (GAME_WIDTH/2)-72
@@ -246,8 +247,8 @@ function draw_ui()
         for y=menu_y,menu_y+(4*16),16 do
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
-      end  
-      pprint("CONTINUE..?", menu_x, menu_y, 19)
+      end 
+      pprint_shiny("CONTINUE..?", menu_x, menu_y,  19, 0, 47)
     end
   end
 

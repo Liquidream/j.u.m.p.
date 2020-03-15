@@ -458,7 +458,7 @@ end
 -- (will be positioned later)
 function init_blob()
   blob = {
-    lives = 3,
+    lives = 1,
     score = 0,       -- essentially the platform num?
     levelNum = 0,    -- ...this gets set in init_section()
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
