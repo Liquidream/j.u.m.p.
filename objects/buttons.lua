@@ -52,8 +52,12 @@ do
   end
   function BaseButtonObject:draw()
     use_font (self.font)
-
-    pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
+    if self.hovered then
+      pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
+    else    
+      pprint_shiny(tostring(self.text), self.x,self.y,  21, 0, 17, 8,10)
+    end
+    --pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
 
     if DEBUG_MODE then 
       -- draw bounding box

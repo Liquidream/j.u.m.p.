@@ -139,6 +139,15 @@ function draw_hitbox(obj, col)
   rect(obj.x, obj.y, obj.x+obj.hitbox_w, obj.y+obj.hitbox_h, col)
 end
 
+
+function pprint_shiny(str, x, y, c1, c2, c3, yoff, yheight)
+  pprint(str, x, y, c1, c2)
+  clip(x, y+(yoff or 5), GAME_WIDTH, yheight or 4)
+  --rectfill(0,0,GAME_WIDTH,GAME_HEIGHT, 38)
+  pprint(str, x, y, c3)
+  clip()
+end
+
 function draw_ui()
   camera(shake_x,shake_y)
   
@@ -155,10 +164,11 @@ function draw_ui()
   
   if gameState == GAME_STATE.TITLE then
     use_font("big-font")
-    pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)
+    --pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 15,10)
+    pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
     use_font ("small-font")
     pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
-    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 3,0)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
     pprint("J\n   U\n      M\n         P", 
     (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
     
@@ -171,15 +181,18 @@ function draw_ui()
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
       end  
-      pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
+      pprint_shiny("CHOOSE DIFFICULTY:", menu_x, menu_y, 19, 0, 47)
+      --pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
       
       -- credits
       if flr(t())%6 < 3 then
-        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 20)
-        pprint('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 47)        
+        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 47)        
+        pprint_shiny('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 26, 0, 25)
       else
-        pprint('    CODE + ART', 0, GAME_HEIGHT-26, 20)
-        pprint('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 47)
+        pprint('    CODE + ART', 0, GAME_HEIGHT-26, 47)
+        pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 15, 0, 14)
+        --pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 21, 0, 17)
+        --pprint_shiny('    CODE + ART', 0, GAME_HEIGHT-26, 26, 0, 25)
       end
     end
 
@@ -201,9 +214,10 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
-      pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
+      pprint_shiny("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 46, 0, 47, 8,10)
+      --pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
       use_font("small-font")
-      pprint(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
+      pprint_shiny(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 53, 0, 52)
       use_font("main-font")
     end
     
@@ -211,14 +225,13 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_PLAY then
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
-    --pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
+    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
+    --pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
   end
   
   if gameState == GAME_STATE.LVL_END then
-    pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
-    -- pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
-    -- pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+    pprint_shiny("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 8, 0, 9, 8,10)
+    --pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
   end
 
   if gameState == GAME_STATE.GAME_OVER then
