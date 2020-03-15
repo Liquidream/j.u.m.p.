@@ -61,7 +61,7 @@ function init_title()
   addTween(
     tween.new(
      2, cam, 
-      {y = blob.maxHeight - GAME_HEIGHT/2 -35 }, 
+      {y = blob.maxHeight - GAME_HEIGHT/2 -30 }, 
       'outBounce',
       function(self)
         -- init menu buttons        
@@ -173,10 +173,10 @@ function init_section(sectionNum)
   end
 
   -- if not title screen
- -- if gameState ~= GAME_STATE.TITLE then
+  if gameState ~= GAME_STATE.TITLE then
     -- generate any missing platforms (and clear old ones)
     generate_platforms()     
-  if gameState ~= GAME_STATE.TITLE then
+ -- if gameState ~= GAME_STATE.TITLE then
     -- show intro / popup
     init_level_intro()
   end

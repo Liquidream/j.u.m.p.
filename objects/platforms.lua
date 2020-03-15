@@ -808,10 +808,12 @@ do
     end
 
     -- draw level number
-    if self.gapSide ~= 1 then
-      print(self.sectionNum, self.x+25, self.y+2, 24)
-    else
-      print(self.sectionNum, self.x+210, self.y+2, 24)
+    if self.spr_w~=1 and gameState ~= GAME_STATE.TITLE then
+      if self.gapSide ~= 1 then
+        print(self.sectionNum, self.x+25, self.y+2, 24)
+      else
+        print(self.sectionNum, self.x+210, self.y+2, 24)
+      end
     end
 
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 

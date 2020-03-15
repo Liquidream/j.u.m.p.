@@ -179,46 +179,21 @@ end
 
 function update_blob(dt)
   local gravity = 500
-  -- local jumpYAmounts = {
-  --   -450, -- one platform
-  --   -600, -- two platforms
-  --   -670  -- three platforms?
-  -- }
-  -- local jumpXAmountAdjust = {
-  --   1.4, -- one platform
-  --   1.6, -- two platforms
-  --   1.4  -- three platforms?
-  -- }
   
   if blob.onGround then
     local morePlatforms = true -- endless??
     local jumpPlatformCount = 1
     -- jump more for blocker platforms
-    -- TODO: need to ensure the last platform is not a "blocker"
+    -- need to ensure the last platform is not a "blocker"
     if platforms[min(blob.onPlatformNum+1,#platforms)].type == PLATFORM_TYPE.BLOCKER then
       jumpPlatformCount = 2
     end
-    -- local jumpAmountY = jumpYAmounts[jumpPlatformCount]
-    -- local jumpAmountX = 0
-
-    -- if morePlatforms then
-    --   local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
-    --   jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-    --   --debug_log("nextPlat.num="..tostring(nextPlat.num))
-    -- end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
     if blob.jumpCounter >= blob.jumpFreq and morePlatforms then
 
       jump_blob(jumpPlatformCount)
 
-      -- blob.vy = jumpAmountY
-      -- blob.vx = jumpAmountX
-      -- blob.onGround = false
-      -- blob.jumpCounter = 0
-      -- debug_log("jump!")
-      -- debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
-      -- debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
     end
 
   else  

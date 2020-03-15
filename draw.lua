@@ -172,8 +172,17 @@ function draw_ui()
         end  
       end  
       pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
+      
+      -- credits
+      if flr(t())%6 < 3 then
+        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 20)
+        pprint('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 47)        
+      else
+        pprint('    CODE + ART', 0, GAME_HEIGHT-26, 20)
+        pprint('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 47)
+      end
     end
-    
+
   end
   
   use_font("main-font")
@@ -240,8 +249,11 @@ function draw_ui()
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
 
     use_font ("small-font")
-    pprint('FPS:' .. love.timer.getFPS(), 92, GAME_HEIGHT-16, 49)
+    pprint('FPS:' .. love.timer.getFPS(), 92, 32, 49)
   end
+  
+
+
 end
 
 
@@ -259,11 +271,14 @@ function draw_popup()
   -- pop-up
   spritesheet("popups")
 
-  --log("popup.info_value="..popup.info_value)
-  --log("popup.info_type="..popup.info_type)
   local spr = (popup.info_value+(7*popup.info_type)) * 4
-  --log("spr="..spr)
   aspr(spr, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
+
+  -- "hint" to skip popup
+  if gameCounter > 50 and flr(t())%2==1 and not hiding_popup then
+    use_font ("small-font")
+    pprint('PRESS TO CLOSE', 14, GAME_HEIGHT-55, 45)
+  end
 
   -- restore normal drawing
   spritesheet("spritesheet")
