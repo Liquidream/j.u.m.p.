@@ -25,24 +25,29 @@ PLATFORM_DEFS = {
   { type = PLATFORM_TYPE.SIDESWITCHER, odds = 0.25, atPlatform=120, announceAtLevel=8  },
   { type = PLATFORM_TYPE.SPRINGER, odds = 0.25, atPlatform=149, announceAtLevel=9  },
 }
-SPEEDUP_LEVELS = {5, 10} --,15}
+SPEEDUP_LEVELS = {
+--level, speed, playlist #
+   [5] = {1.125, 1},
+   [10]= {1.25,  2},
+   [15]= {1.5,   2}
+} 
 
-SPEEDUP_PLAYLISTS = {  
-  [0]={-- x2
-    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
-  },
-  {-- x2
-    Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
-    Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
-  },
-  {-- x3
-    Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
-    Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
-    Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
-  },
-}
+-- SPEEDUP_PLAYLISTS = {  
+--   [0]={-- x2
+--     Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+--   },
+--   {-- x2
+--     Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+--     Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+--   },
+--   {-- x3
+--     Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+--     Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+--     Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+--   },
+-- }
 
 -- Andrew Kensler (+another black!)
 -- https://lospec.com/palette-list/andrew-kensler-54

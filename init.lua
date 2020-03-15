@@ -2,10 +2,12 @@
 _t = 0
 blob = {}
 cam = {}
---platforms = {} -- init/clear platforms
+tweens = {}
+sounds = {}
+buttons = {} -- menu/other buttons
+cursor = {}
 lastPressedState = false
 gameCounter = 0 -- used for countdown delays at end/start of levels
-tweens = {}
 lastPlatformState = false
 countOfSameStates = 0
 -- shake tells how much to
@@ -13,38 +15,122 @@ countOfSameStates = 0
 shake=0
 shake_x=0
 shake_y=0
+speedUpNum = 0
 
-function init_game()
-  -- only perform core init once
-  if not _initialized then
-    init_sugarcoat()  
-    init_assets()
-    init_input()
-    on_resize()
+function init_cursor()
+  -- re-show the mouse cursor 
+  -- (for menu on Desktop)
+  if not ON_MOBILE then    
+    love.mouse.setVisible(true)
   end
-  _initialized = true
 
-  -- create platform definitions
-   
+  -- define cursor obj, for collision testing later
+  cursor = {
+    x = 0,
+    y = 0,
+    hitbox_w = 0,
+    hitbox_h = 0,
+  }
+end
+
+
+function init_title()  
+  gameState = GAME_STATE.TITLE
+
+  -- init mouse/touch controls
+  init_cursor()
+
+  -- -- reset menu buttons
+  buttons = {}
+
+  -- create platform definitions   
+  last_xpos = PLATFORM_POSITIONS[2]
+  -- init/clear platforms
+  platforms = {}
+    
+  init_blob()
+  
+  init_section(1) -- level/section
+  
+  -- reposition blob at start
+  reset_blob()
+  
+  init_cam()
+
+  cam.y = -200
+  addTween(
+    tween.new(
+     2, cam, 
+      {y = blob.maxHeight - GAME_HEIGHT/2 -30 }, 
+      'outBounce',
+      function(self)
+        -- init menu buttons        
+        local menu_xpos = 25
+        local menu_ypos = GAME_HEIGHT/2 - 10
+
+        local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
+          -- start game
+          init_game(1)
+        end,nil,nil,17)
+        local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
+          -- start game
+          init_game(5)
+        end,nil,nil,17)
+        local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
+          -- start game
+          init_game(10)
+        end,nil,nil,17)
+        table.insert(buttons, easyButton)
+        table.insert(buttons, mediumButton)
+        table.insert(buttons, hardButton)
+      end
+    )
+  )
+  -- force cam to be a bit higher on title
+  --cam.y = blob.maxHeight - GAME_HEIGHT/2 -40
+  
+  -- play starting music playlist (intro + music loop)
+  -- (only if not already playing something
+  --  e.g. coz started at higher level/tempo)
+  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  
+  gameState = GAME_STATE.TITLE
+end
+
+function createTextObj(text, fontName, col1, col2)
+
+end
+
+function init_game(startSection)
+  gameState = GAME_STATE.LVL_INTRO
+
+  -- clear all menu buttons
+  buttons = {}
+
+  -- re-hide the mouse cursor
+  love.mouse.setVisible(false)
+
+  -- create platform definitions   
   last_xpos = PLATFORM_POSITIONS[2]
   -- init/clear platforms
   platforms = {}
 
   
   init_blob()
-  
-  init_section(1) -- level/section
 
+  blob.last_level_full_lives = startSection or 1  
+  init_section(blob.last_level_full_lives) -- level/section
+  
   -- reposition blob at start
   reset_blob()
   
   init_cam()
   
-  -- show the title
-  --init_title()
-
-  -- play starting music playlist (intro + music loop)
-  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  -- if playing music...
+  if MusicManager.currentsong ~= -1 then
+    -- release title music loop
+    MusicManager.playlist[1]:setLooping(false)
+  end
 end
 
 -- create initial platforms & reset blobby
@@ -69,9 +155,10 @@ function init_section(sectionNum)
   if platforms[1] == nil then
     debug_log("create 'floor' platform...")
     local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(blob.startPlatformNum*PLATFORM_DIST_Y)
-    platforms[1] = StaticPlatform(-56, ypos, 8)
-    platforms[1].num = blob.startPlatformNum
-    platforms[1].sectionNum = sectionNum
+    local startPlatform = StaticPlatform(-56, ypos, 8)
+    startPlatform.num = blob.startPlatformNum
+    startPlatform.sectionNum = sectionNum
+    platforms[1] = startPlatform
     -- test
     --platforms[1].gapSide=1
   end
@@ -85,14 +172,14 @@ function init_section(sectionNum)
     blob.platformCounter = blob.startPlatformNum
   end
 
-  -- generate any missing platforms (and clear old ones)
-  generate_platforms()
-  
-  
-  --
-  -- show intro / popup
-  --
-  init_level_intro()
+  -- if not title screen
+  if gameState ~= GAME_STATE.TITLE then
+    -- generate any missing platforms (and clear old ones)
+    generate_platforms()     
+ -- if gameState ~= GAME_STATE.TITLE then
+    -- show intro / popup
+    init_level_intro()
+  end
 end
 
 function init_level_intro()
@@ -115,23 +202,25 @@ function init_level_end()
   gameState = GAME_STATE.LVL_END
   gameCounter = 0
 
-  -- TODO: review speed-ups and new platform messages, etc.
-  
-  
+  -- record progress for continue?
+  if blob.lives == 3 then
+    blob.last_level_full_lives = blob.levelNum + 1
+  end
 end
 
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
   -- speed up?
-  if has_value(SPEEDUP_LEVELS, blob.levelNum) then
-    blob.speedFactor = min(blob.speedFactor + 0.25, 2.5)
-    --log("blob.speedFactor = "..blob.speedFactor)
+  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum]
+  if speedUpDef then
+    blob.speedFactor = speedUpDef[1]
+    log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
-    local speedUpNum = table.indexOf(SPEEDUP_LEVELS, blob.levelNum)
+    speedUpNum = speedUpDef[2]
+    log("speedUpNum = "..speedUpNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
-    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
-    --play_music( min(speedUpNum +1,3) )  
+    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])    
   end   
   
   -- new platforms?
@@ -199,6 +288,9 @@ function createNewPlatform(platformNum)
     debug_log("  >> picked xpos="..xpos)
   until xpos ~= last_xpos
 
+  -- re-seed rng for platform
+  srand(platformNum)
+
   local ypos = GAME_HEIGHT+PLATFORM_DIST_Y-(platformNum*PLATFORM_DIST_Y)
   local prevPlatform = platforms[#platforms]
   
@@ -209,8 +301,6 @@ function createNewPlatform(platformNum)
     -- create a landing platform for checkpoint
     newPlatform = StaticPlatform(-56, ypos, 8)
     newPlatform.isCheckpoint = true
-    newPlatform.levelNum = blob.levelNum + 1
-
     -- rig it so prev platform always at a side
     if prevPlatform.x == PLATFORM_POSITIONS[2] then
       -- with a spiker in left/right pos
@@ -227,7 +317,10 @@ function createNewPlatform(platformNum)
     --return checkPoint
   end
   
-  -- randomly select a platform type (based on those unlocked)
+  
+  -- randomly select a platform type (based on those unlocked)  
+  -- re-seed rng for platform
+  srand(platformNum)
   
   while newPlatform == nil do
     -- pick a platform type
@@ -365,7 +458,7 @@ end
 -- (will be positioned later)
 function init_blob()
   blob = {
-    lives = 3,
+    lives = 1,
     score = 0,       -- essentially the platform num?
     levelNum = 0,    -- ...this gets set in init_section()
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
@@ -376,20 +469,47 @@ function init_blob()
     platformCounter = 1, -- running counter of platform gen numbers
     onPlatformNum = 1,
     startPlatformNum = 0,
+    last_level_full_lives = 0,
 
     loseLife = function(self)
       debug_log("OUCH!!!!")
       self.lives = self.lives - 1
       -- shake camera
       shake = shake + 0.25
+      -- flash red
       cls(38) flip()
+      -- play sfx
+      pick(sounds.ouches):play()
       -- game over?
       if self.lives <= 0 then
-        gameState = GAME_STATE.GAME_OVER      
-        gameCounter = 0
+        init_game_over()   
       end
     end
   }
+end
+
+function init_game_over()
+  gameState = GAME_STATE.GAME_OVER      
+  gameCounter = 0       
+
+  -- init mouse/touch controls
+  init_cursor()
+
+  -- init menu buttons
+  buttons = {}
+  local menu_xpos = 50
+  local menu_ypos = GAME_HEIGHT/2 - 10
+
+  local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
+    -- continue game
+    init_game(blob.last_level_full_lives)
+  end,nil,nil,17)
+  local titleButton = BaseButtonObject(menu_xpos, menu_ypos+40, "NO", function()
+    -- exit to title
+    init_title()
+  end,nil,nil,17)
+  table.insert(buttons, continueButton)
+  table.insert(buttons, titleButton)
 end
 
 -- reset blob back to starting position
@@ -409,14 +529,11 @@ function reset_blob()
 end
 
 function init_cam()
-  -- TODO: initialise camera object (smooth panning camera)
+  -- initialise camera object (smooth panning camera)
   cam = {
     x = 0,
-    y = blob.maxHeight-GAME_HEIGHT/2,
-    --y = platforms[1].y - GAME_HEIGHT/2,
-    
+    y = blob.maxHeight-GAME_HEIGHT/2,    
     trap_y = GAME_HEIGHT/2
-    --trap_y = GAME_HEIGHT/2
   }
 end
 
@@ -427,7 +544,8 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
-  load_font ("assets/AweMono.ttf", 16, "small-font", true)
+  load_font ("assets/AweMono.ttf", 16, "small-font")
+  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 40, "big-font")
   load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 26, "main-font", true)
   --load_font ("assets/PublicSans-Black.otf", 21, "main-font", true)
   --load_font ("assets/Awesome.ttf", 32, "main-font", true)
@@ -457,7 +575,42 @@ function init_assets()
   spritesheet_grid(32,32)
   --spritesheet_grid(128,128)
   load_png("spritesheet", "assets/spritesheet.png", ak54, true)
-  spritesheet_grid(32,32)  
+  spritesheet_grid(32,32)
+
+  -- init sounds
+  local musicVol = 0.25
+  local sfxVol = 0.25
+  -- init music  
+  SPEEDUP_PLAYLISTS = {  
+    [0]={-- x2
+    Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
+    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+    },
+    {-- x2
+      Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
+      Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+    },
+    {-- x3
+      Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
+      Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+    },
+  }
+
+  -- init sfx
+  sounds.checkpoints={}
+  for i= 1,3 do
+    sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1)
+    sounds.checkpoints[i]:setVolume(sfxVol)
+  end
+  sounds.ouches={}
+  for i= 1,5 do
+    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1)
+    sounds.ouches[i]:setVolume(sfxVol)
+  end
+  
 end
 
 function init_input()
@@ -482,16 +635,3 @@ function init_input()
   register_btn(7,  0, input_id("mouse_button", "lb"))
 
 end
-
--- function play_music(num)
---   -- stop current music
---   if Sounds.currentMusicNum then 
---     Sounds.music[Sounds.currentMusicNum]:stop()
---   end
-
---   -- play new music
---   Sounds.music[num]:setVolume(1)
---   Sounds.music[num]:setLooping(true)
---   Sounds.music[num]:play()
---   Sounds.currentMusicNum = num
--- end

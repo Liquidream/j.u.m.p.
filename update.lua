@@ -18,14 +18,18 @@ function update_game(dt)
   
   -- player interactions (always capture latest state)
   update_player_input()
+  -- update all buttons
+  for k, button in pairs(buttons) do
+    button:update(dt)
+  end
 
   MusicManager:update(dt)
 
   if gameState == GAME_STATE.SPLASH then
     -- todo: splash screen
 
-  elseif gameState == GAME_STATE.TITLE then
-    -- todo: title screen    
+  elseif gameState == GAME_STATE.TITLE then    
+    -- anything??
 
     -- intro pt.1 (popup)
   elseif gameState == GAME_STATE.LVL_INTRO then    
@@ -94,12 +98,9 @@ function update_game(dt)
 
   elseif gameState == GAME_STATE.GAME_OVER then
     
-    -- TODO: tally up score, then wait for user to start next round
-    gameCounter = gameCounter + 1
-    if gameCounter > 100 then
-      -- TODO: go back to title?
-      init_game()
-    end
+    -- TODO: tally up score, then wait for user to decide (continue/exit)
+ 
+
     -- update camera
     update_camera(dt)
   
@@ -115,19 +116,17 @@ function update_player_input()
   -- and update the world accordingly
   local mousePressed = btn(7)
   local mainKeyPressed = btn(4)
+  local mx = flr(btnv(5)) - SCREEN_X
+  local my = flr(btnv(6)) - SCREEN_Y
+
+  cursor.x = mx
+  cursor.y = my
   currPressedState = mousePressed or mainKeyPressed
 
   -- something pressed (this frame)
-  somethingPressed = currPressedState ~= lastPressedState
+  somethingPressed = currPressedState and (currPressedState ~= lastPressedState)
+  pressedStateChanged = currPressedState ~= lastPressedState
 
-  -- if currPressedState ~= lastPressedState then
-  --   for key,platform in pairs(platforms) do
-  --     -- update platform state
-  --     -- (if either input method used)
-  --     platform:setPressedState(currPressedState)
-  --   end
-  -- end  
-  
   -- remember...
   lastPressedState = currPressedState  
 end
@@ -137,8 +136,8 @@ function update_platforms(dt)
   for i = 1,#platforms do
     local platform = platforms[i]
     if platform then
-      -- something pressed (this frame)?
-      if somethingPressed then 
+      -- something changed in pressed state (this frame)?
+      if pressedStateChanged then 
         -- update platform state
         -- (if either input method used)
         platform:setPressedState(currPressedState)
@@ -180,46 +179,21 @@ end
 
 function update_blob(dt)
   local gravity = 500
-  -- local jumpYAmounts = {
-  --   -450, -- one platform
-  --   -600, -- two platforms
-  --   -670  -- three platforms?
-  -- }
-  -- local jumpXAmountAdjust = {
-  --   1.4, -- one platform
-  --   1.6, -- two platforms
-  --   1.4  -- three platforms?
-  -- }
   
   if blob.onGround then
     local morePlatforms = true -- endless??
     local jumpPlatformCount = 1
     -- jump more for blocker platforms
-    -- TODO: need to ensure the last platform is not a "blocker"
+    -- need to ensure the last platform is not a "blocker"
     if platforms[min(blob.onPlatformNum+1,#platforms)].type == PLATFORM_TYPE.BLOCKER then
       jumpPlatformCount = 2
     end
-    -- local jumpAmountY = jumpYAmounts[jumpPlatformCount]
-    -- local jumpAmountX = 0
-
-    -- if morePlatforms then
-    --   local nextPlat = platforms[blob.onPlatformNum+jumpPlatformCount]
-    --   jumpAmountX = (nextPlat.x +(nextPlat.spr_w*32/2) -16 - blob.x)/jumpXAmountAdjust[jumpPlatformCount]
-    --   --debug_log("nextPlat.num="..tostring(nextPlat.num))
-    -- end
     blob.jumpCounter = blob.jumpCounter + 1
     -- jump?   
     if blob.jumpCounter >= blob.jumpFreq and morePlatforms then
 
       jump_blob(jumpPlatformCount)
 
-      -- blob.vy = jumpAmountY
-      -- blob.vx = jumpAmountX
-      -- blob.onGround = false
-      -- blob.jumpCounter = 0
-      -- debug_log("jump!")
-      -- debug_log("jumpPlatformCount="..tostring(jumpPlatformCount))
-      -- debug_log("blob.onPlatformNum+jumpPlatformCount="..tostring(blob.onPlatformNum+jumpPlatformCount))
     end
 
   else  
@@ -281,8 +255,12 @@ function update_collisions()
           blob.startPlatformNum = blob.onPlatform.num
           -- clear old ones platforms
           prune_platforms(i-1)
-          --log("CHECKPOINT!")
+          --log("CHECKPOINT!")          
           debug_log("#platforms = "..#platforms)
+
+          sounds.checkpoints[speedUpNum+1]:play()
+          --pick(sounds.checkpoints):play()
+
 
           -- DEBUG:
           for k,p in pairs(platforms) do

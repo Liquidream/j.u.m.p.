@@ -62,6 +62,7 @@ tween = require 'lib/tween'
 Sound = require("lib/sound")
 Object = require("lib/classic")
 require("objects/platforms")
+require("objects/buttons")
 require("common")
 require("init")
 require("update")
@@ -73,7 +74,16 @@ MusicManager = require("lib/musicmanager")
 
  
 function love.load()
-  init_game()
+  -- only perform core init once
+  init_sugarcoat()  
+  init_assets()
+  init_input()
+  on_resize()
+
+  _initialized = true
+
+  -- start at title screen
+  init_title()
 end
 
 function love.update(dt)

@@ -11,7 +11,7 @@ function draw_game()
   elseif gameState == GAME_STATE.TITLE then
 
     -- TODO: title screen
-    --draw_level()??
+    draw_level()
 
   elseif gameState == GAME_STATE.LVL_INTRO 
       or gameState == GAME_STATE.LVL_INTRO2
@@ -139,6 +139,15 @@ function draw_hitbox(obj, col)
   rect(obj.x, obj.y, obj.x+obj.hitbox_w, obj.y+obj.hitbox_h, col)
 end
 
+
+function pprint_shiny(str, x, y, c1, c2, c3, yoff, yheight)
+  pprint(str, x, y, c1, c2)
+  clip(x, y+(yoff or 5), GAME_WIDTH*2, yheight or 6)
+  --rectfill(0,0,GAME_WIDTH,GAME_HEIGHT, 38)
+  pprint(str, x, y, c3)
+  clip()
+end
+
 function draw_ui()
   camera(shake_x,shake_y)
   
@@ -150,13 +159,54 @@ function draw_ui()
     0x0)
   printp_color(47, 0, 0, 0)
 
-  for i=0,blob.lives-1 do
-    spr(30,i*22,-4)
+  
+
+  
+  if gameState == GAME_STATE.TITLE then
+    use_font("big-font")
+    pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
+    --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
+    use_font ("small-font")
+    pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
+    pprint("J\n   U\n      M\n         P", 
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
+    
+    if #buttons > 0 then
+      -- dark overlay
+      local menu_x = (GAME_WIDTH/2)-72
+      local menu_y = (GAME_HEIGHT/2)-28
+      for x=menu_x,menu_x+(7*16),16 do
+        for y=menu_y,menu_y+(4*16),16 do
+          aspr(43, x,y, 0, 1,1, 0, 0)
+        end  
+      end  
+      pprint_shiny("CHOOSE DIFFICULTY:", menu_x, menu_y, 19, 0, 47)
+      --pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
+      
+      -- credits
+      if flr(t())%6 < 3 then
+        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 47)        
+        pprint_shiny('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 26, 0, 25)
+      else
+        pprint('    CODE + ART', 0, GAME_HEIGHT-26, 47)
+        pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 15, 0, 14)
+        --pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 21, 0, 17)
+        --pprint_shiny('    CODE + ART', 0, GAME_HEIGHT-26, 26, 0, 25)
+      end
+    end
+
+  end
+  
+  use_font("main-font")
+
+  -- draw blobby's lives
+  if gameState ~= GAME_STATE.TITLE then    
+    for i=0,blob.lives-1 do
+      spr(30,i*22,-4)
+    end
   end
 
-  use_font ("main-font")
-  
-  
   if gameState == GAME_STATE.LVL_INTRO 
   and popup then
     draw_popup()
@@ -164,28 +214,47 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
-      pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
-      use_font ("small-font")
-      pprint(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 47)
-      use_font ("main-font")
+      pprint_shiny("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 46, 0, 47, 8,10)
+      --pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
+      use_font("small-font")
+      pprint_shiny(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 53, 0, 52)
+      use_font("main-font")
     end
     
   end
   
   if gameState == GAME_STATE.LVL_PLAY then
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
-    --pprint( string.format("%02d",blob.score) ,GAME_WIDTH-38,-2, 47)
+    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2,  52, 0, 45, 7,15)
+    --pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
+    --pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
   end
   
   if gameState == GAME_STATE.LVL_END then
-    pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
-    -- pprint("LEVEL", (GAME_WIDTH/2)-38, (GAME_HEIGHT/2)-56, 47)
-    -- pprint("COMPLETE", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-32, 47)
+    pprint_shiny("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 8, 0, 9, 8,10)
+    --pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
   end
 
   if gameState == GAME_STATE.GAME_OVER then
-    pprint("GAME OVER", (GAME_WIDTH/2)-64, (GAME_HEIGHT/2)-56, 47)
+    if #buttons > 0 then
+      use_font("big-font")
+      pprint_shiny("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 39, 0, 38, 9,27)
+      use_font("small-font")
+      -- dark overlay
+      local menu_x = (GAME_WIDTH/2)-72
+      local menu_y = (GAME_HEIGHT/2)-28
+      for x=menu_x,menu_x+(7*16),16 do
+        for y=menu_y,menu_y+(4*16),16 do
+          aspr(43, x,y, 0, 1,1, 0, 0)
+        end  
+      end 
+      pprint_shiny("CONTINUE..?", menu_x, menu_y,  19, 0, 47)
+    end
+  end
+
+  -- regardless of state, draw buttons
+  for k, button in pairs(buttons) do
+    button:draw(dt)
   end
 
   if DEBUG_MODE then
@@ -194,9 +263,13 @@ function draw_ui()
     line(GAME_WIDTH/2,0,GAME_WIDTH/2,GAME_HEIGHT,12)
 
     use_font ("small-font")
-    pprint('FPS:' .. love.timer.getFPS(), 92, GAME_HEIGHT-16, 49)
+    pprint('FPS:' .. love.timer.getFPS(), 92, 32, 49)
   end
+  
+
+
 end
+
 
 function draw_popup()
   --43 (3x3) bg  
@@ -212,11 +285,14 @@ function draw_popup()
   -- pop-up
   spritesheet("popups")
 
-  --log("popup.info_value="..popup.info_value)
-  --log("popup.info_type="..popup.info_type)
   local spr = (popup.info_value+(7*popup.info_type)) * 4
-  --log("spr="..spr)
   aspr(spr, GAME_WIDTH/2, GAME_HEIGHT/2, 0, 4,4, 0.5, 0.5, popup.sx, popup.sy)
+
+  -- "hint" to skip popup
+  if gameCounter > 50 and flr(t())%2==1 and not hiding_popup then
+    use_font ("small-font")
+    pprint('PRESS TO CLOSE', 14, GAME_HEIGHT-55, 45)
+  end
 
   -- restore normal drawing
   spritesheet("spritesheet")
