@@ -45,6 +45,7 @@ if CASTLE_PREFETCH then
     "draw.lua",
     "assets/spritesheet.png",
     "assets/gomarice_gogono_cocoa_mochi.ttf",
+    "assets/snd/Jump Music Title Music Loop.ogg",
     "assets/snd/Jump Music Level 1 Intro Loop.ogg",
     "assets/snd/Jump Music Level 1 Game Loop.ogg",
     "assets/snd/Jump Music Level 1-2 Transition.ogg",
@@ -52,7 +53,15 @@ if CASTLE_PREFETCH then
     "assets/snd/Jump Music Level 2 Game Loop.ogg",
     "assets/snd/Jump Music Level 2-3 Transition.ogg",
     "assets/snd/Jump Music Level 3 Intro Loop.ogg",
-    "assets/snd/Jump Music Level 3 Game Loop.ogg",
+    "assets/snd/Jump Music Level 3 Game Loop.ogg",    
+    "assets/snd/Jump SFX Checkpoint1.ogg",
+    "assets/snd/Jump SFX Checkpoint2.ogg",
+    "assets/snd/Jump SFX Checkpoint3.ogg",    
+    "assets/snd/Jump SFX Ouch1.ogg",
+    "assets/snd/Jump SFX Ouch2.ogg",
+    "assets/snd/Jump SFX Ouch3.ogg",
+    "assets/snd/Jump SFX Ouch4.ogg",
+    "assets/snd/Jump SFX Ouch5.ogg",
   })
 end
 
