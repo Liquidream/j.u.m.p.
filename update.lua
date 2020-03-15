@@ -283,7 +283,8 @@ function update_collisions()
           --log("CHECKPOINT!")          
           debug_log("#platforms = "..#platforms)
 
-          sounds.checkpoint:play()
+          sounds.checkpoints[speedUpNum+1]:play()
+          --pick(sounds.checkpoints):play()
 
 
           -- DEBUG:

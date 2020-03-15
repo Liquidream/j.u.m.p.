@@ -15,6 +15,7 @@ countOfSameStates = 0
 shake=0
 shake_x=0
 shake_y=0
+speedUpNum = 0
 
 function init_cursor()
   -- re-show the mouse cursor 
@@ -116,8 +117,9 @@ function init_game(startSection)
 
   
   init_blob()
-  
-  init_section(startSection or 1) -- level/section
+
+  blob.last_level_full_lives = startSection or 1  
+  init_section(blob.last_level_full_lives) -- level/section
   
   -- reposition blob at start
   reset_blob()
@@ -214,7 +216,7 @@ function checkSpeedupAndPopups()
     blob.speedFactor = speedUpDef[1]
     log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
-    local speedUpNum = speedUpDef[2]
+    speedUpNum = speedUpDef[2]
     log("speedUpNum = "..speedUpNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
     -- TODO: speed up music (switch track to next speed music)
@@ -474,7 +476,10 @@ function init_blob()
       self.lives = self.lives - 1
       -- shake camera
       shake = shake + 0.25
+      -- flash red
       cls(38) flip()
+      -- play sfx
+      pick(sounds.ouches):play()
       -- game over?
       if self.lives <= 0 then
         init_game_over()   
@@ -594,9 +599,17 @@ function init_assets()
     },
   }
 
-  -- init sfx  
-  sounds.checkpoint = Sound:new('Jump SFX Checkpoint1.ogg', 1)
-  sounds.checkpoint:setVolume(sfxVol)
+  -- init sfx
+  sounds.checkpoints={}
+  for i= 1,3 do
+    sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1)
+    sounds.checkpoints[i]:setVolume(sfxVol)
+  end
+  sounds.ouches={}
+  for i= 1,5 do
+    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1)
+    sounds.ouches[i]:setVolume(sfxVol)
+  end
   
 end
 
