@@ -231,7 +231,7 @@ function draw_ui()
   end
   
   if gameState == GAME_STATE.LVL_END then
-    pprint_shiny("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 8, 0, 9, 8,10)
+    pprint_shiny("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 8, 0, 9, 7,16)
     --pprint("CHECKPOINT", (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-56, 47)
   end
 
