@@ -597,6 +597,16 @@ function init_assets()
       Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
       Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
     },
+    {-- x3
+      Sound:new('Jump Music Level 3-4 Transition.ogg', 1),
+      Sound:new('Jump Music Level 4 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 4 Game Loop.ogg', 1, true)
+    },
+    {-- x3
+      Sound:new('Jump Music Level 4-5 Transition.ogg', 1),
+      Sound:new('Jump Music Level 5 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 5 Game Loop.ogg', 1, true)
+    },
   }
 
   -- init sfx
