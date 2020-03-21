@@ -238,17 +238,21 @@ function draw_ui()
   if gameState == GAME_STATE.GAME_OVER then
     if #buttons > 0 then
       use_font("big-font")
-      pprint_shiny("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 39, 0, 38, 9,27)
+      pprint_shiny("GAME", (GAME_WIDTH/2)-54, (GAME_HEIGHT/2)-116, 39, 0, 38, 9,27)
+      pprint_shiny("OVER", (GAME_WIDTH/2)-50, (GAME_HEIGHT/2)-80, 39, 0, 38, 9,27)
       use_font("small-font")
+      
       -- dark overlay
-      local menu_x = (GAME_WIDTH/2)-72
-      local menu_y = (GAME_HEIGHT/2)-28
+      local menu_x = (GAME_WIDTH/2)-64
+      local menu_y = (GAME_HEIGHT/2)-22
       for x=menu_x,menu_x+(7*16),16 do
         for y=menu_y,menu_y+(4*16),16 do
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
       end 
-      pprint_shiny("CONTINUE..?", menu_x, menu_y,  19, 0, 47)
+      pprint_shiny("CONTINUE..?", menu_x+4, menu_y+4,  19, 0, 47)
+
+      pprint_shiny("BEST: LEVEL "..blob.levelNum, (GAME_WIDTH/2)-56, (GAME_HEIGHT/2)+95,  53, 0, 52)
     end
   end
 
