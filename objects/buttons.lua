@@ -7,14 +7,15 @@
 do
   BaseButtonObject = Object:extend()
   -- base constructor
-  function BaseButtonObject:new(x,y,text,funcOnClick,w,h,col,hcol,font)
+  function BaseButtonObject:new(x,y,text,funcOnClick,w,h,col1,col2,scol,hcol,font)
     -- initialising
     self.x = x
     self.y = y
     self.text = text
     self.hovered = false
     -- cols?
-    self.col = col or 17
+    self.col1 = col1 or 17
+    self.col2 = col2 or 21
     self.hcol = hcol or 47
 
     -- font?
@@ -53,9 +54,10 @@ do
   function BaseButtonObject:draw()
     use_font (self.font)
     if self.hovered then
-      pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
+      pprint(tostring(self.text), self.x,self.y, self.hcol)
     else    
-      pprint_shiny(tostring(self.text), self.x,self.y,  21, 0, 17, 7,16)
+      pprint_shiny(tostring(self.text), self.x,self.y,  self.col2, 0, self.col1, 5,14)
+      --pprint_shiny(tostring(self.text), self.x,self.y,  21, 0, 17, 7,16)
     end
 
     if DEBUG_MODE then 

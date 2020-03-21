@@ -65,25 +65,25 @@ function init_title()
       'outBounce',
       function(self)
         -- init menu buttons        
-        local menu_xpos = 25
+        local menu_xpos = 20
         local menu_ypos = GAME_HEIGHT/2 - 30
 
         local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
           -- start game
           init_game(1)
-        end,nil,nil,17)
+        end,nil,nil,10,11)
         local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
           -- start game
           init_game(5)
-        end,nil,nil,17)
+        end,nil,nil,45,44)
         local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
           -- start game
           init_game(10)
-        end,nil,nil,17)
+        end,nil,nil,52,53)
         local nightmareButton = BaseButtonObject(menu_xpos, menu_ypos+75, "NIGHTMARE", function()
           -- start game
           init_game(20)
-        end,nil,nil,17)
+        end,nil,nil,38,39)
         table.insert(buttons, easyButton)
         table.insert(buttons, mediumButton)
         table.insert(buttons, hardButton)
@@ -508,11 +508,11 @@ function init_game_over()
   local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
     -- continue game
     init_game(blob.last_level_full_lives)
-  end,nil,nil,17)
+  end,nil,nil)
   local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
     -- exit to title
     init_title()
-  end,nil,nil,17)
+  end,nil,nil)
   table.insert(buttons, continueButton)
   table.insert(buttons, titleButton)
 end
