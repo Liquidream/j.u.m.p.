@@ -78,7 +78,8 @@ function init_title()
         end,nil,nil,17)
         local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
           -- start game
-          init_game(10)
+          init_game(11)
+          --init_game(10)
         end,nil,nil,17)
         table.insert(buttons, easyButton)
         table.insert(buttons, mediumButton)
@@ -611,7 +612,7 @@ function init_assets()
 
   -- init sfx
   sounds.checkpoints={}
-  for i= 1,3 do
+  for i= 1,5 do
     sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1)
     sounds.checkpoints[i]:setVolume(sfxVol)
   end
