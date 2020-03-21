@@ -122,6 +122,18 @@ function love.keypressed( key, scancode, isrepeat )
       log("Debug mode: "..(DEBUG_MODE and "Enabled" or "Disabled"))
       return
   end
+
+  if DEBUG_MODE then
+    local currLevel = blob and blob.levelNum or 1
+    if key=="up" then
+      -- reset to level above      
+      init_game(currLevel + 1)
+
+    elseif key=="down" then
+      -- reset to level below
+      init_game(max(currLevel - 1, 1))
+    end
+  end
 end
 
 function on_resize()

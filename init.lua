@@ -216,7 +216,7 @@ end
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
   -- speed up?
-  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum]
+  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum] or (blob.levelNum > 20 and SPEEDUP_LEVELS[20])
   if speedUpDef then
     blob.speedFactor = speedUpDef[1]
     log("blob.speedFactor = "..blob.speedFactor)
