@@ -168,9 +168,9 @@ function draw_ui()
     --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
     use_font ("small-font")
     pprint("JUMPING MASSIVE\n UNDER   PRESSURE", 
-    (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-90, 6, 0)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
     pprint("J       M\n U       P", 
-    (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-90, 9)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
     
     if #buttons > 0 then
       -- dark overlay
@@ -222,9 +222,7 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_PLAY then
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2,  52, 0, 45, 7,15)
-    --pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
-    --pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
+    pprint_shiny(progress, GAME_WIDTH-(14*#progress),1,  40, 0, 45, 5,14)
   end
   
   if gameState == GAME_STATE.LVL_END then
