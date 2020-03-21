@@ -678,6 +678,7 @@ do
   function SpikerPlatform:hasLanded(blob)
     -- check for spikes
     if aabb(blob, self) and blob.vy>0 
+     and blob.vy < 500 -- only lose life if not fallen too far (dont want to lose 2 lives!)
      and self.currState == self.activeState then
       blob:loseLife()
     end 
