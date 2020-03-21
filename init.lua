@@ -65,24 +65,29 @@ function init_title()
       'outBounce',
       function(self)
         -- init menu buttons        
-        local menu_xpos = 25
-        local menu_ypos = GAME_HEIGHT/2 - 10
+        local menu_xpos = 20
+        local menu_ypos = GAME_HEIGHT/2 - 30
 
         local easyButton = BaseButtonObject(menu_xpos, menu_ypos, "EASY", function()
           -- start game
           init_game(1)
-        end,nil,nil,17)
+        end,nil,nil,10,11)
         local mediumButton = BaseButtonObject(menu_xpos, menu_ypos+25, "MEDIUM", function()
           -- start game
           init_game(5)
-        end,nil,nil,17)
+        end,nil,nil,45,44)
         local hardButton = BaseButtonObject(menu_xpos, menu_ypos+50, "HARD", function()
           -- start game
           init_game(10)
-        end,nil,nil,17)
+        end,nil,nil,52,53)
+        local nightmareButton = BaseButtonObject(menu_xpos, menu_ypos+75, "NIGHTMARE", function()
+          -- start game
+          init_game(20)
+        end,nil,nil,38,39)
         table.insert(buttons, easyButton)
         table.insert(buttons, mediumButton)
         table.insert(buttons, hardButton)
+        table.insert(buttons, nightmareButton)
       end
     )
   )
@@ -498,16 +503,16 @@ function init_game_over()
   -- init menu buttons
   buttons = {}
   local menu_xpos = 50
-  local menu_ypos = GAME_HEIGHT/2 - 10
+  local menu_ypos = GAME_HEIGHT/2 - 5
 
   local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
     -- continue game
     init_game(blob.last_level_full_lives)
-  end,nil,nil,17)
-  local titleButton = BaseButtonObject(menu_xpos, menu_ypos+40, "NO", function()
+  end,nil,nil)
+  local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
     -- exit to title
     init_title()
-  end,nil,nil,17)
+  end,nil,nil)
   table.insert(buttons, continueButton)
   table.insert(buttons, titleButton)
 end
@@ -544,12 +549,7 @@ function init_sugarcoat()
   --load_png("splash", "assets/splash.png", palettes.pico8, true)
 
   use_palette(ak54)
-  load_font ("assets/AweMono.ttf", 16, "small-font")
-  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 40, "big-font")
-  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 26, "main-font", true)
-  --load_font ("assets/PublicSans-Black.otf", 21, "main-font", true)
-  --load_font ("assets/Awesome.ttf", 32, "main-font", true)
-  -- load_png("title", "assets/title-text.png", ak54, true)
+  
   screen_resizeable(true, 2, on_resize)
   screen_render_integer_scale(false)
   set_frame_waiting(60)
@@ -570,6 +570,10 @@ function init_sugarcoat()
 end
 
 function init_assets()
+  -- load fonts
+  load_font ("assets/AweMono.ttf", 16, "small-font")
+  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 40, "big-font")
+  load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 22, "main-font", true)
   -- load gfx
   load_png("popups", "assets/popups.png", ak54, true)
   spritesheet_grid(32,32)
@@ -582,7 +586,7 @@ function init_assets()
   local sfxVol = 0.25
   -- init music  
   SPEEDUP_PLAYLISTS = {  
-    [0]={-- x2
+    [0]={-- x1
     Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
     Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
       Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
@@ -597,11 +601,21 @@ function init_assets()
       Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
       Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
     },
+    {-- x4
+      Sound:new('Jump Music Level 3-4 Transition.ogg', 1),
+      Sound:new('Jump Music Level 4 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 4 Game Loop.ogg', 1, true)
+    },
+    {-- x5
+      Sound:new('Jump Music Level 4-5 Transition.ogg', 1),
+      Sound:new('Jump Music Level 5 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 5 Game Loop.ogg', 1, true)
+    },
   }
 
   -- init sfx
   sounds.checkpoints={}
-  for i= 1,3 do
+  for i= 1,5 do
     sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1)
     sounds.checkpoints[i]:setVolume(sfxVol)
   end

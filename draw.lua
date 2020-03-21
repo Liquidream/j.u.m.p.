@@ -167,22 +167,21 @@ function draw_ui()
     pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
     --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
     use_font ("small-font")
-    pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
+    pprint("JUMPING MASSIVE\n UNDER   PRESSURE", 
     (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
-    pprint("J\n   U\n      M\n         P", 
+    pprint("J       M\n U       P", 
     (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
     
     if #buttons > 0 then
       -- dark overlay
       local menu_x = (GAME_WIDTH/2)-72
-      local menu_y = (GAME_HEIGHT/2)-28
+      local menu_y = (GAME_HEIGHT/2)-48
       for x=menu_x,menu_x+(7*16),16 do
-        for y=menu_y,menu_y+(4*16),16 do
+        for y=menu_y,menu_y+(5*16),16 do
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
       end  
       pprint_shiny("CHOOSE DIFFICULTY:", menu_x, menu_y, 19, 0, 47)
-      --pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
       
       -- credits
       if flr(t())%6 < 3 then
@@ -191,8 +190,6 @@ function draw_ui()
       else
         pprint('    CODE + ART', 0, GAME_HEIGHT-26, 47)
         pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 15, 0, 14)
-        --pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 21, 0, 17)
-        --pprint_shiny('    CODE + ART', 0, GAME_HEIGHT-26, 26, 0, 25)
       end
     end
 
@@ -225,9 +222,7 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_PLAY then
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2,  52, 0, 45, 7,15)
-    --pprint_shiny(progress, GAME_WIDTH-(14*#progress),-2, 46, 0, 47, 8,10)
-    --pprint(progress, GAME_WIDTH-(14*#progress),-2, 47)
+    pprint_shiny(progress, GAME_WIDTH-(14*#progress),1,  40, 0, 45, 5,14)
   end
   
   if gameState == GAME_STATE.LVL_END then
@@ -238,17 +233,21 @@ function draw_ui()
   if gameState == GAME_STATE.GAME_OVER then
     if #buttons > 0 then
       use_font("big-font")
-      pprint_shiny("GAME OVER", (GAME_WIDTH/2)-94, (GAME_HEIGHT/2)-86, 39, 0, 38, 9,27)
+      pprint_shiny("GAME", (GAME_WIDTH/2)-54, (GAME_HEIGHT/2)-116, 39, 0, 38, 9,27)
+      pprint_shiny("OVER", (GAME_WIDTH/2)-50, (GAME_HEIGHT/2)-80, 39, 0, 38, 9,27)
       use_font("small-font")
+      
       -- dark overlay
-      local menu_x = (GAME_WIDTH/2)-72
-      local menu_y = (GAME_HEIGHT/2)-28
+      local menu_x = (GAME_WIDTH/2)-64
+      local menu_y = (GAME_HEIGHT/2)-22
       for x=menu_x,menu_x+(7*16),16 do
         for y=menu_y,menu_y+(4*16),16 do
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
       end 
-      pprint_shiny("CONTINUE..?", menu_x, menu_y,  19, 0, 47)
+      pprint_shiny("CONTINUE..?", menu_x+4, menu_y+4,  19, 0, 47)
+
+      pprint_shiny("BEST: LEVEL "..blob.levelNum, (GAME_WIDTH/2)-56, (GAME_HEIGHT/2)+95,  53, 0, 52)
     end
   end
 
