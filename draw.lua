@@ -167,22 +167,21 @@ function draw_ui()
     pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
     --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
     use_font ("small-font")
-    pprint("JUMPING\n   UNDER\n      MASSIVE\n         PRESSURE", 
-    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
-    pprint("J\n   U\n      M\n         P", 
-    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
+    pprint("JUMPING MASSIVE\n UNDER   PRESSURE", 
+    (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-90, 6, 0)
+    pprint("J       M\n U       P", 
+    (GAME_WIDTH/2)-72, (GAME_HEIGHT/2)-90, 9)
     
     if #buttons > 0 then
       -- dark overlay
       local menu_x = (GAME_WIDTH/2)-72
-      local menu_y = (GAME_HEIGHT/2)-28
+      local menu_y = (GAME_HEIGHT/2)-48
       for x=menu_x,menu_x+(7*16),16 do
-        for y=menu_y,menu_y+(4*16),16 do
+        for y=menu_y,menu_y+(5*16),16 do
           aspr(43, x,y, 0, 1,1, 0, 0)
         end  
       end  
       pprint_shiny("CHOOSE DIFFICULTY:", menu_x, menu_y, 19, 0, 47)
-      --pprint("CHOOSE DIFFICULTY:", menu_x, menu_y, 19)
       
       -- credits
       if flr(t())%6 < 3 then
@@ -191,8 +190,6 @@ function draw_ui()
       else
         pprint('    CODE + ART', 0, GAME_HEIGHT-26, 47)
         pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 15, 0, 14)
-        --pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 21, 0, 17)
-        --pprint_shiny('    CODE + ART', 0, GAME_HEIGHT-26, 26, 0, 25)
       end
     end
 

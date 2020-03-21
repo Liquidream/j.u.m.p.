@@ -57,7 +57,6 @@ do
     else    
       pprint_shiny(tostring(self.text), self.x,self.y,  21, 0, 17, 7,16)
     end
-    --pprint(tostring(self.text), self.x,self.y, self.hovered and self.hcol or self.col)
 
     if DEBUG_MODE then 
       -- draw bounding box
