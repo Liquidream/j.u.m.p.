@@ -20,10 +20,12 @@ end
 
 --do the music magic
 function MusicManager:playMusic(first, ...)
+  log("playMusic...")
   --stop all currently playing music
-  for i, snd in ipairs(self.playlist) do
-    snd:stop()
-  end
+  self:stop()
+  -- for i, snd in ipairs(self.playlist) do
+  --   snd:stop()
+  -- end
   --decide if we were passed a table or a vararg,
   --and assemble the playlist
   if type(first) == "table" then
@@ -71,6 +73,16 @@ function MusicManager:update(dt)
   end
 end
 
+function MusicManager:stop()
+  log("stop!!!")
+  self.currentsong = -1
+  --stop all currently playing music
+  for i, snd in ipairs(self.playlist) do
+    log(">>> stop "..i)
+    --snd:setLooping(false)
+    snd:stop()
+  end
+end
 
 
 -- helper functions

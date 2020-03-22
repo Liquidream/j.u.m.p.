@@ -60,6 +60,10 @@ if CASTLE_PREFETCH then
     "assets/snd/Jump Music Level 4-5 Transition.ogg",
     "assets/snd/Jump Music Level 5 Intro Loop.ogg",
     "assets/snd/Jump Music Level 5 Game Loop.ogg",
+    "assets/snd/Jump Music Game Over Level 1.ogg",
+    "assets/snd/Jump Music Game Over Level 2.ogg",
+    "assets/snd/Jump Music Game Over Level 3.ogg",
+    "assets/snd/Jump Music Game Over Level 4-5.ogg",
     "assets/snd/Jump SFX Checkpoint1.ogg",
     "assets/snd/Jump SFX Checkpoint2.ogg",
     "assets/snd/Jump SFX Checkpoint3.ogg",    
@@ -121,6 +125,18 @@ function love.keypressed( key, scancode, isrepeat )
       DEBUG_MODE = not DEBUG_MODE
       log("Debug mode: "..(DEBUG_MODE and "Enabled" or "Disabled"))
       return
+  end
+
+  if DEBUG_MODE then
+    local currLevel = blob and blob.levelNum or 1
+    if key=="up" then
+      -- reset to level above      
+      init_game(currLevel + 1)
+
+    elseif key=="down" then
+      -- reset to level below
+      init_game(max(currLevel - 1, 1))
+    end
   end
 end
 

@@ -97,7 +97,7 @@ function init_title()
   -- play starting music playlist (intro + music loop)
   -- (only if not already playing something
   --  e.g. coz started at higher level/tempo)
-  MusicManager:playMusic(SPEEDUP_PLAYLISTS[0])
+  MusicManager:playMusic(SPEEDUP_PLAYLISTS[-1])
   
   gameState = GAME_STATE.TITLE
 end
@@ -108,9 +108,9 @@ end
 
 function init_game(startSection)
   gameState = GAME_STATE.LVL_INTRO
-
   -- clear all menu buttons
   buttons = {}
+  pressedCount = 0
 
   -- re-hide the mouse cursor
   love.mouse.setVisible(false)
@@ -216,15 +216,15 @@ end
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
   -- speed up?
-  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum]
+  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum] or (blob.levelNum > 20 and SPEEDUP_LEVELS[20])
   if speedUpDef then
     blob.speedFactor = speedUpDef[1]
     log("blob.speedFactor = "..blob.speedFactor)
     -- announce speed-up
     speedUpNum = speedUpDef[2]
-    log("speedUpNum = "..speedUpNum)
+    --log("speedUpNum = "..speedUpNum)
     init_popup(1, speedUpNum) -- 1 = speedup msg
-    -- TODO: speed up music (switch track to next speed music)
+    -- speed up music (switch track to next speed music)
     MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])    
   end   
   
@@ -353,7 +353,8 @@ function createNewPlatform(platformNum)
 
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.SLIDER 
-      and last_xpos ~= PLATFORM_POSITIONS[2] then
+     -- and last_xpos ~= PLATFORM_POSITIONS[2] 
+      then
     ------------------------------------------------
       newPlatform = SliderPlatform(PLATFORM_POSITIONS[2], ypos, 1) -- always middle pos
     
@@ -494,8 +495,14 @@ function init_blob()
 end
 
 function init_game_over()
+  log("init_game_over()")
   gameState = GAME_STATE.GAME_OVER      
   gameCounter = 0       
+
+  -- stop game playlist
+  MusicManager:stop()  
+  -- play end jingle
+  sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:play()
 
   -- init mouse/touch controls
   init_cursor()
@@ -508,8 +515,14 @@ function init_game_over()
   local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
     -- continue game
     init_game(blob.last_level_full_lives)
+    -- stop game over sfx
+    sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+    -- play starting music playlist (for correct speed)
+    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
   end,nil,nil)
   local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
+    -- stop game over sfx
+    sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
     -- exit to title
     init_title()
   end,nil,nil)
@@ -586,9 +599,13 @@ function init_assets()
   local sfxVol = 0.25
   -- init music  
   SPEEDUP_PLAYLISTS = {  
+    [-1]={-- x1 (title + start)
+      Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
+      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+    },
     [0]={-- x1
-    Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
-    Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
+      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
       Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
     },
     {-- x2
@@ -624,7 +641,13 @@ function init_assets()
     sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1)
     sounds.ouches[i]:setVolume(sfxVol)
   end
-  
+  -- game over
+  sounds.gameover={
+    Sound:new('Jump Music Game Over Level 1.ogg', 1),
+    Sound:new('Jump Music Game Over Level 2.ogg', 1),
+    Sound:new('Jump Music Game Over Level 3.ogg', 1),
+    Sound:new('Jump Music Game Over Level 4-5.ogg', 1),
+  }  
 end
 
 function init_input()
