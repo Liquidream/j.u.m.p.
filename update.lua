@@ -37,7 +37,7 @@ function update_game(dt)
     --TODO: wait for user to start next round?
     if popup then 
       gameCounter = gameCounter + 1
-      if gameCounter > 500 or somethingPressed then  
+      if gameCounter > 500 or somethingPressed then
         -- start section        
         if not hiding_popup then
           hide_popup()
@@ -125,10 +125,19 @@ function update_player_input()
 
   -- something pressed (this frame)
   somethingPressed = currPressedState and (currPressedState ~= lastPressedState)
+  -- keep a tab of # of clicks (down & up)
+  if somethingPressed 
+   and gameState == GAME_STATE.LVL_PLAY 
+  then
+    pressedCount = pressedCount + 1
+    --log("pressedCount:"..tostring(pressedCount))
+  end
+
+
   pressedStateChanged = currPressedState ~= lastPressedState
 
   -- remember...
-  lastPressedState = currPressedState  
+  lastPressedState = currPressedState
 end
 
 
@@ -137,7 +146,8 @@ function update_platforms(dt)
     local platform = platforms[i]
     if platform then
       -- something changed in pressed state (this frame)?
-      if pressedStateChanged then 
+      if pressedStateChanged 
+       and (currPressedState or pressedCount>0) then 
         -- update platform state
         -- (if either input method used)
         platform:setPressedState(currPressedState)

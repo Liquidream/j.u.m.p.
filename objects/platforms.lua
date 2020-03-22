@@ -49,7 +49,7 @@ end
 
 
 -- ------------------------------------------------------------
--- SIDE-SWITCHER platform type (switches left/right on press)
+-- SIDESWITCHER platform type (switches left/right on press)
 --
 do
   SLIDER_MAX_MOVEMENT = 200
@@ -69,10 +69,23 @@ do
 
     self.side = (self.activeState) and 1 or 3 -- 1=left, 3=right
     self.x = PLATFORM_POSITIONS[self.side]
-    self.openAmount = (not self.currState) 
-                         and 0 or SLIDER_MAX_MOVEMENT
+    
+    if self.side == 1 then
+      self.openAmount = (self.currState==self.activeState) 
+                          and SLIDER_MAX_MOVEMENT or 0
+    else
+      self.openAmount = (self.currState==self.activeState) 
+                          and 0 or SLIDER_MAX_MOVEMENT
+    end
+
+    -- self.openAmount = (self.currState==self.activeState) 
+    --                      and 0 or SLIDER_MAX_MOVEMENT
     -- self.openAmount = (self.currState==self.activeState) 
     --                      and 0 or SLIDER_MAX_OPEN_AMOUNT
+
+    -- log("self.side = "..self.side)
+    -- log("self.x = "..self.x)
+    -- log("self.openAmount = "..self.openAmount)
 
     self.id = irnd(100000)
   end
@@ -143,23 +156,23 @@ do
   end
 
   function SideSwitcherPlatform:setPressedState(is_pressed)
-    -- call base implementation
-    --SliderPlatform.super.setPressedState(self,is_pressed)
-    
-    self.currState = not self.currState
-    
-    -- if is_pressed then
-    --   -- call base implementation
-    --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
-    -- end
+      -- call base implementation
+      --SliderPlatform.super.setPressedState(self,is_pressed)
+      
+      self.currState = not self.currState
+      
+      -- if is_pressed then
+      --   -- call base implementation
+      --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
+      -- end
 
-    -- NOTE: Slider movement will happen in update   
-    addTween(
-      tween.new(
-        0.3, self, 
-        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
-        'outCirc')
-    )
+      -- NOTE: Slider movement will happen in update   
+      addTween(
+        tween.new(
+          0.3, self, 
+          {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
+          'outCirc')
+      )
   end
 
   -- override "landed" test
@@ -572,17 +585,17 @@ do
     --SliderPlatform.super.draw(self)
   end
 
-  function SliderPlatform:setPressedState(is_pressed)
-    -- call base implementation
-    SliderPlatform.super.setPressedState(self,is_pressed)
+  function SliderPlatform:setPressedState(is_pressed)    
+      -- call base implementation
+      SliderPlatform.super.setPressedState(self,is_pressed)
 
-    -- NOTE: Slider movement will happen in update   
-    addTween(
-      tween.new(
-        0.3, self, 
-        {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
-        'outCirc')
-    )
+      -- NOTE: Slider movement will happen in update   
+      addTween(
+        tween.new(
+          0.3, self, 
+          {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
+          'outCirc')
+      )
   end
 
   -- override "landed" test

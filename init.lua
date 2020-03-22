@@ -108,9 +108,9 @@ end
 
 function init_game(startSection)
   gameState = GAME_STATE.LVL_INTRO
-
   -- clear all menu buttons
   buttons = {}
+  pressedCount = 0
 
   -- re-hide the mouse cursor
   love.mouse.setVisible(false)
@@ -353,7 +353,8 @@ function createNewPlatform(platformNum)
 
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.SLIDER 
-      and last_xpos ~= PLATFORM_POSITIONS[2] then
+     -- and last_xpos ~= PLATFORM_POSITIONS[2] 
+      then
     ------------------------------------------------
       newPlatform = SliderPlatform(PLATFORM_POSITIONS[2], ypos, 1) -- always middle pos
     
