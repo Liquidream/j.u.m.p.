@@ -100,10 +100,38 @@ function update_game(dt)
     
     -- TODO: tally up score, then wait for user to decide (continue/exit)
  
-
     -- update camera
     update_camera(dt)
-  
+ 
+    -- show CONTINUE option yet?
+    gameCounter = gameCounter + 1
+    if gameCounter > 100 
+     and #buttons==0 then    
+      -- init mouse/touch controls
+      init_cursor()
+
+      -- init menu buttons
+      buttons = {}
+      local menu_xpos = 50
+      local menu_ypos = GAME_HEIGHT/2 - 5
+
+      local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
+        -- continue game
+        init_game(blob.last_level_full_lives)
+        -- stop game over sfx
+        sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+        -- play starting music playlist (for correct speed)
+        MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
+      end,nil,nil)
+      local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
+        -- stop game over sfx
+        sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+        -- exit to title
+        init_title()
+      end,nil,nil)
+      table.insert(buttons, continueButton)
+      table.insert(buttons, titleButton)
+    end
   
   else
     -- ??
