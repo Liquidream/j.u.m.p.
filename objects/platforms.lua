@@ -26,7 +26,7 @@ do
     if self.completed then
       pal(13,9)
       pal(24,10)
-      pal(41,8)
+      pal(41,7)
     end
 
     -- anything?
@@ -133,8 +133,19 @@ do
   end
 
   function SideSwitcherPlatform:draw()
-    pal(19,33)
-    pal(24,33)
+    
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(24,8)
+      pal(41,7)
+    else
+      -- dark grey
+      pal(19,33)
+      pal(24,33)
+    end
+
     -- draw left "door"
     x = (GAME_WIDTH/2) - 263 + self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
@@ -163,31 +174,30 @@ do
 
 
     -- reset palette
-    pal(19,19)
-    pal(24,24)
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     -- draw (base) platform?
     --SideSwitcherPlatform.super.draw(self)
   end
 
-  function SideSwitcherPlatform:setPressedState(is_pressed)
-      -- call base implementation
-      --SliderPlatform.super.setPressedState(self,is_pressed)
-      
-      self.currState = not self.currState
-      
-      -- if is_pressed then
-      --   -- call base implementation
-      --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
-      -- end
-
-      -- NOTE: Slider movement will happen in update   
-      addTween(
-        tween.new(
-          0.3, self, 
-          {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
-          'outCirc')
-      )
+  function SideSwitcherPlatform:setPressedState(is_pressed)      
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    
+    self.currState = not self.currState
+    
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
+        'outCirc')
+    )
   end
 
   -- override "landed" test
@@ -206,6 +216,12 @@ do
     end
     
     return false -- landing handled in update!
+  end
+
+  function SideSwitcherPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = true
+    self.activeState = true
   end
 
 end
@@ -248,7 +264,7 @@ do
     if self.completed then
       pal(13,9)
       pal(19,10)
-      pal(41,8)
+      pal(41,78)
     end
 
     -- draw (base) platform
@@ -570,12 +586,8 @@ do
     if blob.y+32 >= self.y-5 and blob.y+32<=self.y+16 then
       -- landed?    
       if self:hasLanded(blob)
-      -- blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
-      -- and blob.vy>=0 
-      -- and self.currState == self.activeState 
       then
         -- landed
-        --debug_log("landed!!")
         blob.onGround = true
         -- were we hurt?
         if blob.vy > 500 then
@@ -589,8 +601,17 @@ do
 
     end
   end
-
+  
   function SliderPlatform:draw()
+
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(24,8)
+      pal(41,7)
+    end
+
     -- draw left "door"
     x = (GAME_WIDTH/2) - 32 - self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
@@ -606,6 +627,12 @@ do
       spr(13, x, self.y, 1, self.spr_h)
     end
 
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
+
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
 
@@ -614,16 +641,20 @@ do
   end
 
   function SliderPlatform:setPressedState(is_pressed)    
-      -- call base implementation
-      SliderPlatform.super.setPressedState(self,is_pressed)
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    -- call base implementation
+    SliderPlatform.super.setPressedState(self,is_pressed)
 
-      -- NOTE: Slider movement will happen in update   
-      addTween(
-        tween.new(
-          0.3, self, 
-          {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
-          'outCirc')
-      )
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
+        'outCirc')
+    )
   end
 
   -- override "landed" test
@@ -647,18 +678,14 @@ do
     --else
       --blob.onGround = false
     end
-
-    -- if aabb(blob, self) 
-    --   and blob.vy>0 
-    --   and self.currState == self.activeState then
-    --   return true
-    -- else
-    --   return false
-    -- end 
-    -- call base implementation
-    --return SliderPlatform.super.hasLanded(self,blob)
     
     return false -- landing handled in update!
+  end
+
+  function SliderPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = true
+    self.activeState = true
   end
 
 end
@@ -697,7 +724,7 @@ do
     if self.completed then
       pal(13,9)
       pal(24,10)
-      pal(41,8)
+      pal(41,7)
     end
 
     -- draw (base) platform
@@ -780,7 +807,7 @@ do
     if self.completed then
       pal(13,9)
       pal(24,10)
-      pal(41,8)
+      pal(41,7)
     end
 
     -- draw (base) platform
@@ -803,7 +830,7 @@ do
         if self.completed then
           pal(13,9)
           pal(24,10)
-          pal(41,8)
+          pal(41,7)
         end
         -- draw (base) platform
         spr(self.spr, xpos, self.y, self.spr_w, self.spr_h)
@@ -867,11 +894,15 @@ do
     if self.gapSide == 2 then offset=offset-100 end
 
     -- if visited?
-    -- if self.completed then
-    --   pal(13,9)
-    --   pal(19,8)
-    --   pal(41,7)
-    -- end
+    if self.completed 
+     and self.num ~= blob.startPlatformNum
+     and not self.isCheckpoint
+    then
+      pal(13,9)
+      pal(24,10)
+      pal(19,10)
+      pal(41,7)
+    end
 
     spr(self.spr, self.x + offset, self.y, self.spr_w, self.spr_h)
     -- draw base class/values
