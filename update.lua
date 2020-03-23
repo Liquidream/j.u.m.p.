@@ -257,7 +257,8 @@ function update_collisions()
         blob.onPlatform = platform
         if not blob.onPlatform.completed then
           blob.score = blob.score + 1
-          blob.onPlatform.completed = true
+          blob.onPlatform:setCompleted(true)
+          --blob.onPlatform.completed = true
         end
         debug_log("blob.onPlatformNum = "..blob.onPlatformNum)
         debug_log("#platforms = "..#platforms)

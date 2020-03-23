@@ -22,8 +22,21 @@ do
     -- anything?
   end
   function BasePlatformObject:draw()
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,10)
+      pal(41,8)
+    end
+
     -- anything?
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true)
 
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -45,8 +58,10 @@ do
     end 
     return false
   end
+  function BasePlatformObject:setCompleted(is_completed)
+    self.completed = is_completed
+  end
 end
-
 
 -- ------------------------------------------------------------
 -- SIDESWITCHER platform type (switches left/right on press)
@@ -195,7 +210,6 @@ do
 
 end
 
-
 -- ------------------------------------------------------------
 -- SPRINGER platform type (boosts player on activation - if close enough)
 --
@@ -230,9 +244,22 @@ do
     -- draw springer
     spr((self.currState==self.activeState) and 25 or 24, self.x, self.y+yoff, self.spr_w, spr_h)
     
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(41,8)
+    end
+
     -- draw (base) platform
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -669,14 +696,12 @@ do
     -- if visited?
     if self.completed then
       pal(13,9)
-      pal(24,8)
-      pal(41,7)
+      pal(24,10)
+      pal(41,8)
     end
 
     -- draw (base) platform
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
-    -- spr(self.spr - (self.completed and 1 or 0), 
-    --    self.x, self.y, self.spr_w, self.spr_h)
 
     -- reset palette
     pal()
@@ -690,9 +715,13 @@ do
   end
 
   function SpikerPlatform:setPressedState(is_pressed)
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    
     -- call base implementation
     SpikerPlatform.super.setPressedState(self,is_pressed)
-
     -- check for spikes
     if blob.onGround
      and blob.onPlatform == self
@@ -710,8 +739,15 @@ do
      and self.currState == self.activeState then
       blob:loseLife()
     end 
+
     -- call base implementation
     return SpikerPlatform.super.hasLanded(self,blob)
+  end
+
+  function SpikerPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = false
+    self.activeState = true
   end
 
 end
@@ -740,11 +776,21 @@ do
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
     
-    -- draw (base) platform
-    spr(self.spr - (self.completed and 1 or 0), 
-       self.x, self.y, self.spr_w, self.spr_h)
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,10)
+      pal(41,8)
+    end
 
-    --SpikerPlatform.super.draw(self)
+    -- draw (base) platform
+    spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     -- draw decoys
     for i=1,3 do
@@ -753,9 +799,20 @@ do
         -- draw spikes
         spr((self.currState~=self.activeState) and 16 or 17, xpos, self.y-32, self.spr_w, spr_h)
         
+        -- if visited?
+        if self.completed then
+          pal(13,9)
+          pal(24,10)
+          pal(41,8)
+        end
         -- draw (base) platform
-        spr(self.spr - (self.completed and 1 or 0), 
-        xpos, self.y, self.spr_w, self.spr_h)
+        spr(self.spr, xpos, self.y, self.spr_w, self.spr_h)
+
+        -- reset palette
+        pal()
+        palt()
+        palt(0, false)
+        palt(35,true)
       end
     end
 
@@ -776,7 +833,6 @@ do
   end
 
 end
-
 
 -- ------------------------------------------------------------
 -- STATIC platform type (no interaction)

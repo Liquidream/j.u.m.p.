@@ -111,6 +111,8 @@ function init_game(startSection)
   -- clear all menu buttons
   buttons = {}
   pressedCount = 0
+  -- (force pressed state to false - to ignore click of starting game)
+  currPressedState = false
 
   -- re-hide the mouse cursor
   love.mouse.setVisible(false)
