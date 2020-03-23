@@ -353,7 +353,7 @@ function createNewPlatform(platformNum)
 
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.SLIDER 
-     -- and last_xpos ~= PLATFORM_POSITIONS[2] 
+      and (last_xpos ~= PLATFORM_POSITIONS[2] or prevPlatform.isCheckpoint) -- not too many "middle" pos platforms
       then
     ------------------------------------------------
       newPlatform = SliderPlatform(PLATFORM_POSITIONS[2], ypos, 1) -- always middle pos

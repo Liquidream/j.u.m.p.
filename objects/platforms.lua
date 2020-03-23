@@ -15,7 +15,7 @@ do
     self.activeState = irnd(2)==0 
     debug_log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
-    self.currState = false    
+    self.currState = currPressedState --false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
   end
   function BasePlatformObject:update(dt)
@@ -205,6 +205,7 @@ do
   function SpringerPlatform:new(x,y,spr_width)
     SpringerPlatform.super.new(self, x, y)
 
+    self.currState = false
     self.activeState = true
     self.type = PLATFORM_TYPE.SPRINGER
     self.spr = 9
@@ -665,9 +666,23 @@ do
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
     
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,8)
+      pal(41,7)
+    end
+
     -- draw (base) platform
-    spr(self.spr - (self.completed and 1 or 0), 
-       self.x, self.y, self.spr_w, self.spr_h)
+    spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+    -- spr(self.spr - (self.completed and 1 or 0), 
+    --    self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -795,6 +810,13 @@ do
     if self.gapSide == 1 then offset=offset+100 end
     if self.gapSide == 2 then offset=offset-100 end
 
+    -- if visited?
+    -- if self.completed then
+    --   pal(13,9)
+    --   pal(19,8)
+    --   pal(41,7)
+    -- end
+
     spr(self.spr, self.x + offset, self.y, self.spr_w, self.spr_h)
     -- draw base class/values
     --StaticPlatform.super.draw(self)
@@ -814,12 +836,14 @@ do
         -- right
         spr(29, self.x+150, self.y-32)
       end
-      -- reset palette
-      pal()
-      palt()
-      palt(0, false)
-      palt(35,true)      
+          
     end
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true)  
 
     -- draw level number
     if self.spr_w~=1 and gameState ~= GAME_STATE.TITLE then
