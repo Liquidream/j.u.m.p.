@@ -221,9 +221,14 @@ function update_blob(dt)
     if blob.y > blob.maxHeight +50
      and blob.maxHeight < blob.y 
      then 
-      --blob:loseLife()
       -- allow camera to follow again
-      blob.maxHeight = blob.y-- + GAME_HEIGHT/2
+      blob.maxHeight = blob.y
+    end
+
+    -- make sure blobby stays on screen
+    if blob.x < -16 or blob.x > GAME_WIDTH-16 then
+      -- bounce back in
+      blob.vx = -blob.vx
     end
   end  
 end
