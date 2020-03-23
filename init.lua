@@ -111,6 +111,8 @@ function init_game(startSection)
   -- clear all menu buttons
   buttons = {}
   pressedCount = 0
+  -- (force pressed state to false - to ignore click of starting game)
+  currPressedState = false
 
   -- re-hide the mouse cursor
   love.mouse.setVisible(false)
@@ -353,7 +355,7 @@ function createNewPlatform(platformNum)
 
     ------------------------------------------------
     elseif pDef.type == PLATFORM_TYPE.SLIDER 
-     -- and last_xpos ~= PLATFORM_POSITIONS[2] 
+      and (last_xpos ~= PLATFORM_POSITIONS[2] or prevPlatform.isCheckpoint) -- not too many "middle" pos platforms
       then
     ------------------------------------------------
       newPlatform = SliderPlatform(PLATFORM_POSITIONS[2], ypos, 1) -- always middle pos
@@ -497,37 +499,51 @@ end
 function init_game_over()
   log("init_game_over()")
   gameState = GAME_STATE.GAME_OVER      
-  gameCounter = 0       
+  gameCounter = 0
+  -- object for tween use
+  gameover_ui = {
+    ypos = -200
+  }
 
   -- stop game playlist
   MusicManager:stop()  
   -- play end jingle
   sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:play()
 
-  -- init mouse/touch controls
-  init_cursor()
+  addTween(
+    tween.new(
+     2, gameover_ui, 
+      {ypos = (GAME_HEIGHT/2)-116 }, 
+      'outBounce', function()        
+        -- NOTE: Restart buttons delayed, to avoid clicking too quick
+        -- init mouse/touch controls
+        init_cursor()
+        -- init menu buttons
+        buttons = {}
+        local menu_xpos = 50
+        local menu_ypos = GAME_HEIGHT/2 - 5
 
-  -- init menu buttons
-  buttons = {}
-  local menu_xpos = 50
-  local menu_ypos = GAME_HEIGHT/2 - 5
+        local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
+          -- continue game
+          init_game(blob.last_level_full_lives)
+          -- stop game over sfx
+          sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+          -- play starting music playlist (for correct speed)
+          MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
+        end,nil,nil)
+        local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
+          -- stop game over sfx
+          sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+          -- exit to title
+          init_title()
+        end,nil,nil)
+        table.insert(buttons, continueButton)
+        table.insert(buttons, titleButton)
+      end
+    )
+  )
 
-  local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
-    -- continue game
-    init_game(blob.last_level_full_lives)
-    -- stop game over sfx
-    sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
-    -- play starting music playlist (for correct speed)
-    MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
-  end,nil,nil)
-  local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
-    -- stop game over sfx
-    sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
-    -- exit to title
-    init_title()
-  end,nil,nil)
-  table.insert(buttons, continueButton)
-  table.insert(buttons, titleButton)
+  
 end
 
 -- reset blob back to starting position

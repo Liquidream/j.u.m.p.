@@ -15,15 +15,28 @@ do
     self.activeState = irnd(2)==0 
     debug_log("self.activeState="..tostring(self.activeState))
     -- default to false state (could be active or inactive)
-    self.currState = false    
+    self.currState = currPressedState --false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
   end
   function BasePlatformObject:update(dt)
     -- anything?
   end
   function BasePlatformObject:draw()
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,10)
+      pal(41,7)
+    end
+
     -- anything?
     spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true)
 
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -45,8 +58,10 @@ do
     end 
     return false
   end
+  function BasePlatformObject:setCompleted(is_completed)
+    self.completed = is_completed
+  end
 end
-
 
 -- ------------------------------------------------------------
 -- SIDESWITCHER platform type (switches left/right on press)
@@ -118,8 +133,19 @@ do
   end
 
   function SideSwitcherPlatform:draw()
-    pal(19,33)
-    pal(24,33)
+    
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(24,8)
+      pal(41,7)
+    else
+      -- dark grey
+      pal(19,33)
+      pal(24,33)
+    end
+
     -- draw left "door"
     x = (GAME_WIDTH/2) - 263 + self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
@@ -148,31 +174,30 @@ do
 
 
     -- reset palette
-    pal(19,19)
-    pal(24,24)
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     -- draw (base) platform?
     --SideSwitcherPlatform.super.draw(self)
   end
 
-  function SideSwitcherPlatform:setPressedState(is_pressed)
-      -- call base implementation
-      --SliderPlatform.super.setPressedState(self,is_pressed)
-      
-      self.currState = not self.currState
-      
-      -- if is_pressed then
-      --   -- call base implementation
-      --   SideSwitcherPlatform.super.setPressedState(self, not self.currState)
-      -- end
-
-      -- NOTE: Slider movement will happen in update   
-      addTween(
-        tween.new(
-          0.3, self, 
-          {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
-          'outCirc')
-      )
+  function SideSwitcherPlatform:setPressedState(is_pressed)      
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    
+    self.currState = not self.currState
+    
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
+        'outCirc')
+    )
   end
 
   -- override "landed" test
@@ -193,8 +218,13 @@ do
     return false -- landing handled in update!
   end
 
-end
+  function SideSwitcherPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = true
+    self.activeState = true
+  end
 
+end
 
 -- ------------------------------------------------------------
 -- SPRINGER platform type (boosts player on activation - if close enough)
@@ -205,6 +235,7 @@ do
   function SpringerPlatform:new(x,y,spr_width)
     SpringerPlatform.super.new(self, x, y)
 
+    self.currState = false
     self.activeState = true
     self.type = PLATFORM_TYPE.SPRINGER
     self.spr = 9
@@ -229,9 +260,22 @@ do
     -- draw springer
     spr((self.currState==self.activeState) and 25 or 24, self.x, self.y+yoff, self.spr_w, spr_h)
     
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(41,78)
+    end
+
     -- draw (base) platform
     spr(self.spr - (self.completed and 1 or 0), 
        self.x, self.y+yoff+32, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -542,12 +586,8 @@ do
     if blob.y+32 >= self.y-5 and blob.y+32<=self.y+16 then
       -- landed?    
       if self:hasLanded(blob)
-      -- blob.y+32 >= self.y-5 and blob.y+32<=self.y+16
-      -- and blob.vy>=0 
-      -- and self.currState == self.activeState 
       then
         -- landed
-        --debug_log("landed!!")
         blob.onGround = true
         -- were we hurt?
         if blob.vy > 500 then
@@ -561,8 +601,17 @@ do
 
     end
   end
-
+  
   function SliderPlatform:draw()
+
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(19,10)
+      pal(24,8)
+      pal(41,7)
+    end
+
     -- draw left "door"
     x = (GAME_WIDTH/2) - 32 - self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
@@ -578,6 +627,12 @@ do
       spr(13, x, self.y, 1, self.spr_h)
     end
 
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
+
     -- if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
 
@@ -586,16 +641,20 @@ do
   end
 
   function SliderPlatform:setPressedState(is_pressed)    
-      -- call base implementation
-      SliderPlatform.super.setPressedState(self,is_pressed)
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    -- call base implementation
+    SliderPlatform.super.setPressedState(self,is_pressed)
 
-      -- NOTE: Slider movement will happen in update   
-      addTween(
-        tween.new(
-          0.3, self, 
-          {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
-          'outCirc')
-      )
+    -- NOTE: Slider movement will happen in update   
+    addTween(
+      tween.new(
+        0.3, self, 
+        {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
+        'outCirc')
+    )
   end
 
   -- override "landed" test
@@ -619,18 +678,14 @@ do
     --else
       --blob.onGround = false
     end
-
-    -- if aabb(blob, self) 
-    --   and blob.vy>0 
-    --   and self.currState == self.activeState then
-    --   return true
-    -- else
-    --   return false
-    -- end 
-    -- call base implementation
-    --return SliderPlatform.super.hasLanded(self,blob)
     
     return false -- landing handled in update!
+  end
+
+  function SliderPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = true
+    self.activeState = true
   end
 
 end
@@ -665,9 +720,21 @@ do
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
     
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,10)
+      pal(41,7)
+    end
+
     -- draw (base) platform
-    spr(self.spr - (self.completed and 1 or 0), 
-       self.x, self.y, self.spr_w, self.spr_h)
+    spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     --  if DEBUG_MODE then pprint(tostring(self.sectionNum), 
     --   self.x+50,self.y,7) end
@@ -675,9 +742,13 @@ do
   end
 
   function SpikerPlatform:setPressedState(is_pressed)
+    -- abort on completed?
+    if self.completed then 
+      return
+    end
+    
     -- call base implementation
     SpikerPlatform.super.setPressedState(self,is_pressed)
-
     -- check for spikes
     if blob.onGround
      and blob.onPlatform == self
@@ -695,8 +766,15 @@ do
      and self.currState == self.activeState then
       blob:loseLife()
     end 
+
     -- call base implementation
     return SpikerPlatform.super.hasLanded(self,blob)
+  end
+
+  function SpikerPlatform:setCompleted(is_completed)
+    self.completed = true
+    self.currState = false
+    self.activeState = true
   end
 
 end
@@ -725,11 +803,21 @@ do
     -- draw spikes
     spr((self.currState==self.activeState) and 16 or 17, self.x, self.y-32, self.spr_w, spr_h)
     
-    -- draw (base) platform
-    spr(self.spr - (self.completed and 1 or 0), 
-       self.x, self.y, self.spr_w, self.spr_h)
+    -- if visited?
+    if self.completed then
+      pal(13,9)
+      pal(24,10)
+      pal(41,7)
+    end
 
-    --SpikerPlatform.super.draw(self)
+    -- draw (base) platform
+    spr(self.spr, self.x, self.y, self.spr_w, self.spr_h)
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true) 
 
     -- draw decoys
     for i=1,3 do
@@ -738,9 +826,20 @@ do
         -- draw spikes
         spr((self.currState~=self.activeState) and 16 or 17, xpos, self.y-32, self.spr_w, spr_h)
         
+        -- if visited?
+        if self.completed then
+          pal(13,9)
+          pal(24,10)
+          pal(41,7)
+        end
         -- draw (base) platform
-        spr(self.spr - (self.completed and 1 or 0), 
-        xpos, self.y, self.spr_w, self.spr_h)
+        spr(self.spr, xpos, self.y, self.spr_w, self.spr_h)
+
+        -- reset palette
+        pal()
+        palt()
+        palt(0, false)
+        palt(35,true)
       end
     end
 
@@ -761,7 +860,6 @@ do
   end
 
 end
-
 
 -- ------------------------------------------------------------
 -- STATIC platform type (no interaction)
@@ -795,6 +893,17 @@ do
     if self.gapSide == 1 then offset=offset+100 end
     if self.gapSide == 2 then offset=offset-100 end
 
+    -- if visited?
+    if self.completed 
+     and self.num ~= blob.startPlatformNum
+     and not self.isCheckpoint
+    then
+      pal(13,9)
+      pal(24,10)
+      pal(19,10)
+      pal(41,7)
+    end
+
     spr(self.spr, self.x + offset, self.y, self.spr_w, self.spr_h)
     -- draw base class/values
     --StaticPlatform.super.draw(self)
@@ -814,12 +923,14 @@ do
         -- right
         spr(29, self.x+150, self.y-32)
       end
-      -- reset palette
-      pal()
-      palt()
-      palt(0, false)
-      palt(35,true)      
+          
     end
+
+    -- reset palette
+    pal()
+    palt()
+    palt(0, false)
+    palt(35,true)  
 
     -- draw level number
     if self.spr_w~=1 and gameState ~= GAME_STATE.TITLE then

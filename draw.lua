@@ -211,7 +211,7 @@ function draw_ui()
   
   if gameState == GAME_STATE.LVL_INTRO2 then
     if gameCounter > 25 then 
-      pprint_shiny("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 46, 0, 47, 8,10)
+      pprint_shiny("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-45, (GAME_HEIGHT/2)-56, 46, 0, 47, 8,10)
       --pprint("LEVEL "..blob.levelNum, (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-56, 47)
       use_font("small-font")
       pprint_shiny(blob.numPlatforms.." PLATFORMS", (GAME_WIDTH/2)-47, (GAME_HEIGHT/2)-26, 53, 0, 52)
@@ -231,12 +231,15 @@ function draw_ui()
   end
 
   if gameState == GAME_STATE.GAME_OVER then
+    use_font("big-font")
+    pprint_shiny("GAME", (GAME_WIDTH/2)-54, gameover_ui.ypos,    39, 0, 38, 9,27)
+    pprint_shiny("OVER", (GAME_WIDTH/2)-50, gameover_ui.ypos+36, 39, 0, 38, 9,27)    
+    -- pprint_shiny("GAME", (GAME_WIDTH/2)-54, (GAME_HEIGHT/2)-116, 39, 0, 38, 9,27)
+    -- pprint_shiny("OVER", (GAME_WIDTH/2)-50, (GAME_HEIGHT/2)-80, 39, 0, 38, 9,27)
+    
     if #buttons > 0 then
-      use_font("big-font")
-      pprint_shiny("GAME", (GAME_WIDTH/2)-54, (GAME_HEIGHT/2)-116, 39, 0, 38, 9,27)
-      pprint_shiny("OVER", (GAME_WIDTH/2)-50, (GAME_HEIGHT/2)-80, 39, 0, 38, 9,27)
-      use_font("small-font")
-      
+    use_font("small-font")
+    
       -- dark overlay
       local menu_x = (GAME_WIDTH/2)-64
       local menu_y = (GAME_HEIGHT/2)-22

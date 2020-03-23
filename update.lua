@@ -100,10 +100,15 @@ function update_game(dt)
     
     -- TODO: tally up score, then wait for user to decide (continue/exit)
  
-
     -- update camera
     update_camera(dt)
-  
+ 
+    -- -- show CONTINUE option yet?
+    -- gameCounter = gameCounter + 1
+    -- if gameCounter > 100 
+    --  and #buttons==0 then    
+      
+    -- end
   
   else
     -- ??
@@ -221,9 +226,14 @@ function update_blob(dt)
     if blob.y > blob.maxHeight +50
      and blob.maxHeight < blob.y 
      then 
-      --blob:loseLife()
       -- allow camera to follow again
-      blob.maxHeight = blob.y-- + GAME_HEIGHT/2
+      blob.maxHeight = blob.y
+    end
+
+    -- make sure blobby stays on screen
+    if blob.x < -16 or blob.x > GAME_WIDTH-16 then
+      -- bounce back in
+      blob.vx = -blob.vx
     end
   end  
 end
@@ -252,7 +262,8 @@ function update_collisions()
         blob.onPlatform = platform
         if not blob.onPlatform.completed then
           blob.score = blob.score + 1
-          blob.onPlatform.completed = true
+          blob.onPlatform:setCompleted(true)
+          --blob.onPlatform.completed = true
         end
         debug_log("blob.onPlatformNum = "..blob.onPlatformNum)
         debug_log("#platforms = "..#platforms)
