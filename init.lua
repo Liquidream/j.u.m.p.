@@ -466,7 +466,7 @@ end
 -- (will be positioned later)
 function init_blob()
   blob = {
-    lives = 1,
+    lives = 3,
     score = 0,       -- essentially the platform num?
     levelNum = 0,    -- ...this gets set in init_section()
     speedFactor = 1, -- will increase (up to 2.5?) as game progresses
@@ -499,14 +499,51 @@ end
 function init_game_over()
   log("init_game_over()")
   gameState = GAME_STATE.GAME_OVER      
-  gameCounter = 0       
+  gameCounter = 0
+  -- object for tween use
+  gameover_ui = {
+    ypos = -200
+  }
 
   -- stop game playlist
   MusicManager:stop()  
   -- play end jingle
   sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:play()
 
-  -- NOTE: Restart buttons delayed, to avoid clicking too quick
+  addTween(
+    tween.new(
+     2, gameover_ui, 
+      {ypos = (GAME_HEIGHT/2)-116 }, 
+      'outBounce', function()        
+        -- NOTE: Restart buttons delayed, to avoid clicking too quick
+        -- init mouse/touch controls
+        init_cursor()
+        -- init menu buttons
+        buttons = {}
+        local menu_xpos = 50
+        local menu_ypos = GAME_HEIGHT/2 - 5
+
+        local continueButton = BaseButtonObject(menu_xpos, menu_ypos+10, "YES", function()
+          -- continue game
+          init_game(blob.last_level_full_lives)
+          -- stop game over sfx
+          sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+          -- play starting music playlist (for correct speed)
+          MusicManager:playMusic(SPEEDUP_PLAYLISTS[speedUpNum])
+        end,nil,nil)
+        local titleButton = BaseButtonObject(menu_xpos, menu_ypos+35, "NO", function()
+          -- stop game over sfx
+          sounds.gameover[speedUpNum==0 and 1 or speedUpNum]:stop()
+          -- exit to title
+          init_title()
+        end,nil,nil)
+        table.insert(buttons, continueButton)
+        table.insert(buttons, titleButton)
+      end
+    )
+  )
+
+  
 end
 
 -- reset blob back to starting position
