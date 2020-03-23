@@ -217,8 +217,22 @@ end
 
 -- any announcements? (speed, platform, tips)
 function checkSpeedupAndPopups()
-  -- speed up?
-  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum] or (blob.levelNum > 20 and SPEEDUP_LEVELS[20])
+  
+  -- determine speed
+  -- (only really necessary for debugging)
+  if DEBUG_MODE then
+    --log("checkSpeedupAndPopups -------------")
+    for i=1,20 do
+      local speedUpDef = SPEEDUP_LEVELS[i]
+      if speedUpDef and blob.levelNum >= i then
+        blob.speedFactor = speedUpDef[1]
+        --log("  > blob.speedFactor = "..blob.speedFactor)
+      end
+    end
+  end
+
+  -- speed up announce?
+  local speedUpDef = SPEEDUP_LEVELS[blob.levelNum]-- or (blob.levelNum > 20 and SPEEDUP_LEVELS[20])  
   if speedUpDef then
     blob.speedFactor = speedUpDef[1]
     log("blob.speedFactor = "..blob.speedFactor)
