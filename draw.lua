@@ -163,14 +163,15 @@ function draw_ui()
 
   
   if gameState == GAME_STATE.TITLE then
-    use_font("big-font")
-    pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
-    --pprint("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 9, 6)    
+    aspr(64, (GAME_WIDTH/2)-74,(GAME_HEIGHT/2)-132, 0, 5,2, 0, 0)
+    --use_font("big-font")
+    --pprint_shiny("J.U.M.P.", (GAME_WIDTH/2)-74, (GAME_HEIGHT/2)-134, 8, 0, 9, 9,27)
+    
     use_font ("small-font")
     pprint("JUMPING MASSIVE\n UNDER   PRESSURE", 
-    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 6, 0)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-85, 6, 0)
     pprint("J       M\n U       P", 
-    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-90, 9)
+    (GAME_WIDTH/2)-70, (GAME_HEIGHT/2)-85, 9)
     
     if #buttons > 0 then
       -- dark overlay
