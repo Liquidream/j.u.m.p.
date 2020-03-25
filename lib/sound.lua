@@ -2,14 +2,14 @@ SOUND_DIR = 'assets/snd/'
 
 Sound = {}
 
-function Sound:new(filename, cacheSize, shouldLoop)
+function Sound:new(filename, cacheSize, shouldLoop, volume)
   local o = {};
   o.sources = {};
   o.cacheSize = cacheSize or 2;
   o.sources[1] = love.audio.newSource(SOUND_DIR..filename, 'static');
   o.sources[1]:setLooping(shouldLoop or false)
   o.index = 1;
-  o.volume = 1;
+  o.volume = volume or 1;
   for i = 2, o.cacheSize do
     o.sources[i] = o.sources[1]:clone();    
   end

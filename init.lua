@@ -15,7 +15,6 @@ countOfSameStates = 0
 shake=0
 shake_x=0
 shake_y=0
-speedUpNum = 0
 
 function init_cursor()
   -- re-show the mouse cursor 
@@ -106,7 +105,8 @@ function createTextObj(text, fontName, col1, col2)
 
 end
 
-function init_game(startSection)
+function init_game(startSection)  
+  speedUpNum = 0
   gameState = GAME_STATE.LVL_INTRO
   -- clear all menu buttons
   buttons = {}
@@ -226,6 +226,7 @@ function checkSpeedupAndPopups()
       local speedUpDef = SPEEDUP_LEVELS[i]
       if speedUpDef and blob.levelNum >= i then
         blob.speedFactor = speedUpDef[1]
+        speedUpNum = speedUpDef[2]
         --log("  > blob.speedFactor = "..blob.speedFactor)
       end
     end
@@ -625,58 +626,56 @@ function init_assets()
   spritesheet_grid(32,32)
 
   -- init sounds
-  local musicVol = 0.25
-  local sfxVol = 0.25
+  local musicVol = 0.3
+  local sfxVol = 0.3
   -- init music  
   SPEEDUP_PLAYLISTS = {  
     [-1]={-- x1 (title + start)
-      Sound:new('Jump Music Title Music Loop.ogg', 1, true),  
-      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Title Music Loop.ogg', 1, true, musicVol),  
+      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true, musicVol)
     },
     [0]={-- x1
-      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Level 1 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 1 Game Loop.ogg', 1, true, musicVol)
     },
     {-- x2
-      Sound:new('Jump Music Level 1-2 Transition.ogg', 1),
-      Sound:new('Jump Music Level 2 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Level 1-2 Transition.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 2 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 2 Game Loop.ogg', 1, true, musicVol)
     },
     {-- x3
-      Sound:new('Jump Music Level 2-3 Transition.ogg', 1),
-      Sound:new('Jump Music Level 3 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Level 2-3 Transition.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 3 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 3 Game Loop.ogg', 1, true, musicVol)
     },
     {-- x4
-      Sound:new('Jump Music Level 3-4 Transition.ogg', 1),
-      Sound:new('Jump Music Level 4 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 4 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Level 3-4 Transition.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 4 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 4 Game Loop.ogg', 1, true, musicVol)
     },
     {-- x5
-      Sound:new('Jump Music Level 4-5 Transition.ogg', 1),
-      Sound:new('Jump Music Level 5 Intro Loop.ogg', 1),
-      Sound:new('Jump Music Level 5 Game Loop.ogg', 1, true)
+      Sound:new('Jump Music Level 4-5 Transition.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 5 Intro Loop.ogg', 1, false, musicVol),
+      Sound:new('Jump Music Level 5 Game Loop.ogg', 1, true, musicVol)
     },
   }
 
   -- init sfx
   sounds.checkpoints={}
   for i= 1,5 do
-    sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1)
-    sounds.checkpoints[i]:setVolume(sfxVol)
+    sounds.checkpoints[i] = Sound:new('Jump SFX Checkpoint'..i..'.ogg', 1, false, sfxVol)
   end
   sounds.ouches={}
   for i= 1,5 do
-    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1)
-    sounds.ouches[i]:setVolume(sfxVol)
+    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1, false, sfxVol)
   end
   -- game over
   sounds.gameover={
-    Sound:new('Jump Music Game Over Level 1.ogg', 1),
-    Sound:new('Jump Music Game Over Level 2.ogg', 1),
-    Sound:new('Jump Music Game Over Level 3.ogg', 1),
-    Sound:new('Jump Music Game Over Level 4-5.ogg', 1),
+    Sound:new('Jump Music Game Over Level 1.ogg', 1, false, sfxVol),
+    Sound:new('Jump Music Game Over Level 2.ogg', 1, false, sfxVol),
+    Sound:new('Jump Music Game Over Level 3.ogg', 1, false, sfxVol),
+    Sound:new('Jump Music Game Over Level 4-5.ogg', 1, false, sfxVol),
   }  
 end
 

@@ -280,7 +280,7 @@ function update_collisions()
           debug_log("#platforms = "..#platforms)
 
           sounds.checkpoints[speedUpNum+1]:play()
-          --pick(sounds.checkpoints):play()
+          --log("playing checkpoints["..(speedUpNum+1).."]")
 
 
           -- DEBUG:
