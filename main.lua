@@ -74,6 +74,9 @@ if CASTLE_PREFETCH then
     "assets/snd/Jump SFX Ouch3.ogg",
     "assets/snd/Jump SFX Ouch4.ogg",
     "assets/snd/Jump SFX Ouch5.ogg",
+    "assets/snd/JUMP SFX Breaking.ogg",
+    "assets/snd/JUMP SFX Boing1.ogg",
+    "assets/snd/JUMP SFX Boing2.ogg",
   })
 end
 

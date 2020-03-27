@@ -10,8 +10,10 @@ function Sound:new(filename, cacheSize, shouldLoop, volume)
   o.sources[1]:setLooping(shouldLoop or false)
   o.index = 1;
   o.volume = volume or 1;
+  o.sources[1]:setVolume(o.volume); 
   for i = 2, o.cacheSize do
     o.sources[i] = o.sources[1]:clone();    
+    o.sources[i]:setVolume(o.volume); 
   end
   
   self.__index = self;

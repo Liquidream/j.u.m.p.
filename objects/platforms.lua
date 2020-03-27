@@ -317,6 +317,9 @@ do
 
           -- launch Blobby higher than usual (3 platforms)
           jump_blob(3)
+
+          -- play sfx
+          pick(sounds.boings):play()
         end
       end
     end
@@ -461,6 +464,8 @@ do
     table.insert( self.pieces, self:createPiece(15,134,28) )
     table.insert( self.pieces, self:createPiece(16,16,2) )
     table.insert( self.pieces, self:createPiece(17, 90,24) )
+    -- play sfx
+    sounds.breaking:play()
   end
 
   function BlockerPlatform:updatePieces(dt)

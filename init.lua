@@ -626,8 +626,8 @@ function init_assets()
   spritesheet_grid(32,32)
 
   -- init sounds
-  local musicVol = 0.3
-  local sfxVol = 0.3
+  local musicVol = 0.7
+  local sfxVol = 0.9
   -- init music  
   SPEEDUP_PLAYLISTS = {  
     [-1]={-- x1 (title + start)
@@ -676,7 +676,14 @@ function init_assets()
     Sound:new('Jump Music Game Over Level 2.ogg', 1, false, sfxVol),
     Sound:new('Jump Music Game Over Level 3.ogg', 1, false, sfxVol),
     Sound:new('Jump Music Game Over Level 4-5.ogg', 1, false, sfxVol),
-  }  
+  }
+  -- breaking blocker
+  sounds.breaking = Sound:new('JUMP SFX Breaking.ogg', 1, false, sfxVol-0.2)
+  -- boings
+  sounds.boings={}
+  for i= 1,2 do
+    sounds.boings[i] = Sound:new('JUMP SFX Boing'..i..'.ogg', 1, false, sfxVol)
+  end  
 end
 
 function init_input()
