@@ -222,8 +222,9 @@ function draw_ui()
   end
   
   if gameState == GAME_STATE.LVL_PLAY then
+    use_font("big-font3")
     local progress = (blob.onPlatformNum-1).."/"..blob.numPlatforms
-    pprint_shiny(progress, GAME_WIDTH-(14*#progress),1,  40, 0, 45, 5,14)
+    pprint_shiny(progress, GAME_WIDTH-(13*#progress),3,  52, 0, 45, 5,11)
   end
   
   if gameState == GAME_STATE.LVL_END then

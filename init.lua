@@ -618,6 +618,7 @@ function init_assets()
   load_font ("assets/AweMono.ttf", 16, "small-font")
   load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 40, "big-font")
   load_font ("assets/gomarice_gogono_cocoa_mochi.ttf", 22, "main-font", true)
+  load_font ("assets/GAMEPLAY-1987.ttf", 16, "big-font3", true)
   -- load gfx
   load_png("popups", "assets/popups.png", ak54, true)
   spritesheet_grid(32,32)

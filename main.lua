@@ -26,8 +26,14 @@
 ## ACKNOWLEDGEMENTS
   • Goma ShinGogono for "Cocoa Mochi Font"
     https://www.dafont.com/gogono-cocoa-mochi.font
-  • @somepx for Efforts font
-    https://www.patreon.com/posts/efforts-sf-v1-1-18175945
+
+  • @somepx for AweMono font
+    https://www.patreon.com/posts/free-font-and-34049548
+
+  • The FontStruction “GAMEPLAY 1987”
+    (http://fontstruct.com/fontstructions/show/1073507) by “GeronimoFonts” is
+    licensed under a Creative Commons Attribution Share Alike license
+    (http://creativecommons.org/licenses/by-sa/3.0/).
   
 
 ]]
@@ -45,6 +51,8 @@ if CASTLE_PREFETCH then
     "draw.lua",
     "assets/spritesheet.png",
     "assets/gomarice_gogono_cocoa_mochi.ttf",
+    "assets/AweMono.ttf",
+    "assets/GAMEPLAY-1987.ttf",
     "assets/snd/Jump Music Title Music Loop.ogg",
     "assets/snd/Jump Music Level 1 Intro Loop.ogg",
     "assets/snd/Jump Music Level 1 Game Loop.ogg",
