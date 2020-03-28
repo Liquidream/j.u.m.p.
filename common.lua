@@ -27,11 +27,18 @@ PLATFORM_DEFS = {
 }
 SPEEDUP_LEVELS = {
 --level, speed, playlist #
-   [5] = {1.125, 1},
-   [10]= {1.25,  2},
-   [15]= {1.5,   3},
-   [20]= {1.75,  4},
+   [5] = {1.75, 1},
+   [10]= {2,    2},
+   [15]= {2.25, 3},
+   [20]= {2.375,  4},
 } 
+-- (PREV) SPEEDUP_LEVELS = {
+-- --level, speed, playlist #
+--    [5] = {1.125, 1},
+--    [10]= {1.25,  2},
+--    [15]= {1.5,   3},
+--    [20]= {1.75,  4},
+-- } 
 
 
 -- Andrew Kensler (+another black!)

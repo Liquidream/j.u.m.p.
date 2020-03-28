@@ -484,7 +484,7 @@ function init_blob()
     lives = 3,
     score = 0,       -- essentially the platform num?
     levelNum = 0,    -- ...this gets set in init_section()
-    speedFactor = 1, -- will increase (up to 2.5?) as game progresses
+    speedFactor = 1.5,  -- will increase as game progresses (was 1)
     hitbox_w = 32,
     hitbox_h = 32,
     jumpFreq = 10,
@@ -669,7 +669,7 @@ function init_assets()
   end
   sounds.ouches={}
   for i= 1,5 do
-    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 1, false, sfxVol)
+    sounds.ouches[i] = Sound:new('Jump SFX Ouch'..i..'.ogg', 2, false, sfxVol)
   end
   -- game over
   sounds.gameover={
@@ -679,11 +679,11 @@ function init_assets()
     Sound:new('Jump Music Game Over Level 4-5.ogg', 1, false, sfxVol),
   }
   -- breaking blocker
-  sounds.breaking = Sound:new('JUMP SFX Breaking.ogg', 1, false, sfxVol-0.2)
+  sounds.breaking = Sound:new('JUMP SFX Breaking.ogg', 3, false, sfxVol-0.2)
   -- boings
   sounds.boings={}
   for i= 1,2 do
-    sounds.boings[i] = Sound:new('JUMP SFX Boing'..i..'.ogg', 1, false, sfxVol)
+    sounds.boings[i] = Sound:new('JUMP SFX Boing'..i..'.ogg', 2, false, sfxVol)
   end  
 end
 

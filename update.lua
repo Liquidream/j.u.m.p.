@@ -167,7 +167,7 @@ function jump_blob(jumpPlatformCount)
   local jumpYAmounts = {
     -450, -- one platform
     -600, -- two platforms
-    -670  -- three platforms?
+    -680  -- three platforms?
   }
   local jumpXAmountAdjust = {
     1.4, -- one platform

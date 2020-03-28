@@ -297,7 +297,7 @@ do
 
       --log(dist)
       -- close enough to perform boost?
-      if dist < 30 and dist > 0 then
+      if dist < 38 and dist > 0 then
         -- adjust score/platform, depending on state
         if blob.onPlatform ~= self then
           -- "land"
