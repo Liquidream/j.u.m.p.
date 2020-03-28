@@ -17,9 +17,17 @@ do
     -- default to false state (could be active or inactive)
     self.currState = currPressedState --false    
     self.completed = false        -- lit up when blobby has landed (on most blocks)
+    self.tween = nil -- keep local tween (to avoid flicker with layered tweens)
   end
   function BasePlatformObject:update(dt)
-    -- anything?
+    -- update tween (if applicable)
+    if self.tween then
+      local complete = self.tween:update(dt)
+      -- purge completed tweens
+      if complete then
+        self.tween = nil
+      end
+    end
   end
   function BasePlatformObject:draw()
     -- if visited?
@@ -192,11 +200,10 @@ do
     self.currState = not self.currState
     
     -- NOTE: Slider movement will happen in update   
-    addTween(
-      tween.new(
-        0.3, self, 
-        {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
-        'outCirc')
+    self.tween = tween.new(
+      0.3, self, 
+      {openAmount = (not self.currState) and 0 or SLIDER_MAX_MOVEMENT}, 
+      'outCirc'
     )
   end
 
@@ -527,13 +534,6 @@ do
      and self.hitsLeft > 0 then
       -- register a hit
       self.hitsLeft = self.hitsLeft - 1
-      -- shake blocker
-      -- addTween(
-      --   tween.new(
-      --     0.3, self, 
-      --     {y = self.y}, 
-      --     'inOutBack')
-      -- )
       self.flash = true
       -- have we destroyed it?
       if self.hitsLeft <= 0 then
@@ -654,11 +654,10 @@ do
     SliderPlatform.super.setPressedState(self,is_pressed)
 
     -- NOTE: Slider movement will happen in update   
-    addTween(
-      tween.new(
-        0.3, self, 
-        {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
-        'outCirc')
+    self.tween = tween.new(
+      0.3, self, 
+      {openAmount = (self.currState==self.activeState) and 0 or SLIDER_MAX_OPEN_AMOUNT}, 
+      'outCirc'
     )
   end
 
