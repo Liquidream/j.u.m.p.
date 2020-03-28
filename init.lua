@@ -34,6 +34,8 @@ end
 
 
 function init_title()  
+  use_palette(ak54)
+  
   gameState = GAME_STATE.TITLE
 
   -- init mouse/touch controls
@@ -87,6 +89,9 @@ function init_title()
         table.insert(buttons, mediumButton)
         table.insert(buttons, hardButton)
         table.insert(buttons, nightmareButton)
+        
+        -- reset time for credits
+        _t=0
       end
     )
   )
@@ -590,9 +595,7 @@ function init_sugarcoat()
   init_sugar("J.U.M.P.", GAME_WIDTH, GAME_HEIGHT, GAME_SCALE)
   
   -- start with splash screen palette 
-  --load_png("splash", "assets/splash.png", palettes.pico8, true)
-
-  use_palette(ak54)
+  load_png("splash", "assets/splash.png", palettes.pico8, true)
   
   screen_resizeable(true, 2, on_resize)
   screen_render_integer_scale(false)
@@ -606,11 +609,6 @@ function init_sugarcoat()
   --  if me.photoUrl then
   --    load_png("photo", me.photoUrl, ak54) 
   --  end
-   
-  -- init splash
-  -- gameState = GAME_STATE.SPLASH 
-  -- use_palette(palettes.pico8)
-  -- splashStartTime = t()
 end
 
 function init_assets()
@@ -708,4 +706,11 @@ function init_input()
   register_btn(6,  0, input_id("mouse_position", "y"))
   register_btn(7,  0, input_id("mouse_button", "lb"))
 
+end
+
+function init_splash()
+  -- init splash
+  gameState = GAME_STATE.SPLASH 
+  use_palette(palettes.pico8)
+  splashStartTime = t()
 end

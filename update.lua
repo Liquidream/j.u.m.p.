@@ -1,4 +1,14 @@
 
+function updateSplash(dt)
+  if splashStartTime then
+      duration = t()-splashStartTime 
+      if duration > 3.53 then
+        -- Now show "Title" level
+        init_title()
+      end
+  end
+end
+
 function update_game(dt)
   _t=_t+1
 
@@ -26,7 +36,8 @@ function update_game(dt)
   MusicManager:update(dt)
 
   if gameState == GAME_STATE.SPLASH then
-    -- todo: splash screen
+    -- splash screen
+    updateSplash(dt)
 
   elseif gameState == GAME_STATE.TITLE then    
     -- anything??

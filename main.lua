@@ -50,6 +50,8 @@ if CASTLE_PREFETCH then
     "update.lua",
     "draw.lua",
     "assets/spritesheet.png",
+    "assets/popups.png",
+    'assets/splash.png',
     "assets/gomarice_gogono_cocoa_mochi.ttf",
     "assets/AweMono.ttf",
     "assets/GAMEPLAY-1987.ttf",
@@ -114,8 +116,8 @@ function love.load()
 
   _initialized = true
 
-  -- start at title screen
-  init_title()
+  -- start at splash
+  init_splash()
 end
 
 function love.update(dt)

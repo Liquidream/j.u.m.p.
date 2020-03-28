@@ -1,4 +1,22 @@
 
+-- draw intro splash screen
+function drawSplash()
+  cls()
+  camera(0, 0)
+  if duration then
+    local offset = math.sin(duration)*2
+    fade(max(14-(offset-1.1)*25,0))
+    -- title logo
+    if surface_exists("splash") then
+        local w,h = surface_size("splash")
+        local scale = 2
+        w = w * scale
+        h = h * scale
+        spr_sheet("splash", flr(GAME_WIDTH/2)-w/2, flr(GAME_HEIGHT/2)-h/2, w, h)
+        --spr_sheet("splash", flr(GAME_WIDTH/2-w/2), flr(GAME_HEIGHT/2-h/2))
+    end
+  end
+end
 
 -- draw the actual game 
 -- (including the title screen)
@@ -6,7 +24,8 @@ function draw_game()
   
   if gameState == GAME_STATE.SPLASH then
     
-    -- TODO: splash screen
+    -- splash screen
+    drawSplash()
 
   elseif gameState == GAME_STATE.TITLE then
 
@@ -29,6 +48,12 @@ end
 
 function draw_level()
   cls(0) 
+
+  -- reset palette
+  pal()
+  palt()
+  palt(0, false)
+  palt(35,true)
 
   -- clip to game bounds?
   --clip(0,0, GAME_WIDTH-1,GAME_HEIGHT-1)
@@ -185,12 +210,13 @@ function draw_ui()
       pprint_shiny("CHOOSE DIFFICULTY:", menu_x, menu_y, 19, 0, 47)
       
       -- credits
-      if flr(t())%6 < 3 then
-        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 47)        
-        pprint_shiny('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 26, 0, 25)
-      else
+      if _t%200 < 100 then
+      -- if flr(t())%6 < 3 then
         pprint('    CODE + ART', 0, GAME_HEIGHT-26, 47)
         pprint_shiny('   PAUL NICHOLAS', 0, GAME_HEIGHT-13, 15, 0, 14)
+      else
+        pprint('   MUSIC + SFX', 0, GAME_HEIGHT-26, 47)        
+        pprint_shiny('  CHRIS DONNELLY', 0, GAME_HEIGHT-13, 26, 0, 25)
       end
     end
 
