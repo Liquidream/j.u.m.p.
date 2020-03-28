@@ -101,11 +101,6 @@ do
                           and 0 or SLIDER_MAX_MOVEMENT
     end
 
-    -- self.openAmount = (self.currState==self.activeState) 
-    --                      and 0 or SLIDER_MAX_MOVEMENT
-    -- self.openAmount = (self.currState==self.activeState) 
-    --                      and 0 or SLIDER_MAX_OPEN_AMOUNT
-
     -- log("self.side = "..self.side)
     -- log("self.x = "..self.x)
     -- log("self.openAmount = "..self.openAmount)
@@ -155,14 +150,14 @@ do
     end
 
     -- draw left "door"
-    x = (GAME_WIDTH/2) - 263 + self.openAmount
+    x = (GAME_WIDTH/2) - 253 + self.openAmount
     spr(11, x, self.y, 1, self.spr_h)
     for i=1,4 do
       x = x - 32
       spr(10, x, self.y, 1, self.spr_h)
     end
     -- draw right "door"
-    x = (GAME_WIDTH) + -40 + self.openAmount
+    x = (GAME_WIDTH) + -50 + self.openAmount
     spr(12, x, self.y, 1, self.spr_h)
     for i=1,4 do
       x = x + 32
